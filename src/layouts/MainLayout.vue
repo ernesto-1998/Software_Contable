@@ -25,14 +25,9 @@
       <q-list padding>
         <div class="item q-mt-lg" style="margin-bottom: 12px">
           <q-item-label header class="subdiv">Home</q-item-label>
-          <q-item to="/">
+          <q-item to="/" exact-active-class="q-py-md active-item">
             <q-item-section avatar top>
-              <q-avatar
-                class="ico"
-                icon="fa-solid fa-house-user"
-                color="primary"
-                text-color="white"
-              />
+              <q-avatar class="ico" icon="fa-solid fa-house-user" />
             </q-item-section>
 
             <q-item-section>
@@ -45,28 +40,18 @@
         <div class="item q-mt-lg" style="margin-bottom: 12px">
           <q-separator color="blue-grey-6" spaced />
           <q-item-label header class="subdiv">General</q-item-label>
-          <q-item to="/dashboard">
+          <q-item to="/dashboard" exact-active-class="q-py-md active-item">
             <q-item-section avatar top>
-              <q-avatar
-                class="ico"
-                icon="fa-solid fa-chart-pie"
-                color="primary"
-                text-color="white"
-              />
+              <q-avatar class="ico" icon="fa-solid fa-chart-pie" />
             </q-item-section>
 
             <q-item-section>
               <q-item-label lines="1">Dashboard</q-item-label>
             </q-item-section>
           </q-item>
-          <q-item to="/reportes">
+          <q-item to="/reportes" exact-active-class="q-py-md active-item">
             <q-item-section avatar top>
-              <q-avatar
-                class="ico"
-                icon="fa-solid fa-file-lines"
-                color="primary"
-                text-color="white"
-              />
+              <q-avatar class="ico" icon="fa-solid fa-file-lines" />
             </q-item-section>
 
             <q-item-section>
@@ -79,14 +64,9 @@
         <div class="item q-mt-lg" style="margin-bottom: 12px">
           <q-separator color="blue-grey-6" spaced />
           <q-item-label header class="subdiv">Administración</q-item-label>
-          <q-item to="/admin">
+          <q-item to="/admin" exact-active-class="q-py-md active-item">
             <q-item-section avatar top>
-              <q-avatar
-                class="ico"
-                icon="settings"
-                color="primary"
-                text-color="white"
-              />
+              <q-avatar class="ico" icon="settings" />
             </q-item-section>
 
             <q-item-section>
@@ -106,15 +86,10 @@
 
 <script>
 import { ref } from "vue";
-const leftDrawerOpen = ref(false);
 export default {
   setup() {
     return {
       miniState: ref(true),
-      leftDrawerOpen,
-      toggleLeftDrawer() {
-        leftDrawerOpen.value = !leftDrawerOpen.value;
-      },
     };
   },
 };
@@ -125,11 +100,25 @@ export default {
     rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
 }
 .ico {
-  box-shadow: -2px 2px 0px -0px hsla(0, 0%, 100%, 0.984);
+  box-shadow: -2px 2px 0px -0px hsla(297, 70%, 71%, 0.984);
+  color: #8646f3;
+  background-color: aliceblue;
 }
 .subdiv {
   color: rgb(176, 164, 164);
   padding: 8px 12px 12px 16px;
+}
+.active-item {
+  color: white;
+  box-shadow: 0 0 20px rgba(104, 85, 224, 0.6);
+  background-color: rgba(104, 85, 224, 1);
+}
+.active-item .ico {
+  transform: scale(1.2);
+  transition: transform 450ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: -2px 2px 0px -0px hsla(0, 0%, 100%, 0.984);
+  color: aliceblue;
+  background-color: #00abb3;
 }
 .item {
   color: white;
