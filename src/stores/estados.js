@@ -64,119 +64,200 @@ export const useCounterStore = defineStore('estados', {
         total_pasivo_mas_patrimonio: 185_519_062
        }
     ],
-    estado_de_resultados: [
+    
+    estado_resultados: [
 
       {
-        año: 2018, // Al 30 de Septiembre
-        ingresos: {
-          ingresos_ordinarios: 220_896_146,
-          otros_ingresos: 604_418,
+        año: 2018,
+        productos_de_operacion: {
+          ventas_de_energia: 102_704_499.40,
+          ventas_de_energia_entre_compañias_distribuidoras: 1_914_807.92,
+          ingresos_por_uso_de_red: 28_877_072.46,
+          ingresos_por_transacciones_en_el_MRS: 5_705_568.58,
+          otros_productos_de_operacion: 5_464_267.36,
+          total: 144_666_215.72
         },
-        costo_de_ventas: 167_159_449,
-        resultado_bruto: 54_341_115,
-        gastos_de_operacion: {
-          gastos_de_distribucion: 12_109_269,
-          gastos_de_administracion: 9_134_995,
-          gastos_de_personal: 9_689_144,
-          gastos_de_depreciacion_y_amortizacion: 5_204_305
+        costos_de_energia: {
+          compra_de_energia: 108_739_922.53,
+          total: 108_739_922.53
         },
-        resultado_de_operacion: 18_203_402,
-        ingresos_financieros: 922_525,
-        gastos_financieros: 2_327_410,
-        resultado_antes_de_reserva_de_impuestos: 16_798_517,
-        impuestos: 5_585_124,
-        resultado_del_periodo: 11_213_394
+        margen_compra_venta_de_energia: {
+          gastos_de_operacion_y_mantenimiento: 9_531_724.80,
+          gastos_de_comercializacion: 3_953_024.38,
+          gastos_por_cuenta_de_consumidores: 785_642.01,
+          gastos_de_administracion: 4_013_427.33,
+          gastos_por_depreciacion: 2_881_276.81,
+          amortizacion_de_intangibles: 574_392.68,
+          costos_por_servicios_a_terceros: 1_009_839.46,
+          gastos_de_periodos_anteriores: 459_198.00,
+          otros_gastos: 0.00,
+          perdidas_por_retiro_de_activos_fijos: 133_155.08,
+          total: 35_926_293.19   
+        },
+        costos_y_gastos_de_operacion: 23_341_680.55,
+        utilidad_de_operacion: 12_584_612.64,
+        gastos_financieros: {
+          gastos_financieros: 1_524_546.78,
+          total: 1_524_546.78
+        },
+        productos_financieros: {
+          productos_financieros: 229_386.04,
+          otros_ingresos_financieros: 390_893.44,
+          total: 620_279.48
+        },
+        utilidad_antes_de_impuestos_y_reservas: {
+          impuesto_sobre_la_renta: 954_789.67,
+          impuesto_sobre_la_renta_diferido: 2_934_669.10,
+          contribucion_especial: 119_368.01,
+          total: 11_680_345.34
+        },
+        utilidad_por_distribuir: 7_671_518.56
       },
 
       {
-        año: 2019, // Al 30 de septiembre
-        ingresos: {
-          ingresos_ordinarios: 242_162_601,
-          otros_ingresos: 764_393,
+        año: 2019,
+        productos_de_operacion: {
+          ventas_de_energia: 118_710_848.10,
+          ventas_de_energia_entre_compañias_distribuidoras: 2_010_332.85,
+          ingresos_por_uso_de_red: 30_371_219.90,
+          ingresos_por_transacciones_en_el_MRS: 5_804_280.87,
+          otros_productos_de_operacion: 5_497_749.86,
+          total: 162_394_431.58
         },
-        costo_de_ventas: 187_972_173,
-        resultado_bruto: 54_954_822,
-        gastos_de_operacion: {
-          gastos_de_distribucion: 11_389_391,
-          gastos_de_administracion: 8_947_669,
-          gastos_de_personal: 9_968_564,
-          gastos_de_depreciacion_y_amortizacion: 7_667_958
+        costos_de_energia: {
+          compra_de_energia: 125_321_771.49,
+          total: 125_321_771.49
         },
-        resultado_de_operacion: 16_981_241,
-        ingresos_financieros: 1_176_543,
-        gastos_financieros: 2_858_676,
-        resultado_antes_de_reserva_de_impuestos: 15_299_108,
-        impuestos: 5_927_901,
-        resultado_del_periodo: 9_371_208
+        margen_compra_venta_de_energia: {
+          gastos_de_operacion_y_mantenimiento: 9_546_247.84,
+          gastos_de_comercializacion: 4_820_691.17,
+          gastos_por_cuenta_de_consumidores: 80.13,
+          gastos_de_administracion: 4_144_539.29,
+          gastos_por_depreciacion: 3_948_588.54,
+          amortizacion_de_intangibles: 729_609.51,
+          amortizacion_de_activos_por_derecho_de_uso: 465_754.08,
+          costos_por_servicios_a_terceros: 688_761.94,
+          gastos_de_periodos_anteriores: 321_996.49,
+          otros_gastos: 0.00,
+          perdidas_por_retiro_de_activos_fijos: 207_176.59,
+          total: 37_072_660.09   
+        },
+        costos_y_gastos_de_operacion: 24_873_445.58,
+        utilidad_de_operacion: 12_199_214.51,
+        gastos_financieros: {
+          gastos_financieros: 1_905_968.38,
+          total: 1_905_968.38
+        },
+        productos_financieros: {
+          productos_financieros: 244_902.06,
+          otros_ingresos_financieros: 515_999.82,
+          total: 760_901.88
+        },
+        utilidad_antes_de_impuestos_y_reservas: {
+          impuesto_sobre_la_renta: 3_348_719.43,
+          impuesto_sobre_la_renta_diferido: 491_362.05,
+          contribucion_especial: 397_286.22,
+          total: 11_054_148.01
+        },
+        utilidad_por_distribuir: 6_816_780.31
       },
 
       {
-        año: 2020, // Al 30 de septiembre
-        ingresos: {
-          ingresos_ordinarios: 187_718_463,
-          otros_ingresos: 763_536,
+        año: 2020,
+        productos_de_operacion: {
+          ventas_de_energia: 88_733_342.81,
+          ventas_de_energia_entre_compañias_distribuidoras: 1_492_441.82,
+          ingresos_por_uso_de_red: 30_070_472.23,
+          ingresos_por_transacciones_en_el_MRS: 4_805_440.58,
+          otros_productos_de_operacion: 5_389_696.72,
+          total: 130_491_394.16
         },
-        costo_de_ventas: 137_620_548,
-        resultado_bruto: 50_861_451,
-        gastos_de_operacion: {
-          gastos_de_distribucion: 11_368_854,
-          gastos_de_administracion: 9_189_478,
-          gastos_de_personal: 10_083_967,
-          gastos_de_depreciacion_y_amortizacion: 6_026_306
+        costos_de_energia: {
+          compra_de_energia: 96_738_227.56,
+          total: 96_738_227.56
         },
-        resultado_de_operacion: 14_192_847,
-        ingresos_financieros: 618_572,
-        gastos_financieros: 2_197_173,
-        resultado_antes_de_reserva_de_impuestos: 12_614_246,
-        impuestos: 4_396_720,
-        resultado_del_periodo: 8_217_526
+        margen_compra_venta_de_energia: {
+          gastos_de_operacion_y_mantenimiento: 9_649_310.13,
+          gastos_de_comercializacion: 4_472_817.42,
+          gastos_por_cuenta_de_consumidores: 8_705.04,
+          gastos_de_administracion: 4_068_176.04,
+          gastos_por_depreciacion: 2_823_804.94,
+          amortizacion_de_intangibles: 721_596.34,
+          amortizacion_de_activos_por_derecho_de_uso: 479_480.62,
+          costos_por_servicios_a_terceros: 605_634.40,
+          gastos_de_periodos_anteriores: 594_410.60,
+          otros_gastos: 0.00,
+          perdidas_por_retiro_de_activos_fijos: 94_208.91,
+          total: 33_753_166.60   
+        },
+        costos_y_gastos_de_operacion: 23_518_144.44,
+        utilidad_de_operacion: 10_235_022.16,
+        gastos_financieros: {
+          gastos_financieros: 1_542_383.31,
+          total: 1_542_383.31
+        },
+        productos_financieros: {
+          productos_financieros: 433_886.17,
+          otros_ingresos_financieros: 497_711.84,
+          total: 931_598.01
+        },
+        utilidad_antes_de_impuestos_y_reservas: {
+          impuesto_sobre_la_renta: 5_331_212.21,
+          impuesto_sobre_la_renta_diferido: 2_516_873.29,
+          contribucion_especial: 621_771.19,
+          total: 9_624_236.86
+        },
+        utilidad_por_distribuir: 6_188_126.75
       },
 
       {
-        año: 2021, // Al 30 de septiembre
-        ingresos: {
-          ingresos_ordinarios: 217_681_180,
-          otros_ingresos: 1_139_926,
+        año: 2021,
+        productos_de_operacion: {
+          ventas_de_energia: 94_245_035.72,
+          ventas_de_energia_entre_compañias_distribuidoras: 1_848_313.78,
+          ingresos_por_uso_de_red: 32_294_800.14,
+          ingresos_por_transacciones_en_el_MRS: 3_065_448.50,
+          otros_productos_de_operacion: 5_998_567.06,
+          total: 137_452_165.20
         },
-        costo_de_ventas: 160_672_489,
-        resultado_bruto: 58_148_617,
-        gastos_de_operacion: {
-          gastos_de_distribucion: 12_915_911,
-          gastos_de_administracion: 9_222_885,
-          gastos_de_personal: 10_586_765,
-          gastos_de_depreciacion_y_amortizacion: 5_967_108
+        costos_de_energia: {
+          compra_de_energia: 99_670_344.34,
+          total: 99_670_344.34
         },
-        resultado_de_operacion: 19_455_950,
-        ingresos_financieros: 410_757,
-        gastos_financieros: 1_994_154,
-        resultado_antes_de_reserva_de_impuestos: 17_872_552,
-        impuestos: 5_740_757,
-        resultado_del_periodo: 12_131_796
+        margen_compra_venta_de_energia: {
+          gastos_de_operacion_y_mantenimiento: 10_627_573.59,
+          gastos_de_comercializacion: 5_383_963.52,
+          gastos_por_cuenta_de_consumidores: 12_026.70,
+          gastos_de_administracion: 4_178_597.53,
+          gastos_por_depreciacion: 2_836_087.29,
+          amortizacion_de_intangibles: 680_252.65,
+          amortizacion_de_activos_por_derecho_de_uso: 469_690.49,
+          costos_por_servicios_a_terceros: 858_824.22,
+          gastos_de_periodos_anteriores: 171_921.71, // Este sale entre parentesis, puede ser negativo
+          otros_gastos: 0.00,
+          perdidas_por_retiro_de_activos_fijos: 73_015.92,
+          total: 37_781_820.86   
+        },
+        costos_y_gastos_de_operacion: 24_948_110.20,
+        utilidad_de_operacion: 12_833_710.66,
+        gastos_financieros: {
+          gastos_financieros: 1_297_683.30,
+          total: 1_297_683.30
+        },
+        productos_financieros: {
+          productos_financieros: 319_269.43,
+          otros_ingresos_financieros: 840_374.76,
+          total: 1_159_644.19
+        },
+        utilidad_antes_de_impuestos_y_reservas: {
+          impuesto_sobre_la_renta: 15_618.00, // Este aparece en parentesis, puede ser negativo
+          impuesto_sobre_la_renta_diferido: 5_024_406.17,
+          total: 12_695_671.55
+        },
+        utilidad_por_distribuir: 7_686_883.38
       },
-
-      {
-        año: 2022, // Al 30 de junio
-        ingresos: {
-          ingresos_ordinarios: 171_276_755,
-          otros_ingresos: 3_546_119,
-        },
-        costo_de_ventas: 135_871_008,
-        resultado_bruto: 38_951_866,
-        gastos_de_operacion: {
-          gastos_de_distribucion: 9_130_295,
-          gastos_de_administracion: 7_660_457,
-          gastos_de_personal: 8_038_057,
-          gastos_de_depreciacion_y_amortizacion: 3_927_152
-        },
-        resultado_de_operacion: 10_195_904,
-        ingresos_financieros: 1_736_878,
-        gastos_financieros: 1_734_784,
-        resultado_antes_de_reserva_de_impuestos: 10_197_997,
-        impuestos: 2_919_569,
-        resultado_del_periodo: 7_278_428
-      },
-
     ]
+
   }),
   getters: {
     doubleCount: (state) => state.counter * 2,
