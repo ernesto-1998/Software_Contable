@@ -1,41 +1,100 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+  <q-layout view="lHh lpR lFf">
+    <q-header reveal elevated class="bg-primary text-white">
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-
         <q-toolbar-title>
-          Quasar App
+          <q-avatar>
+            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg" />
+          </q-avatar>
+          Title
         </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
 
     <q-drawer
-      v-model="leftDrawerOpen"
       show-if-above
-      bordered
+      v-model="leftDrawerOpen"
+      side="left"
+      behavior="desktop"
+      class="bg-dark drawer"
+      :mini="miniState"
+      @mouseover="miniState = false"
+      @mouseout="miniState = true"
+      :breakpoint="500"
     >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
+      <q-list padding>
+        <div class="item q-mt-lg" style="margin-bottom: 12px">
+          <q-item-label header class="subdiv">Home</q-item-label>
+          <q-item to="/">
+            <q-item-section avatar top>
+              <q-avatar
+                class="ico"
+                icon="fa-solid fa-house-user"
+                color="primary"
+                text-color="white"
+              />
+            </q-item-section>
 
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
+            <q-item-section>
+              <q-item-label lines="1">Inicio</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-separator color="blue-grey-6" spaced />
+        </div>
+
+        <div class="item q-mt-lg" style="margin-bottom: 12px">
+          <q-separator color="blue-grey-6" spaced />
+          <q-item-label header class="subdiv">General</q-item-label>
+          <q-item to="/dashboard">
+            <q-item-section avatar top>
+              <q-avatar
+                class="ico"
+                icon="fa-solid fa-chart-pie"
+                color="primary"
+                text-color="white"
+              />
+            </q-item-section>
+
+            <q-item-section>
+              <q-item-label lines="1">Dashboard</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item to="/reportes">
+            <q-item-section avatar top>
+              <q-avatar
+                class="ico"
+                icon="fa-solid fa-file-lines"
+                color="primary"
+                text-color="white"
+              />
+            </q-item-section>
+
+            <q-item-section>
+              <q-item-label lines="1">Reportes</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-separator color="blue-grey-6" spaced />
+        </div>
+
+        <div class="item q-mt-lg" style="margin-bottom: 12px">
+          <q-separator color="blue-grey-6" spaced />
+          <q-item-label header class="subdiv">Administración</q-item-label>
+          <q-item to="/admin">
+            <q-item-section avatar top>
+              <q-avatar
+                class="ico"
+                icon="settings"
+                color="primary"
+                text-color="white"
+              />
+            </q-item-section>
+
+            <q-item-section>
+              <q-item-label lines="1">Configuración</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-separator color="blue-grey-6" spaced />
+        </div>
       </q-list>
     </q-drawer>
 
@@ -46,71 +105,74 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
-
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-]
-
-export default defineComponent({
-  name: 'MainLayout',
-
-  components: {
-    EssentialLink
-  },
-
-  setup () {
-    const leftDrawerOpen = ref(false)
-
+import { ref } from "vue";
+const leftDrawerOpen = ref(false);
+export default {
+  setup() {
     return {
-      essentialLinks: linksList,
+      miniState: ref(true),
       leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      }
-    }
-  }
-})
+      toggleLeftDrawer() {
+        leftDrawerOpen.value = !leftDrawerOpen.value;
+      },
+    };
+  },
+};
 </script>
+<style>
+.drawer {
+  box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px,
+    rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+}
+.ico {
+  box-shadow: -2px 2px 0px -0px hsla(0, 0%, 100%, 0.984);
+}
+.subdiv {
+  color: rgb(176, 164, 164);
+  padding: 8px 12px 12px 16px;
+}
+.item {
+  color: white;
+  text-decoration-color: azure;
+  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+  transition: 0.4s;
+}
+button {
+  cursor: pointer;
+  border: 0;
+  border-radius: 6px;
+  font-weight: 600;
+  margin: 10px 10px;
+  width: 200px;
+  padding: 10px 0;
+  box-shadow: 0 0 20px rgba(104, 85, 224, 0.2);
+  transition: 0.4s;
+}
+
+.login {
+  cursor: pointer;
+  border: 0;
+  border-radius: 6px;
+  font-weight: 600;
+  margin: 10px 10px;
+  width: 200px;
+  padding: 10px 0;
+  box-shadow: 0 0 20px rgba(104, 85, 224, 0.2);
+  transition: 0.4s;
+  color: rgb(104, 85, 224);
+  background-color: rgba(255, 255, 255, 1);
+  border: 1px solid rgba(104, 85, 224, 1);
+}
+
+button:hover {
+  color: white;
+  box-shadow: 0 0 20px rgba(104, 85, 224, 0.6);
+  background-color: rgba(104, 85, 224, 1);
+}
+
+.navigation-container {
+  background-color: #8646f3;
+  display: flex;
+  justify-content: center;
+}
+</style>
