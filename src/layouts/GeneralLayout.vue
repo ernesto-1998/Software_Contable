@@ -16,7 +16,7 @@
       v-model="leftDrawerOpen"
       side="left"
       behavior="desktop"
-      class="bg-dark drawer"
+      class="drawer drawer"
       :mini="miniState"
       @mouseover="miniState = false"
       @mouseout="miniState = true"
@@ -96,6 +96,7 @@ export default {
 </script>
 <style>
 .drawer {
+  background-color: #f67e7d;
   box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px,
     rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
 }
