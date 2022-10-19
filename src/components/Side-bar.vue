@@ -1,7 +1,6 @@
 <template>
     <q-drawer
       show-if-above
-      v-model="leftDrawerOpen"
       side="left"
       behavior="desktop"
       class="bg-primary"
