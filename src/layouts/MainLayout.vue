@@ -46,7 +46,7 @@
             </q-item-section>
 
             <q-item-section>
-              <q-item-label lines="1">Dashboard</q-item-label>
+              <q-item-label lines="1">Analisis</q-item-label>
             </q-item-section>
           </q-item>
           <q-item to="/reportes" exact-active-class="q-py-md active-item">
