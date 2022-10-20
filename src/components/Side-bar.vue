@@ -27,14 +27,24 @@
         <div class="item q-mt-lg" style="margin-bottom: 12px">
           <q-separator color="blue-grey-6" spaced />
           <q-item-label header class="subdiv">General</q-item-label>
-          <q-item to="/dashboard" exact-active-class="q-py-md active-item">
-            <q-item-section avatar top>
-              <q-avatar class="ico" icon="fa-solid fa-chart-pie" />
-            </q-item-section>
+          <q-item class="analisis-container" exact-active-class="q-py-md active-item">
+            <div class="analisis-menu">
+              <q-item-section avatar top>
+                <q-avatar class="ico" icon="fa-solid fa-chart-pie" />
+              </q-item-section>
 
-            <q-item-section>
-              <q-item-label lines="1">Dashboard</q-item-label>
-            </q-item-section>
+              <q-item-section>
+                <q-item-label lines="1">Analisis</q-item-label>
+              </q-item-section>
+            </div>
+
+            <div class="hover-menu">
+              <li class="hover-menu_link">Razones Financieras</li>
+              <li class="hover-menu_link">Diagrama Dupon</li>
+              <li class="hover-menu_link">Analisis Vertical</li>
+              <li class="hover-menu_link">Analisis Horizontal</li>
+            </div>
+
           </q-item>
           <q-item to="/reportes" exact-active-class="q-py-md active-item">
             <q-item-section avatar top>
@@ -75,5 +85,42 @@ let miniState = ref(true)
 </script>
 
 <style>
+
+.analisis-container {
+  display: grid;
+  align-items: center;
+}
+
+.analisis-menu {
+  display: flex;
+}
+
+.hover-menu {
+  display: none;
+  width: 100%;
+  list-style: none;
+  margin-top: 0.5rem;
+}
+
+.analisis-container:hover .hover-menu {
+  display: block;
+  background-color: transparent;
+  transition: ease-in-out;
+}
+
+.hover-menu_link {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+}
+
+.hover-menu_link:hover {
+  color: #000;
+  cursor: pointer;
+  background-color: rgb(104, 87, 209);
+  box-shadow: 3px 4px 5px 0px rgba(0,0,0,0.75);
+  -webkit-box-shadow: 3px 4px 5px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 3px 4px 5px 0px rgba(0,0,0,0.75);
+}
 
 </style>
