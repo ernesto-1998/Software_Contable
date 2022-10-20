@@ -23,7 +23,7 @@ import { useCounterStore } from "stores/estados";
 onBeforeMount(() => {
     const tamanio = input.balance_general.length;
     for(let i = 0; i < tamanio; i++){
-        periods.push(`Junio ${input.balance_general[i].año}`);
+        periods.push(input.balance_general[i].año);
     }
 })
 
