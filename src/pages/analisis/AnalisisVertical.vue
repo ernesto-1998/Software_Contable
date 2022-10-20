@@ -8,7 +8,7 @@
                 <label>Estado Financiero: </label>
                 <q-select filled v-model="model" :options="options" label="Escoja" />
             </div>
-            <div class="periodo_container">
+            <div class="periodo-container">
                 <label>Periodos: </label>
                 <q-select filled v-model="model2" :options="periods" label="Periodo" />
             </div>
@@ -43,7 +43,7 @@ let periods = [];
 }
 .info-container {
     margin: 1.5rem 2.5rem;
-    padding: 0.7rem;
+    padding: 1rem;
     border-radius: 16px;
 }
 
@@ -52,7 +52,7 @@ let periods = [];
     font-size: 1.5rem;
 }
 
-.estado-financiero_container {
+.estado-financiero_container, .periodo-container {
     display: grid;
     grid-template-columns: 150px 250px;
     align-items: center;
@@ -60,6 +60,11 @@ let periods = [];
 }
 
 .estado-financiero_container label {
+    color: #fff;
+    font-size: 1rem;
+}
+
+.periodo-container label {
     color: #fff;
     font-size: 1rem;
 }
