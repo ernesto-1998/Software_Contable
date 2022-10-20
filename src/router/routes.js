@@ -17,6 +17,14 @@ const routes = [
     ],
   },
 
+  {
+    path: "/analisis",
+    component: () => import("layouts/GeneralLayout.vue"),
+    children: [
+      { path: "/vertical", name: "vertical", component: () => import("src/pages/analisis/AnalisisVertical.vue") }
+    ]
+  },
+
   // Always leave this as last one,
   // but you can also remove it
   {

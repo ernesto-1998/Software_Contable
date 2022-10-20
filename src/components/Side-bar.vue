@@ -39,7 +39,7 @@
             </div>
 
             <div class="hover-menu">
-              <li class="hover-menu_link">Razones Financieras</li>
+              <router-link :to="{name: 'vertical'}"><li class="hover-menu_link">Razones Financieras</li></router-link>
               <li class="hover-menu_link">Diagrama Dupon</li>
               <li class="hover-menu_link">Analisis Vertical</li>
               <li class="hover-menu_link">Analisis Horizontal</li>
@@ -100,6 +100,11 @@ let miniState = ref(true)
   width: 100%;
   list-style: none;
   margin-top: 0.5rem;
+}
+
+.hover-menu a {
+  text-decoration: none;
+  color: #fff;
 }
 
 .analisis-container:hover .hover-menu {
