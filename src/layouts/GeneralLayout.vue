@@ -13,7 +13,7 @@
 
     <Sidebar />
 
-    <q-page-container>
+    <q-page-container class="bg-accent">
       <router-view />
     </q-page-container>
   </q-layout>
