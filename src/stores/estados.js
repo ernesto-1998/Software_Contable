@@ -539,7 +539,18 @@ export const useCounterStore = defineStore("estados", {
     ],
   }),
   getters: {
-    doubleCount: (state) => state.counter * 2,
+    getBalances: (state) => state.balance_general,
+
+    getBalanceGeneralByYear: (state) => {
+      return (year) =>
+        state.balance_general.find((balance) => balance.año === year);
+    },
+    getEstados: (state) => state.estado_resultados,
+
+    getEstadoByYear: (state) => {
+      return (year) =>
+        state.estado_resultados.find((estado) => estado.año === year);
+    },
   },
   actions: {
     increment() {
