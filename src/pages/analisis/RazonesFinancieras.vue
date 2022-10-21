@@ -2,7 +2,7 @@
     <div class="razones-financieras_container">
         <div class="info-container bg-secondary">
             <div class="title">
-                <label> Razones Financieras </label>
+                <label>Razones Financieras</label>
             </div>
             <div class="periodo-container">
                 <label>Periodos: </label>

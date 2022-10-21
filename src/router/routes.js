@@ -22,6 +22,11 @@ const routes = [
     component: () => import("layouts/GeneralLayout.vue"),
     children: [
       {
+        path: "/razones",
+        name: "razones",
+        component: () => import("src/pages/analisis/RazonesFinancieras.vue"),
+      },
+      {
         path: "/vertical",
         name: "vertical",
         component: () => import("src/pages/analisis/AnalisisVertical.vue"),
