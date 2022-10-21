@@ -39,9 +39,9 @@
             </div>
 
             <div class="hover-menu">
-              <router-link :to="{name: 'vertical'}"><li class="hover-menu_link">Razones Financieras</li></router-link>
+              <li class="hover-menu_link">Razones Financieras</li>
               <li class="hover-menu_link">Diagrama Dupon</li>
-              <li class="hover-menu_link">Analisis Vertical</li>
+              <router-link :to="{name: 'vertical'}"><li class="hover-menu_link">Analisis Vertical</li></router-link>
               <li class="hover-menu_link">Analisis Horizontal</li>
             </div>
 
