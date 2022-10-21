@@ -21,13 +21,17 @@ const routes = [
     path: "/analisis",
     component: () => import("layouts/GeneralLayout.vue"),
     children: [
-      { 
-        path: "/vertical", name: "vertical", component: () => import("src/pages/analisis/AnalisisVertical.vue") 
+      {
+        path: "/vertical",
+        name: "vertical",
+        component: () => import("src/pages/analisis/AnalisisVertical.vue"),
       },
       {
-        path: "/razones", name: "razones", component: () => import("src/pages/analisis/RazonesFinancieras.vue")
-      }
-    ]
+        path: "/horizontal",
+        name: "horizontal",
+        component: () => import("src/pages/analisis/AnalisisHorizontal.vue"),
+      },
+    ],
   },
 
   // Always leave this as last one,
