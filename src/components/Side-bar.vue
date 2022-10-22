@@ -90,7 +90,37 @@ import { ref } from "vue";
 let miniState = ref(true);
 </script>
 
-<style>
+<style scoped>
+.label-home {
+  color: white;
+}
+.ico {
+  box-shadow: -2px 2px 0px -0px hsla(297, 70%, 71%, 0.984);
+  color: #8646f3;
+  background-color: aliceblue;
+}
+.subdiv {
+  color: rgb(176, 164, 164);
+  padding: 8px 12px 12px 16px;
+}
+.active-item {
+  color: white;
+  box-shadow: 0 0 20px rgba(104, 85, 224, 0.6);
+  background-color: rgba(104, 85, 224, 1);
+}
+.active-item .ico {
+  transform: scale(1.2);
+  transition: transform 450ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: -2px 2px 0px -0px hsla(0, 0%, 100%, 0.984);
+  color: aliceblue;
+  background-color: #00abb3;
+}
+.item {
+  color: white;
+  text-decoration-color: azure;
+  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+  transition: 0.4s;
+}
 .analisis-container {
   display: grid;
   align-items: center;

@@ -96,8 +96,25 @@ watch(year, () => {
 });
 </script>
 
-<style>
+<style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@1,900&display=swap");
+button {
+  cursor: pointer;
+  border: 0;
+  border-radius: 6px;
+  font-weight: 600;
+  margin: 10px 10px;
+  width: 200px;
+  padding: 10px 0;
+  box-shadow: 0 0 20px rgba(104, 85, 224, 0.2);
+  transition: 0.4s;
+}
+
+button:hover {
+  color: white;
+  box-shadow: 0 0 20px rgba(104, 85, 224, 0.6);
+  background-color: rgba(104, 85, 224, 1);
+}
 .title {
   display: flex;
   justify-content: center;

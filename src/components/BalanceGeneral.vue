@@ -74,12 +74,25 @@
             >
               {{ props.row.sub_activo }}
               <q-popup-edit
-                @save="verificarTipo(props.row.isAC ? 'AC' : 'ANC')"
+                @save="verificarTipo(props.row.typeIzq)"
+                @hide="closePopUp"
                 v-model="props.row.sub_activo"
                 v-slot="scope"
                 buttons
+                :validate="validarInput"
+                label-set="Guardar"
+                label-cancel="Cancelar"
               >
-                <q-input type="number" v-model="scope.value" dense autofocus />
+                <q-input
+                  prefix="$"
+                  @update:model-value="scope.validate"
+                  v-model="scope.value"
+                  dense
+                  :error="errorCalories"
+                  :error-message="errorMessageCalories"
+                  @keyup.enter="scope.set"
+                  autofocus
+                />
               </q-popup-edit>
             </q-td>
             <q-td
@@ -133,6 +146,10 @@
                 v-model="props.row.sub_pasivo"
                 v-slot="scope"
                 buttons
+                :validate="validarInput"
+                label-set="Guardar"
+                label-cancel="Cancelar"
+                @hide="closePopUp"
                 @save="
                   verificarTipo(
                     props.row.isPC
@@ -145,7 +162,16 @@
                   )
                 "
               >
-                <q-input type="number" v-model="scope.value" dense autofocus />
+                <q-input
+                  prefix="$"
+                  @update:model-value="scope.validate"
+                  v-model="scope.value"
+                  dense
+                  :error="errorCalories"
+                  :error-message="errorMessageCalories"
+                  @keyup.enter="scope.set"
+                  autofocus
+                />
               </q-popup-edit>
             </q-td>
             <q-td
@@ -164,6 +190,20 @@
                   props.row.isTotalBalance,
               }"
             >
+              <div
+                :class="{
+                  'bg-purple-13 text-white text-overline text-center':
+                    props.row.isSubTotalPV,
+                  'bg-purple-9 text-white text-overline text-center':
+                    props.row.isTotalPV,
+                  'bg-lime-10 text-white text-overline text-center':
+                    props.row.isTotalCS || props.row.isPT,
+                  'bg-brown text-white text-overline text-center':
+                    props.row.isTotalPT,
+                  'bg-light-green-14 text-overline text-center':
+                    props.row.isTotalBalance,
+                }"
+              ></div>
               {{ props.row.total_pasivo }}
             </q-td>
           </q-tr>
@@ -182,7 +222,8 @@ const props = defineProps({
 });
 const { bus } = useEventsBus();
 const showDialog = ref(props.show);
-
+let errorCalories = ref(false);
+let errorMessageCalories = ref("");
 const initialPagination = ref({
   rowsNumber: 10,
 });
@@ -243,15 +284,40 @@ let rowTotalCapitalSocial = 0;
 let rowTotalPatrimonio = 0;
 let rowTotalPasivoPatrimonio = 0;
 
-let totalActivoCorriente = 0;
-let totalActivoNoCorriente = 0;
-let totalActivos = 0;
-let totalPasivosCorrientes = 0;
-let totalPasivosNoCorrientes = 0;
-let totalPasivos = 0;
-let totalPatrimonio = 0;
-let totalPasivosPatrimonio = 0;
-let totalCapitalSocial = 0;
+function closePopUp() {
+  errorCalories.value = false;
+  errorMessageCalories.value = "";
+}
+
+function validarInput(value) {
+  const regex = /^[0-9]*$/;
+  console.log(value);
+  errorCalories.value = false;
+  errorMessageCalories.value = "";
+  if (!regex.test(value)) {
+    errorCalories.value = true;
+    errorMessageCalories.value =
+      "No se permiten el ingreso de valores no numéricos";
+    return false;
+  } else {
+    if (value.length >= 1) {
+      if (value[0] === "0") {
+        errorCalories.value = true;
+        errorMessageCalories.value =
+          "No se permiten valores de 0 a la izquierda";
+        return false;
+      } else {
+        errorCalories.value = false;
+        errorMessageCalories.value = "";
+        return true;
+      }
+    } else if (value.length === 0) {
+      errorCalories.value = true;
+      errorMessageCalories.value = "Ingrese valores para poder modificar";
+      return false;
+    }
+  }
+}
 
 function close() {
   showDialog.value = !showDialog.value;
@@ -271,7 +337,6 @@ function setTotalActivoCorriente(cuentas) {
     newTotalActivoCorriente.toFixed(2);
 
   setTotalActivos();
-  typeChanged.value = "";
 }
 
 function setTotalActivoNoCorriente(cuentas) {
@@ -347,6 +412,12 @@ function setTotalPasivoPatrimonio() {
 watch(
   () => bus.value.get("sendBalance"),
   (val) => {
+    let totalActivoCorriente = 0;
+    let totalActivoNoCorriente = 0;
+    let totalPasivosCorrientes = 0;
+    let totalPasivosNoCorrientes = 0;
+    let totalPatrimonio = 0;
+    let totalCapitalSocial = 0;
     console.log("valores de las filas   ");
     console.log(rows.value);
     // numero total de cuentas para el lado izquierdo (ACTIVOS)
@@ -380,13 +451,16 @@ watch(
       rows.value[index].cuentaActivo = cuenta;
       rows.value[index].sub_activo = monto;
       rows.value[index].isAC = true;
+      rows.value[index].typeIzq = "AC";
       totalActivoCorriente += monto;
       index += 1;
     }
     rowTotaclActivoCorriente = index;
     rows.value[index].cuentaActivo = "TOTAL ACTIVO CORRIENTE";
     rows.value[index].isSubTotalAC = true;
-    rows.value[index].total_activo = totalActivoCorriente;
+    rows.value[index].total_activo = parseFloat(
+      totalActivoCorriente.toFixed(2)
+    );
     index += 2;
     rows.value[index].cuentaActivo = "ACTIVOS NO CORRIENTES";
     rows.value[index].isHeaderAC = true;
@@ -395,13 +469,16 @@ watch(
       rows.value[index].cuentaActivo = cuenta;
       rows.value[index].sub_activo = monto;
       rows.value[index].isAC = true;
+      rows.value[index].typeIzq = "ANC";
       totalActivoNoCorriente += monto;
       index += 1;
     }
     rowTotalActivoNoCorriente = index;
     rows.value[index].cuentaActivo = "TOTAL ACTIVO NO CORRIENTE";
     rows.value[index].isSubTotalAC = true;
-    rows.value[index].total_activo = totalActivoNoCorriente;
+    rows.value[index].total_activo = parseFloat(
+      totalActivoNoCorriente.toFixed(2)
+    );
     index += 1;
 
     // LLENANDO EL LADO DERECHO DEL BALANCE
@@ -411,13 +488,16 @@ watch(
       rows.value[index].sub_pasivo = monto;
       rows.value[index].isPC = true;
       rows.value[index].isPV = true;
+      rows.value[index].typeDer = "PC";
       index += 1;
       totalPasivosCorrientes += monto;
     }
     rowTotalPasivoCorriente = index;
     rows.value[index].cuentaPasivo = "TOTAL PASIVOS CORRIENTES";
     rows.value[index].isSubTotalPV = true;
-    rows.value[index].total_pasivo = totalPasivosCorrientes;
+    rows.value[index].total_pasivo = parseFloat(
+      totalPasivosCorrientes.toFixed(2)
+    );
     index += 2;
     rows.value[index].cuentaPasivo = "PASIVOS NO CORRIENTES";
     rows.value[index].isHeaderPV = true;
@@ -427,18 +507,22 @@ watch(
       rows.value[index].sub_pasivo = monto;
       rows.value[index].isPNC = true;
       rows.value[index].isPV = true;
+      rows.value[index].typeDer = "PNC";
       index += 1;
       totalPasivosNoCorrientes += monto;
     }
     rowTotalPasivoNoCorriente = index;
     rows.value[index].cuentaPasivo = "TOTAL PASIVOS NO CORRIENTES";
-    rows.value[index].total_pasivo = totalPasivosNoCorrientes;
+    rows.value[index].total_pasivo = parseFloat(
+      totalPasivosNoCorrientes.toFixed(2)
+    );
     rows.value[index].isSubTotalPV = true;
     index += 1;
     rowTotalPasivos = index;
     rows.value[index].cuentaPasivo = "TOTAL PASIVOS";
     rows.value[index].total_pasivo =
-      totalPasivosCorrientes + totalPasivosNoCorrientes;
+      parseFloat(totalPasivosCorrientes.toFixed(2)) +
+      parseFloat(totalPasivosNoCorrientes.toFixed(2));
     rows.value[index].isTotalPV = true;
     index += 2;
 
@@ -449,53 +533,70 @@ watch(
       rows.value[index].cuentaPasivo = cuenta;
       rows.value[index].sub_pasivo = monto;
       rows.value[index].isCS = true;
+      rows.value[index].typeDer = "CS";
       index += 1;
       totalCapitalSocial += monto;
     }
-    val[0].patrimonio.delete("sub_capital_social");
     rowTotalCapitalSocial = index;
     rows.value[index].cuentaPasivo = "Total Capital Social";
     rows.value[index].isTotalCS = true;
-    rows.value[index].total_pasivo = totalCapitalSocial;
+    rows.value[index].total_pasivo = parseFloat(totalCapitalSocial.toFixed(2));
     index += 1;
     for (const [cuenta, monto] of val[0].patrimonio) {
-      rows.value[index].cuentaPasivo = cuenta;
-      rows.value[index].total_pasivo = monto;
-      rows.value[index].isPT = true;
-      index += 1;
-      totalPatrimonio += monto;
+      if (cuenta !== "sub_capital_social") {
+        rows.value[index].cuentaPasivo = cuenta;
+        rows.value[index].total_pasivo = monto;
+        rows.value[index].isPT = true;
+        rows.value[index].typeDer = "PT";
+        index += 1;
+        totalPatrimonio += monto;
+      }
     }
     totalPatrimonio += totalCapitalSocial;
+    totalPatrimonio.toFixed(2);
     rowTotalPatrimonio = index;
     rows.value[index].cuentaPasivo = "TOTAL PATRIMONIO";
     rows.value[index].isTotalPT = true;
-    rows.value[index].total_pasivo = totalPatrimonio;
+    rows.value[index].total_pasivo = parseFloat(totalPatrimonio.toFixed(2));
     index += 2;
     rowTotalActivos = index;
     rows.value[index].cuentaActivo = "TOTAL ACTIVOS";
     rows.value[index].isTotalBalance = true;
     rows.value[index].total_activo =
-      totalActivoCorriente + totalActivoNoCorriente;
+      parseFloat(totalActivoCorriente.toFixed(2)) +
+      parseFloat(totalActivoNoCorriente.toFixed(2));
     rowTotalPasivoPatrimonio = index;
     rows.value[index].cuentaPasivo = "TOTAL PASIVOS Y PATRIMONIO";
     rows.value[index].isTotalBalance = true;
     rows.value[index].total_pasivo =
-      totalPatrimonio + totalPasivosCorrientes + totalPasivosNoCorrientes;
+      parseFloat(totalPatrimonio.toFixed(2)) +
+      parseFloat(totalPasivosCorrientes.toFixed(2)) +
+      parseFloat(totalPasivosNoCorrientes.toFixed(2));
   }
 );
 watch(rows.value, () => {
   console.log("Ha cambiado el balance");
   if (typeChanged.value === "AC") {
     console.log("es AC");
-    setTotalActivoCorriente(rows.value.filter((cuenta) => cuenta.isAC));
+    setTotalActivoCorriente(
+      rows.value.filter((cuenta) => cuenta.typeIzq === "AC")
+    );
   } else if (typeChanged.value === "ANC") {
-    setTotalActivoNoCorriente(rows.value.filter((cuenta) => cuenta.isANC));
+    setTotalActivoNoCorriente(
+      rows.value.filter((cuenta) => cuenta.typeIzq === "ANC")
+    );
   } else if (typeChanged.value === "PC") {
-    setTotalPasivoCorriente(rows.value.filter((cuenta) => cuenta.isPC));
+    setTotalPasivoCorriente(
+      rows.value.filter((cuenta) => cuenta.typeDer === "PC")
+    );
   } else if (typeChanged.value === "PNC") {
-    setTotalPasivoNoCorriente(rows.value.filter((cuenta) => cuenta.isPNC));
+    setTotalPasivoNoCorriente(
+      rows.value.filter((cuenta) => cuenta.typeDer === "PNC")
+    );
   } else if (typeChanged.value === "CS") {
-    setTotalCapitalSocial(rows.value.filter((cuenta) => cuenta.isCS));
+    setTotalCapitalSocial(
+      rows.value.filter((cuenta) => cuenta.typeDer === "CS")
+    );
   } else if (typeChanged.value === "PT") {
     set;
   }
@@ -508,6 +609,21 @@ function verificarTipo(cuenta) {
 </script>
 
 <style lang="sass">
+button
+  cursor: pointer
+  border: 0
+  border-radius: 6px
+  font-weight: 600
+  margin: 10px 10px
+  width: 200px
+  padding: 10px 0
+  box-shadow: 0 0 20px rgba(104, 85, 224, 0.2)
+  transition: 0.4s
+
+button:hover
+  color: white
+  box-shadow: 0 0 20px rgba(104, 85, 224, 0.6)
+  background-color: rgba(104, 85, 224, 1)
 .my-sticky-header-table
   /* height or max-height is important */
   height: 100%
