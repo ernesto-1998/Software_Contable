@@ -3,16 +3,10 @@ const routes = [
     path: "/",
     component: () => import("layouts/HomeLayout.vue"),
     children: [
-      { path: "", name: "inicio", component: () => import("pages/Inicio.vue") },
       {
-        path: "/reportes",
-        name: "home-reportes",
-        component: () => import("pages/Reportes.vue"),
-      },
-      {
-        path: "/dashboard",
-        name: "home-dashboard",
-        component: () => import("pages/DashBoard.vue"),
+        path: "",
+        name: "inicio",
+        component: () => import("pages/InicioPage.vue"),
       },
     ],
   },
@@ -21,6 +15,11 @@ const routes = [
     path: "/analisis",
     component: () => import("layouts/GeneralLayout.vue"),
     children: [
+      {
+        path: "/reportes",
+        name: "reportes",
+        component: () => import("pages/Reportes.vue"),
+      },
       {
         path: "/razones",
         name: "razones",
