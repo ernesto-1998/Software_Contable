@@ -55,7 +55,7 @@
                   props.row.isHeaderAC,
                 'bg-teal-6 text-white text-overline text-center':
                   props.row.isSubTotalAC,
-                'bg-light-green-14 text-overline text-center':
+                'bg-brand text-white text-overline text-center':
                   props.row.isTotalBalance,
               }"
             >
@@ -69,7 +69,7 @@
                 'bg-teal-5': props.row.isHeaderAC,
                 'bg-teal-6 text-white text-overline text-center':
                   props.row.isSubTotalAC,
-                'bg-light-green-14': props.row.isTotalBalance,
+                'bg-brand': props.row.isTotalBalance,
               }"
             >
               {{ props.row.sub_activo }}
@@ -99,9 +99,11 @@
               key="activoTotal"
               :props="props"
               :class="{
+                'bg-teal-3': props.row.isAC,
+                'bg-teal-5': props.row.isHeaderAC,
                 'bg-teal-6 text-white text-overline text-center':
                   props.row.isSubTotalAC,
-                'bg-light-green-14 text-overline text-center':
+                'bg-brand text-white text-overline text-center':
                   props.row.isTotalBalance,
               }"
             >
@@ -116,13 +118,12 @@
                   props.row.isSubTotalPV || props.row.isHeaderPV,
                 'bg-purple-9 text-white text-overline text-center':
                   props.row.isTotalPV,
-                'bg-lime-8': props.row.isCS,
-                'bg-lime-10': props.row.isPT,
-                'bg-lime-10 text-white text-overline text-center':
+                'bg-deep-orange-2': props.row.isPT || props.row.isCS,
+                'bg-deep-orange-2 text-overline text-center':
                   props.row.isTotalCS,
-                'bg-brown text-white text-overline text-center':
+                'bg-yellow-10 text-white text-overline text-center':
                   props.row.isTotalPT || props.row.isHeaderPT,
-                'bg-light-green-14 text-overline text-center':
+                'bg-brand text-white text-overline text-center':
                   props.row.isTotalBalance,
               }"
             >
@@ -135,10 +136,10 @@
                 'bg-orange-3': props.row.isPV,
                 'bg-purple-13': props.row.isHeaderPV || props.row.isSubTotalPV,
                 'bg-purple-9': props.row.isTotalPV,
-                'bg-lime-8': props.row.isCS,
-                'bg-lime-10': props.row.isTotalCS || props.row.isPT,
-                'bg-brown': props.row.isTotalPT || props.row.isHeaderPT,
-                'bg-light-green-14': props.row.isTotalBalance,
+                'bg-deep-orange-2':
+                  props.row.isTotalCS || props.row.isPT || props.row.isCS,
+                'bg-yellow-10': props.row.isTotalPT || props.row.isHeaderPT,
+                'bg-brand': props.row.isTotalBalance,
               }"
             >
               {{ props.row.sub_pasivo }}
@@ -178,32 +179,21 @@
               key="pasivoTotal"
               :props="props"
               :class="{
+                'bg-yellow-10': props.row.isHeaderPT,
+                'bg-purple-13': props.row.isHeaderPV,
+                'bg-orange-3': props.row.isPV,
                 'bg-purple-13 text-white text-overline text-center':
                   props.row.isSubTotalPV,
                 'bg-purple-9 text-white text-overline text-center':
                   props.row.isTotalPV,
-                'bg-lime-10 text-white text-overline text-center':
-                  props.row.isTotalCS || props.row.isPT,
-                'bg-brown text-white text-overline text-center':
+                'bg-deep-orange-2 text-overline text-center':
+                  props.row.isTotalCS || props.row.isPT || props.row.isCS,
+                'bg-yellow-10 text-white text-overline text-center':
                   props.row.isTotalPT,
-                'bg-light-green-14 text-overline text-center':
+                'bg-brand text-white text-overline text-center':
                   props.row.isTotalBalance,
               }"
             >
-              <div
-                :class="{
-                  'bg-purple-13 text-white text-overline text-center':
-                    props.row.isSubTotalPV,
-                  'bg-purple-9 text-white text-overline text-center':
-                    props.row.isTotalPV,
-                  'bg-lime-10 text-white text-overline text-center':
-                    props.row.isTotalCS || props.row.isPT,
-                  'bg-brown text-white text-overline text-center':
-                    props.row.isTotalPT,
-                  'bg-light-green-14 text-overline text-center':
-                    props.row.isTotalBalance,
-                }"
-              ></div>
               {{ props.row.total_pasivo }}
             </q-td>
           </q-tr>
@@ -291,9 +281,6 @@ function closePopUp() {
 
 function validarInput(value) {
   const regex = /^[0-9]*$/;
-  console.log(value);
-  errorCalories.value = false;
-  errorMessageCalories.value = "";
   if (!regex.test(value)) {
     errorCalories.value = true;
     errorMessageCalories.value =
@@ -326,13 +313,9 @@ function close() {
 
 function setTotalActivoCorriente(cuentas) {
   let newTotalActivoCorriente = 0;
-  console.log("cuentas");
-  console.log(cuentas);
   for (const index in cuentas) {
     newTotalActivoCorriente += parseFloat(cuentas[index].sub_activo);
   }
-  console.log("nuevo total:  ", newTotalActivoCorriente);
-  console.log(rowTotaclActivoCorriente);
   rows.value[rowTotaclActivoCorriente].total_activo =
     newTotalActivoCorriente.toFixed(2);
 
@@ -452,7 +435,7 @@ watch(
       rows.value[index].sub_activo = monto;
       rows.value[index].isAC = true;
       rows.value[index].typeIzq = "AC";
-      totalActivoCorriente += monto;
+      totalActivoCorriente += parseFloat(monto.toFixed(2));
       index += 1;
     }
     rowTotaclActivoCorriente = index;
@@ -470,7 +453,7 @@ watch(
       rows.value[index].sub_activo = monto;
       rows.value[index].isAC = true;
       rows.value[index].typeIzq = "ANC";
-      totalActivoNoCorriente += monto;
+      totalActivoNoCorriente += parseFloat(monto.toFixed(2));
       index += 1;
     }
     rowTotalActivoNoCorriente = index;
@@ -490,7 +473,7 @@ watch(
       rows.value[index].isPV = true;
       rows.value[index].typeDer = "PC";
       index += 1;
-      totalPasivosCorrientes += monto;
+      totalPasivosCorrientes += parseFloat(monto.toFixed(2));
     }
     rowTotalPasivoCorriente = index;
     rows.value[index].cuentaPasivo = "TOTAL PASIVOS CORRIENTES";
@@ -504,7 +487,7 @@ watch(
     index += 1;
     for (const [cuenta, monto] of val[0].pasivo.pasivo_no_corriente) {
       rows.value[index].cuentaPasivo = cuenta;
-      rows.value[index].sub_pasivo = monto;
+      rows.value[index].sub_pasivo = parseFloat(monto.toFixed(2));
       rows.value[index].isPNC = true;
       rows.value[index].isPV = true;
       rows.value[index].typeDer = "PNC";
@@ -520,9 +503,13 @@ watch(
     index += 1;
     rowTotalPasivos = index;
     rows.value[index].cuentaPasivo = "TOTAL PASIVOS";
+    console.log(
+      totalPasivosCorrientes + " + " + totalPasivosNoCorrientes + " = ",
+      totalPasivosCorrientes + totalPasivosNoCorrientes
+    );
     rows.value[index].total_pasivo =
-      parseFloat(totalPasivosCorrientes.toFixed(2)) +
-      parseFloat(totalPasivosNoCorrientes.toFixed(2));
+      parseFloat(rows.value[rowTotalPasivoCorriente].total_pasivo) +
+      parseFloat(rows.value[rowTotalPasivoNoCorriente].total_pasivo);
     rows.value[index].isTotalPV = true;
     index += 2;
 
@@ -535,12 +522,12 @@ watch(
       rows.value[index].isCS = true;
       rows.value[index].typeDer = "CS";
       index += 1;
-      totalCapitalSocial += monto;
+      totalCapitalSocial += parseFloat(monto.toFixed(2));
     }
     rowTotalCapitalSocial = index;
     rows.value[index].cuentaPasivo = "Total Capital Social";
     rows.value[index].isTotalCS = true;
-    rows.value[index].total_pasivo = parseFloat(totalCapitalSocial.toFixed(2));
+    rows.value[index].total_pasivo = totalCapitalSocial;
     index += 1;
     for (const [cuenta, monto] of val[0].patrimonio) {
       if (cuenta !== "sub_capital_social") {
@@ -557,7 +544,7 @@ watch(
     rowTotalPatrimonio = index;
     rows.value[index].cuentaPasivo = "TOTAL PATRIMONIO";
     rows.value[index].isTotalPT = true;
-    rows.value[index].total_pasivo = parseFloat(totalPatrimonio.toFixed(2));
+    rows.value[index].total_pasivo = totalPatrimonio;
     index += 2;
     rowTotalActivos = index;
     rows.value[index].cuentaActivo = "TOTAL ACTIVOS";
@@ -569,9 +556,7 @@ watch(
     rows.value[index].cuentaPasivo = "TOTAL PASIVOS Y PATRIMONIO";
     rows.value[index].isTotalBalance = true;
     rows.value[index].total_pasivo =
-      parseFloat(totalPatrimonio.toFixed(2)) +
-      parseFloat(totalPasivosCorrientes.toFixed(2)) +
-      parseFloat(totalPasivosNoCorrientes.toFixed(2));
+      totalPatrimonio + totalPasivosCorrientes + totalPasivosNoCorrientes;
   }
 );
 watch(rows.value, () => {
@@ -624,6 +609,10 @@ button:hover
   color: white
   box-shadow: 0 0 20px rgba(104, 85, 224, 0.6)
   background-color: rgba(104, 85, 224, 1)
+
+.bg-brand
+    background: #0b032d !important
+
 .my-sticky-header-table
   /* height or max-height is important */
   height: 100%
