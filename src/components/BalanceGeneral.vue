@@ -1,10 +1,6 @@
 <template>
   <div>
-    <q-dialog
-      v-model="showDialog"
-      style="height: 90vh; width: 97vw"
-      class="bg-red"
-    >
+    <q-dialog v-model="showDialog">
       <q-table
         class="my-sticky-header-table"
         :rows="rows"
@@ -14,6 +10,7 @@
         hide-pagination
         dense
         fullscreen
+        scroll-target="body"
       >
         <template v-slot:top>
           <div class="column items-center" style="width: 50%">
@@ -47,6 +44,7 @@
         <template v-slot:body="props">
           <q-tr :props="props">
             <q-td
+              auto-width
               key="cuentaActivo"
               :props="props"
               :class="{
@@ -62,6 +60,7 @@
               {{ props.row.cuentaActivo }}
             </q-td>
             <q-td
+              auto-width
               key="activo"
               :props="props"
               :class="{
@@ -74,18 +73,18 @@
             >
               {{ props.row.sub_activo }}
               <q-popup-edit
-                @save="verificarTipo(props.row.typeIzq)"
+                @save="getDataAcount(props.row.typeIzq, props.row.cuentaActivo)"
                 @hide="closePopUp"
+                @update:model-value="getNewAmount"
+                :validate="validarInput"
                 v-model="props.row.sub_activo"
                 v-slot="scope"
                 buttons
-                :validate="validarInput"
                 label-set="Guardar"
                 label-cancel="Cancelar"
               >
                 <q-input
                   prefix="$"
-                  @update:model-value="scope.validate"
                   v-model="scope.value"
                   dense
                   :error="errorCalories"
@@ -96,6 +95,7 @@
               </q-popup-edit>
             </q-td>
             <q-td
+              auto-width
               key="activoTotal"
               :props="props"
               :class="{
@@ -110,6 +110,7 @@
               {{ props.row.total_activo }}
             </q-td>
             <q-td
+              auto-width
               key="cuentaPasivo"
               :props="props"
               :class="{
@@ -130,6 +131,7 @@
               <div class="text-pre-wrap">{{ props.row.cuentaPasivo }}</div>
             </q-td>
             <q-td
+              auto-width
               key="pasivo"
               :props="props"
               :class="{
@@ -150,22 +152,23 @@
                 :validate="validarInput"
                 label-set="Guardar"
                 label-cancel="Cancelar"
+                @update:model-value="getNewAmount"
                 @hide="closePopUp"
                 @save="
-                  verificarTipo(
+                  getDataAcount(
                     props.row.isPC
                       ? 'PC'
                       : props.row.isPNC
                       ? 'PNC'
                       : props.row.isCS
                       ? 'CS'
-                      : 'PT'
+                      : 'PT',
+                    props.row.cuentaPasivo
                   )
                 "
               >
                 <q-input
                   prefix="$"
-                  @update:model-value="scope.validate"
                   v-model="scope.value"
                   dense
                   :error="errorCalories"
@@ -176,6 +179,7 @@
               </q-popup-edit>
             </q-td>
             <q-td
+              auto-width
               key="pasivoTotal"
               :props="props"
               :class="{
@@ -205,11 +209,14 @@
 
 <script setup>
 import { ref, watch } from "vue";
+import { useCounterStore } from "../stores/estados";
 import useEventsBus from "../eventBus";
 
 const props = defineProps({
   show: Boolean,
 });
+
+const store = useCounterStore();
 const { bus } = useEventsBus();
 const showDialog = ref(props.show);
 let errorCalories = ref(false);
@@ -223,44 +230,36 @@ const columns = [
     name: "cuentaActivo",
     label: "Cuenta",
     align: "left",
-    field: (row) => row.cuentaActivo,
   },
   {
     name: "activo",
     label: "Monto",
     align: "center",
-    field: (row) => row.sub_activo,
-    format: (val) => `$${val}`,
   },
   {
     name: "activoTotal",
     label: "Total",
     align: "center",
-    field: (row) => row.total_activo,
-    format: (val) => `$${val}`,
   },
   {
     name: "cuentaPasivo",
     label: "Cuenta",
     align: "left",
-    field: (row) => row.cuentaPasivo,
   },
   {
     name: "pasivo",
     label: "Monto",
     align: "center",
-    field: (row) => row.sub_pasivo,
-    format: (val) => `$${val}`,
   },
   {
     name: "pasivoTotal",
     label: "Total",
     align: "center",
-    field: (row) => row.total_pasivo,
-    format: (val) => `$${val}`,
   },
 ];
-const typeChanged = ref("");
+let typeChanged = "";
+let acount = "";
+let balance = null;
 let rows = ref([]);
 
 // Indice de fila donde se encuentran las cantidades calculadas
@@ -281,14 +280,14 @@ function closePopUp() {
 
 function validarInput(value) {
   const regex = /^[0-9]*$/;
-  if (!regex.test(value)) {
+  if (!regex.test(parseFloat(value))) {
     errorCalories.value = true;
     errorMessageCalories.value =
       "No se permiten el ingreso de valores no numéricos";
     return false;
   } else {
     if (value.length >= 1) {
-      if (value[0] === "0") {
+      if (value[0] === "0" && value.length >= 2) {
         errorCalories.value = true;
         errorMessageCalories.value =
           "No se permiten valores de 0 a la izquierda";
@@ -331,7 +330,6 @@ function setTotalActivoNoCorriente(cuentas) {
     newTotalActivoNoCorriente.toFixed(2);
 
   setTotalActivos();
-  typeChanged.value = "";
 }
 
 function setTotalActivos() {
@@ -395,14 +393,14 @@ function setTotalPasivoPatrimonio() {
 watch(
   () => bus.value.get("sendBalance"),
   (val) => {
+    balance = val[0];
     let totalActivoCorriente = 0;
     let totalActivoNoCorriente = 0;
     let totalPasivosCorrientes = 0;
     let totalPasivosNoCorrientes = 0;
     let totalPatrimonio = 0;
     let totalCapitalSocial = 0;
-    console.log("valores de las filas   ");
-    console.log(rows.value);
+
     // numero total de cuentas para el lado izquierdo (ACTIVOS)
     const rowsIzq =
       val[0].activo.activo_corriente.size +
@@ -412,7 +410,7 @@ watch(
     const rowsDer =
       val[0].pasivo.pasivo_corriente.size +
       val[0].pasivo.pasivo_no_corriente.size +
-      Object.keys(val[0].patrimonio.get("sub_capital_social")[0]).length +
+      val[0].patrimonio.get("sub_capital_social").size +
       (val[0].patrimonio.size - 1) +
       12;
 
@@ -517,6 +515,7 @@ watch(
     rows.value[index].isHeaderPT = true;
     index += 1;
     for (const [cuenta, monto] of val[0].patrimonio.get("sub_capital_social")) {
+      console.log("si");
       rows.value[index].cuentaPasivo = cuenta;
       rows.value[index].sub_pasivo = monto;
       rows.value[index].isCS = true;
@@ -559,37 +558,42 @@ watch(
       totalPatrimonio + totalPasivosCorrientes + totalPasivosNoCorrientes;
   }
 );
+
 watch(rows.value, () => {
-  console.log("Ha cambiado el balance");
-  if (typeChanged.value === "AC") {
-    console.log("es AC");
+  if (typeChanged === "AC") {
     setTotalActivoCorriente(
       rows.value.filter((cuenta) => cuenta.typeIzq === "AC")
     );
-  } else if (typeChanged.value === "ANC") {
+  } else if (typeChanged === "ANC") {
     setTotalActivoNoCorriente(
       rows.value.filter((cuenta) => cuenta.typeIzq === "ANC")
     );
-  } else if (typeChanged.value === "PC") {
+  } else if (typeChanged === "PC") {
     setTotalPasivoCorriente(
       rows.value.filter((cuenta) => cuenta.typeDer === "PC")
     );
-  } else if (typeChanged.value === "PNC") {
+  } else if (typeChanged === "PNC") {
     setTotalPasivoNoCorriente(
       rows.value.filter((cuenta) => cuenta.typeDer === "PNC")
     );
-  } else if (typeChanged.value === "CS") {
+  } else if (typeChanged === "CS") {
     setTotalCapitalSocial(
       rows.value.filter((cuenta) => cuenta.typeDer === "CS")
     );
-  } else if (typeChanged.value === "PT") {
+  } else if (typeChanged === "PT") {
     set;
   }
 });
-function verificarTipo(cuenta) {
-  console.log("verificando.....");
-  typeChanged.value = cuenta;
-  console.log(cuenta);
+
+// Obtenemos la cuenta y el tipo de cuenta modificada desde el popup edit
+function getDataAcount(typeAcount, acountChanged) {
+  typeChanged = typeAcount;
+  acount = acountChanged;
+}
+
+// Obtenemos el nuevo monto ingresado en el popup edit
+function getNewAmount(value) {
+  store.updateBalance(balance, acount, parseFloat(value));
 }
 </script>
 
