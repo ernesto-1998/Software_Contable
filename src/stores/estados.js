@@ -65,10 +65,10 @@ export const useCounterStore = defineStore("estados", {
         patrimonio: new Map([
           [
             "sub_capital_social",
-            [
+            new Map([
               ["Capital social mínimo", 9_000_000.0],
               ["Capital social variable", 3_282_292.0],
-            ],
+            ]),
           ],
           ["Superávit por Revaluación de Activos", 8_731_073.79],
           ["Superávit Realizado", 11_394_056.55],
@@ -144,10 +144,10 @@ export const useCounterStore = defineStore("estados", {
         patrimonio: new Map([
           [
             "sub_capital_social",
-            [
+            new Map([
               ["Capital social mínimo", 9_000_000.0],
               ["Capital social variable", 3_282_292.0],
-            ],
+            ]),
           ],
           ["Superávit por Revaluación de Activos", 19_123_878.37],
           ["Superávit Realizado", 12_869_754.42],
@@ -221,10 +221,10 @@ export const useCounterStore = defineStore("estados", {
         patrimonio: new Map([
           [
             "sub_capital_social",
-            [
+            new Map([
               ["Capital social mínimo", 9_000_000.0],
               ["Capital social variable", 3_282_292.0],
-            ],
+            ]),
           ],
           ["Superávit por Revaluación de Activos", 0.0],
           ["Superávit Realizado", 0.0],
@@ -295,10 +295,10 @@ export const useCounterStore = defineStore("estados", {
         patrimonio: new Map([
           [
             "sub_capital_social",
-            [
+            new Map([
               ["Capital social mínimo", 9_000_000.0],
               ["Capital social variable", 3_282_292.0],
-            ],
+            ]),
           ],
           ["Ganancias Pérdidas actuariales", -1_509_758.69],
           ["Reserva Legal", 7_018_452.57],
@@ -363,10 +363,10 @@ export const useCounterStore = defineStore("estados", {
         patrimonio: new Map([
           [
             "sub_capital_social",
-            [
+            new Map([
               ["Capital social mínimo", 9_000_000.0],
               ["Capital social variable", 3_282_292.0],
-            ],
+            ]),
           ],
           ["Ganancias Pérdidas actuariales", -1_127_769.52],
           ["Reserva Legal", 7_018_452.57],
@@ -563,8 +563,31 @@ export const useCounterStore = defineStore("estados", {
     },
   },
   actions: {
-    increment() {
-      this.counter++;
+    updateBalance(balance, cuenta, newAmount) {
+      // revisanddo en los activos
+      for (const [typeCuenta, value] of Object.entries(balance.activo)) {
+        if (value.has(cuenta)) {
+          value.set(cuenta, newAmount);
+        }
+      }
+
+      // revisando en los pasivos
+      for (const [typeCuenta, value] of Object.entries(balance.pasivo)) {
+        if (value.has(cuenta)) {
+          value.set(cuenta, newAmount);
+        }
+      }
+
+      // revisando en el patrimonio
+      for (const [typeCuenta, value] of balance.patrimonio) {
+        if (typeCuenta === "sub_capital_social") {
+          for (const [subCuenta, valueSubCuenta] of value) {
+            if (subCuenta === cuenta) {
+              value.set(cuenta, newAmount);
+            }
+          }
+        }
+      }
     },
   },
 });
