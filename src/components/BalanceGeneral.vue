@@ -13,11 +13,33 @@
         scroll-target="body"
       >
         <template v-slot:top>
+          <div
+            class="column items-center text-white text-subtitle1"
+            style="width: 100%"
+          >
+            DISTRIBUIDORA DE ELECTRICIDAD DEL SUR, S.A DE C.V.
+          </div>
+          <div
+            class="column items-center text-white text-caption"
+            style="width: 100%"
+          >
+            BALANCE GENERAL DEL 1 DE ENERO AL 30 DE JUNIO DE {{ year }}
+          </div>
+          <div
+            class="column items-center text-white text-caption text-weight-light"
+            style="width: 100%"
+          >
+            (Cifras Expresadas en US Dólares)
+          </div>
           <div class="column items-center" style="width: 50%">
-            <div class="col text-white text-h5">Activo</div>
+            <div class="col text-white text-subtitle1 text-weight-medium">
+              Activo
+            </div>
           </div>
           <div class="column items-center" style="width: 45%">
-            <div class="col text-white text-h5">Pasivo + Capital</div>
+            <div class="col text-white text-subtitle1 text-weight-medium">
+              Pasivo y Patrimonio
+            </div>
           </div>
           <q-btn
             color="white"
@@ -221,6 +243,7 @@ const { bus } = useEventsBus();
 const showDialog = ref(props.show);
 let errorCalories = ref(false);
 let errorMessageCalories = ref("");
+const year = ref("");
 const initialPagination = ref({
   rowsNumber: 10,
 });
@@ -279,28 +302,27 @@ function closePopUp() {
 }
 
 function validarInput(value) {
-  const regex = /^[0-9]*$/;
-  if (!regex.test(parseFloat(value))) {
+  if (isNaN(value)) {
     errorCalories.value = true;
     errorMessageCalories.value =
       "No se permiten el ingreso de valores no numéricos";
     return false;
   } else {
-    if (value.length >= 1) {
-      if (value[0] === "0" && value.length >= 2) {
+    if (value.length >= 2) {
+      if (value[0] === "0" && value[1] !== ".") {
         errorCalories.value = true;
         errorMessageCalories.value =
           "No se permiten valores de 0 a la izquierda";
         return false;
-      } else {
-        errorCalories.value = false;
-        errorMessageCalories.value = "";
-        return true;
       }
     } else if (value.length === 0) {
       errorCalories.value = true;
       errorMessageCalories.value = "Ingrese valores para poder modificar";
       return false;
+    } else {
+      errorCalories.value = false;
+      errorMessageCalories.value = "";
+      return true;
     }
   }
 }
@@ -394,6 +416,7 @@ watch(
   () => bus.value.get("sendBalance"),
   (val) => {
     balance = val[0];
+    year.value = balance.año;
     let totalActivoCorriente = 0;
     let totalActivoNoCorriente = 0;
     let totalPasivosCorrientes = 0;

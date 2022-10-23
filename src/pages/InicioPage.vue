@@ -42,7 +42,7 @@
 
           <q-separator spaced inset />
 
-          <q-item>
+          <q-item clickable @click="showEstado">
             <q-item-section>
               <q-item-label>Estado de Resultados</q-item-label>
               <q-item-label caption>Al 30 de Junio de {{ year }}.</q-item-label>
@@ -53,7 +53,8 @@
         </q-list>
       </div>
     </div>
-    <balanceDialog :show="computedShow" />
+    <balanceDialog :show="computedShowBalance" />
+    <estadoDialog :show="computedShowEstado" />
   </div>
 </template>
 
@@ -61,6 +62,7 @@
 import { ref, watch, computed } from "vue";
 import { useCounterStore } from "../stores/estados";
 import balanceDialog from "../components/BalanceGeneral.vue";
+import estadoDialog from "../components/EstadoResultados.vue";
 import useEventsBus from "../eventBus";
 
 // DATA
@@ -68,16 +70,18 @@ const { emit } = useEventsBus();
 const store = useCounterStore();
 const showList = ref(false);
 const showBalanceDialog = ref(false);
+const showEstadoDialog = ref(false);
 const year = ref(null);
 const options = ["2018", "2019", "2020", "2021", "2022"];
-let balance = null;
 
 // METHODS
 function showBalance() {
   showBalanceDialog.value = true;
-  console.log("enviando el balance del año ", year.value);
-  balance = store.getBalanceGeneralByYear(parseInt(year.value));
-  emit("sendBalance", balance);
+  emit("sendBalance", store.getBalanceGeneralByYear(parseInt(year.value)));
+}
+function showEstado() {
+  showEstadoDialog.value = true;
+  emit("sendEstado", store.getEstadoByYear(parseInt(year.value)));
 }
 
 function scrollInto(elementId) {
@@ -85,8 +89,13 @@ function scrollInto(elementId) {
   section.scrollIntoView({ behavior: "smooth" });
 }
 
-const computedShow = computed(() => {
+// Computed
+const computedShowBalance = computed(() => {
   return showBalanceDialog;
+});
+
+const computedShowEstado = computed(() => {
+  return showEstadoDialog;
 });
 
 // WATCHS
