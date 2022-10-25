@@ -15,8 +15,9 @@
 import { ref } from "vue";
 
 const props = defineProps({
-  columns: Array,
-  rows: Array
+    // title: String,
+    columns: Array,
+    rows: Array
 })
 
 // const columns = [
