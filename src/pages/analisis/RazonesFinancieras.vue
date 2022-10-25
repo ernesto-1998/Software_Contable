@@ -5,8 +5,10 @@
                 <label>Razones Financieras</label>
             </div>
             <div class="periodo-container">
-                <label>Periodos: </label>
+                <label>Periodo 1: </label>
                 <q-select filled v-model="model" :options="periods" label="Periodo" />
+                <label>Periodo 2: </label>
+                <q-select filled v-model="model2" :options="periods2" label="Periodo" />
             </div>
         </div>  
         <div class="razones-container bg-positive">
@@ -22,12 +24,15 @@ onBeforeMount(() => {
     const tamanio = input.balance_general.length;
     for(let i = 0; i < tamanio; i++){
         periods.push(input.balance_general[i].año);
+        periods2.push(input.balance_general[i].año);
     }
 })
 
 const input = useCounterStore();
 let model = ref(null);
+let model2 = ref(null);
 let periods = [];
+let periods2 = [];
 </script>
 
 <style>
@@ -48,7 +53,8 @@ let periods = [];
 
 .periodo-container {
     display: grid;
-    grid-template-columns: 100px 250px;
+    grid-template-columns: 90px 250px 90px 250px;
+    gap: 10px;
     align-items: center;
     margin-top: 1.5rem;
 }
