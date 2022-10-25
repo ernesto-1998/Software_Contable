@@ -11,7 +11,7 @@
                 <q-select filled v-model="model2" :options="periods2" label="Periodo" />
             </div>
             <div class="button-container">
-                <button class="btn-activar">
+                <button class="btn-activar" @click="activarRazonesLiquidez(2018)">
                     Activar
                 </button>
             </div>
@@ -25,6 +25,7 @@
 import { ref, onBeforeMount } from "vue";
 import { useCounterStore } from "stores/estados";
 import RazonesLiquidez from "components/RazonesFinancieras/RazonesLiquidez.vue";
+import { razones_liquidez } from "../../utils/razones.js";
 
 onBeforeMount(() => {
     const tamanio = input.balance_general.length;
@@ -81,8 +82,86 @@ const rows = [
   },
 ]
 
+const obtenerTotales = (año) => {
+    let balance = input.getBalanceGeneralByYear(año);
+    let estado = input.getEstadoByYear(año);
+
+    // Totales de Activo Balance General
+
+    let totalActivoCorriente = 0;
+    balance.activo.activo_corriente.forEach(value => {
+        totalActivoCorriente += value;
+    });
+
+    let totalActivoNoCorriente = 0;
+    balance.activo.activo_no_corriente.forEach(value => {
+        totalActivoNoCorriente += value;
+    });
+
+    let totalActivo = totalActivoCorriente + totalActivoNoCorriente;
+
+    // Totales de Pasivo Balance General
+
+    let totalPasivoCorriente = 0;
+    balance.pasivo.pasivo_corriente.forEach(value => {
+        totalPasivoCorriente += value;
+    });
+
+    let totalPasivoNoCorriente = 0;
+    balance.pasivo.pasivo_no_corriente.forEach(value => {
+        totalPasivoNoCorriente += value;
+    });
+
+    let totalPasivo = totalPasivoCorriente + totalPasivoNoCorriente;
+
+    // Total Patrimonio Balance
+
+    let totalCapitalSocial = 0;
+    balance.patrimonio.get("sub_capital_social").forEach(value => {
+        totalCapitalSocial += value;
+    })
+
+    let totalPatrimonio = 0;
+    const patrimonioArray = Array.from(balance.patrimonio.values());
+    for(let val = 1; val < patrimonioArray.length; val++){
+        totalPatrimonio += patrimonioArray[val];
+    }
+    totalPatrimonio = totalPatrimonio + totalCapitalSocial;
+
+    // Inicio del Estado
+
+    // Fin del Estado
+
+    return {
+        balance: {
+            totalActivo,
+            totalActivoCorriente,
+            totalActivoNoCorriente,
+            totalPasivo,
+            totalPasivoCorriente,
+            totalPasivoNoCorriente,
+            totalCapitalSocial,
+            totalPatrimonio       
+        }
+    }
+}
+
 const activarRazones = () => {
-    
+
+}
+
+const activarRazonesLiquidez = (año) => {
+    const totales = obtenerTotales(año);
+    const balance = input.getBalanceGeneralByYear(año);
+    const inventarios = balance.activo.activo_corriente.get("Inventarios");
+    const activo_corriente = totales.balance.totalActivoCorriente;
+    const pasivo_corriente = totales.balance.totalPasivoCorriente;
+
+    const razon_circulante = razones_liquidez.razon_circulante(activo_corriente, pasivo_corriente);
+    const razon_rapida = razones_liquidez.razon_rapida(activo_corriente, inventarios, pasivo_corriente);
+    const capital_trabajo = razones_liquidez.capital_trabajo(activo_corriente, pasivo_corriente);
+
+    console.log(razon_circulante, razon_rapida, capital_trabajo);
 }
 
 </script>
@@ -120,7 +199,7 @@ const activarRazones = () => {
     margin: 1.7rem 2.5rem;
     padding: 1rem;
     border-radius: 16px;
-    height: 350px;
+    /* height: 350px; */
 }
 
 .button-container {
