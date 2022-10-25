@@ -12,6 +12,11 @@ const routes = [
   },
 
   {
+    path: "/tabla",
+    component: () => import("components/RazonesFinancieras/RazonesLiquidez.vue"),
+  },
+
+  {
     path: "/analisis",
     component: () => import("layouts/GeneralLayout.vue"),
     children: [
