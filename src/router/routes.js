@@ -13,7 +13,7 @@ const routes = [
 
   {
     path: "/tabla",
-    component: () => import("components/RazonesFinancieras/RazonesLiquidez.vue"),
+    component: () => import("src/components/RazonesFinancieras/TablaRazones.vue"),
   },
 
   {

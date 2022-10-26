@@ -6,25 +6,25 @@
             </div>
             <div class="periodo-container">
                 <label>Periodo 1: </label>
-                <q-select filled v-model="model" :options="periods" label="Periodo" />
+                <q-select filled v-model="año" :options="periods" label="Periodo" />
                 <label>Periodo 2: </label>
-                <q-select filled v-model="model2" :options="periods2" label="Periodo" />
+                <q-select filled v-model="año2" :options="periods2" label="Periodo" />
             </div>
             <div class="button-container">
-                <button class="btn-activar" @click="activarRazonesLiquidez(2018)">
+                <button class="btn-activar" @click="activarRazones(año, año2)">
                     Activar
                 </button>
             </div>
         </div>  
-        <div class="razones-container bg-positive">
-            <RazonesLiquidez :columns="columns" :rows="rows"/>
+        <div class="razones-container bg-positive" v-if="columns.length !== 0">
+            <RazonesLiquidez :columns="columns" :rows="rows" :title="title"/>
         </div>      
     </div>
 </template>
 <script setup>
 import { ref, onBeforeMount } from "vue";
 import { useCounterStore } from "stores/estados";
-import RazonesLiquidez from "components/RazonesFinancieras/RazonesLiquidez.vue";
+import RazonesLiquidez from "src/components/RazonesFinancieras/TablaRazones.vue";
 import { razones_liquidez } from "../../utils/razones.js";
 import { obtenerTotalesBalance, obtenerTotalesEstado } from "../../utils/totales.js"
 
@@ -37,57 +37,47 @@ onBeforeMount(() => {
 })
 
 const input = useCounterStore();
-let model = ref(null);
-let model2 = ref(null);
+let año = ref(null);
+let año2 = ref(null);
 let periods = [];
 let periods2 = [];
+let title = ref("");
 
-const columns = [
-  {
-    name: 'name',
-    required: true,
-    label: 'Dessert (100g serving)',
-    align: 'left',
-    field: row => row.name,
-    format: val => `${val}`,
-  },
-  { name: 'calories', align: 'center', label: 'Calories', field: 'calories' },
-  { name: 'fat', label: 'Fat (g)', field: 'fat' },
-  { name: 'carbs', label: 'Carbs (g)', field: 'carbs' },
-  { name: 'protein', label: 'Protein (g)', field: 'protein' },
-  { name: 'sodium', label: 'Sodium (mg)', field: 'sodium' },
-  { name: 'calcium', label: 'Calcium (%)', field: 'calcium' },
-  { name: 'iron', label: 'Iron (%)', field: 'iron' }
-]
+let columns = ref([
+//   {
+//     name: 'name',
+//     required: true,
+//     label: 'Dessert (100g serving)',
+//     align: 'left',
+//     field: row => row.name,
+//     format: val => `${val}`,
+//   },
+//   { name: 'calories', align: 'center', label: 'Calories', field: 'calories' },
+]);
 
-const rows = [
-  {
-    name: 'Frozen Yogurt',
-    calories: 159,
-    fat: 6.0,
-    carbs: 24,
-    protein: 4.0,
-    sodium: 87,
-    calcium: '14%',
-    iron: '1%'
-  },
-  {
-    name: 'Ice cream sandwich',
-    calories: 237,
-    fat: 9.0,
-    carbs: 37,
-    protein: 4.3,
-    sodium: 129,
-    calcium: '8%',
-    iron: '1%'
-  },
-]
+let rows = ref([
+//   {
+//     name: 'Frozen Yogurt',
+//     calories: 159,
+//     fat: 6.0,
+//     carbs: 24,
+//     protein: 4.0,
+//     sodium: 87,
+//     calcium: '14%',
+//     iron: '1%'
+//   },
+]);
 
-const activarRazones = () => {
-
+const activarRazones = (año, año2) => {
+    console.log("Entro")
+    activarRazonesLiquidez(año);
 }
 
 const activarRazonesLiquidez = (año) => {
+    console.log("Entro2")
+    title.value = "Razones de Liquidez";
+    const names = ["Año", "Razón Circulante", "Razón Rápida", "Capital de Trabajo", "ROA", "ROE", "ROS"]
+
     const totalesBalance = obtenerTotalesBalance(año);
     const totalesEstado = obtenerTotalesEstado(año);
     const balance = input.getBalanceGeneralByYear(año);
@@ -112,6 +102,32 @@ const activarRazonesLiquidez = (año) => {
     const roa = razones_liquidez.roa(utilidad_neta, activo);
     const roe = razones_liquidez.roe(utilidad_neta, patrimonio);
     const ros = razones_liquidez.ros(utilidad_neta, ventas);
+
+    names.map(val => {
+        columns.value.push({
+            name: val.replace(/\s+/g, ''), 
+            align: 'center', 
+            label: val, 
+            field: val 
+        });
+    });
+
+    console.log(columns.value)
+
+    names.map(val => {
+        rows.value.push({
+
+            año: '2018',
+            RazonCirculante: 1.02,
+            RazonRapida: 0.20,
+            CapitaldeTrabajo: 1.65,
+            ROA: 1.0,
+            ROE: 1.05,
+            
+        })
+    })
+
+    console.log(columns.value)
 
     
 }

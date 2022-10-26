@@ -3,7 +3,7 @@
         <div class="q-pa-md">
             <q-table
             class="my-sticky-column-table"
-            title="Treats"
+            :title="props.title"
             :rows="props.rows"
             :columns="props.colums"
             row-key="name"
@@ -15,7 +15,7 @@
 import { ref } from "vue";
 
 const props = defineProps({
-    // title: String,
+    title: String,
     columns: Array,
     rows: Array
 })
