@@ -420,7 +420,7 @@ export const useCounterStore = defineStore("estados", {
           ["Ingresos por transacciones en el MRS", 5_804_280.87],
           ["Otros Productos de Operacion", 5_497_749.86],
         ]),
-        sub_costos_de_energia: new Map([["Compra de energía", 125_321_771.49]]),
+        sub_costos_de_energia: new Map([["Compra de energia", 125_321_771.49]]),
         sub_costos_y_gastos_de_operacion: new Map([
           ["Gastos de Operacion y Mantenimiento", 9_546_247.84],
           ["Gastos de Comercializacion", 4_820_691.17],
