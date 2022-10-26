@@ -17,7 +17,7 @@
             </div>
         </div>  
         <div class="razones-container bg-positive" v-if="columns.length !== 0">
-            <RazonesLiquidez :columns="columns" :rows="rows" :title="title"/>
+            <RazonesLiquidez :columns="columns" :rows="rows" :title="title" :secondRow="secondRow"/>
         </div>      
     </div>
 </template>
@@ -42,41 +42,23 @@ let año2 = ref(null);
 let periods = [];
 let periods2 = [];
 let title = ref("");
+let secondRow = ref(false);
 
-let columns = ref([
-//   {
-//     name: 'name',
-//     required: true,
-//     label: 'Dessert (100g serving)',
-//     align: 'left',
-//     field: row => row.name,
-//     format: val => `${val}`,
-//   },
-//   { name: 'calories', align: 'center', label: 'Calories', field: 'calories' },
-]);
-
-let rows = ref([
-//   {
-//     name: 'Frozen Yogurt',
-//     calories: 159,
-//     fat: 6.0,
-//     carbs: 24,
-//     protein: 4.0,
-//     sodium: 87,
-//     calcium: '14%',
-//     iron: '1%'
-//   },
-]);
+let columns = ref([]);
+let rows = ref([]);
 
 const activarRazones = (año, año2) => {
-    console.log("Entro")
-    activarRazonesLiquidez(año);
+    if(año === null && año2 === null) alert("Debes escoger un año de periodo");
+    else if(año === null) alert("Debes escoger el primer periodo primero");
+    else if(año !== null && año2 !== null) {
+        secondRow.value = true;
+        activarRazonesLiquidez(año);
+        activarRazonesLiquidez(año2);
+    }
 }
 
 const activarRazonesLiquidez = (año) => {
-    console.log("Entro2")
     title.value = "Razones de Liquidez";
-    const names = ["Año", "Razón Circulante", "Razón Rápida", "Capital de Trabajo", "ROA", "ROE", "ROS"]
 
     const totalesBalance = obtenerTotalesBalance(año);
     const totalesEstado = obtenerTotalesEstado(año);
@@ -103,31 +85,8 @@ const activarRazonesLiquidez = (año) => {
     const roe = razones_liquidez.roe(utilidad_neta, patrimonio);
     const ros = razones_liquidez.ros(utilidad_neta, ventas);
 
-    names.map(val => {
-        columns.value.push({
-            name: val.replace(/\s+/g, ''), 
-            align: 'center', 
-            label: val, 
-            field: val 
-        });
-    });
-
-    console.log(columns.value)
-
-    names.map(val => {
-        rows.value.push({
-
-            año: '2018',
-            RazonCirculante: 1.02,
-            RazonRapida: 0.20,
-            CapitaldeTrabajo: 1.65,
-            ROA: 1.0,
-            ROE: 1.05,
-            
-        })
-    })
-
-    console.log(columns.value)
+    columns.value = ["Año", "Razón Circulante", "Razón Rápida", "Capital de Trabajo", "ROA", "ROE", "ROS"];
+    rows.value = [año ,razon_circulante, razon_rapida, capital_trabajo, roa, roe, ros];
 
     
 }
