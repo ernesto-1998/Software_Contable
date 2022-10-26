@@ -15,7 +15,7 @@
           </td>
         </tr>
         <tr v-if="props.secondRow === true" class="table-rows_container">
-          <td class="table-rows" v-for="(item, index) in props.rows" :key="index">
+          <td class="table-rows" v-for="(item, index) in props.rows2" :key="index">
             <label> {{ item }} </label>
           </td>
         </tr>
@@ -29,6 +29,7 @@ const props = defineProps({
     title: String,
     columns: Array,
     rows: Array,
+    rows2: Array,
     secondRow: Boolean
 })
 

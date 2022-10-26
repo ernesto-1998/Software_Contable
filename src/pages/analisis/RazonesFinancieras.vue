@@ -17,7 +17,7 @@
             </div>
         </div>  
         <div class="razones-container bg-positive" v-if="columns.length !== 0">
-            <RazonesLiquidez :columns="columns" :rows="rows" :title="title" :secondRow="secondRow"/>
+            <RazonesLiquidez :columns="columns" :rows="rows" :rows2="rows2" :title="title" :secondRow="secondRow"/>
         </div>      
     </div>
 </template>
@@ -43,9 +43,11 @@ let periods = [];
 let periods2 = [];
 let title = ref("");
 let secondRow = ref(false);
+let contador = 0;
 
 let columns = ref([]);
 let rows = ref([]);
+let rows2 = ref([]);
 
 const activarRazones = (año, año2) => {
     if(año === null && año2 === null) alert("Debes escoger un año de periodo");
@@ -54,6 +56,10 @@ const activarRazones = (año, año2) => {
         secondRow.value = true;
         activarRazonesLiquidez(año);
         activarRazonesLiquidez(año2);
+        contador = 0;
+    }
+    else if(año !== null && año2 === null) {
+        activarRazonesLiquidez(año);
     }
 }
 
@@ -86,8 +92,13 @@ const activarRazonesLiquidez = (año) => {
     const ros = razones_liquidez.ros(utilidad_neta, ventas);
 
     columns.value = ["Año", "Razón Circulante", "Razón Rápida", "Capital de Trabajo", "ROA", "ROE", "ROS"];
-    rows.value = [año ,razon_circulante, razon_rapida, capital_trabajo, roa, roe, ros];
-
+    if(contador === 1){
+        rows2.value = [año ,razon_circulante, razon_rapida, capital_trabajo, roa, roe, ros];
+    }
+    else if(contador === 0) {
+        rows.value = [año ,razon_circulante, razon_rapida, capital_trabajo, roa, roe, ros];
+        contador++;
+    } 
     
 }
 
