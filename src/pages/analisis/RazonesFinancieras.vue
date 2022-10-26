@@ -51,6 +51,7 @@ let rows2 = ref([]);
 
 const activarRazones = (año, año2) => {
     if(año === null && año2 === null) alert("Debes escoger un año de periodo");
+    else if(año === año2) alert("No puedes escoger el mismo periodo 2 veces")
     else if(año === null) alert("Debes escoger el primer periodo primero");
     else if(año !== null && año2 !== null) {
         secondRow.value = true;
@@ -64,8 +65,20 @@ const activarRazones = (año, año2) => {
 }
 
 const activarRazonesLiquidez = (año) => {
+    const datos = obetenerDatosRazones(año);
     title.value = "Razones de Liquidez";
 
+    columns.value = ["Año", "Razón Circulante", "Razón Rápida", "Capital de Trabajo", "ROA", "ROE", "ROS"];
+    if(contador === 1){
+        rows2.value = [año , datos.razon_circulante, datos.razon_rapida, datos.capital_trabajo, datos.roa, datos.roe, datos.ros];
+    }
+    else if(contador === 0) {
+        rows.value = [año , datos.razon_circulante, datos.razon_rapida, datos.capital_trabajo, datos.roa, datos.roe, datos.ros];
+        contador++;
+    }   
+}
+
+const obetenerDatosRazones = (año) => {
     const totalesBalance = obtenerTotalesBalance(año);
     const totalesEstado = obtenerTotalesEstado(año);
     const balance = input.getBalanceGeneralByYear(año);
@@ -83,23 +96,33 @@ const activarRazonesLiquidez = (año) => {
     const utilidad_neta = totalesEstado.utilidadNeta;
     const ventas = totalesEstado.ProductosOperacion;
 
-    const razon_circulante = razones_liquidez.razon_circulante(activo_corriente, pasivo_corriente);
-    const razon_rapida = razones_liquidez.razon_rapida(activo_corriente, inventarios, pasivo_corriente);
-    const capital_trabajo = razones_liquidez.capital_trabajo(activo_corriente, pasivo_corriente);
+    const razon_circulante = razones_liquidez.razon_circulante(activo_corriente, pasivo_corriente).toFixed(2);
+    const razon_rapida = razones_liquidez.razon_rapida(activo_corriente, inventarios, pasivo_corriente).toFixed(2);
+    const capital_trabajo = razones_liquidez.capital_trabajo(activo_corriente, pasivo_corriente).toFixed(2);
 
-    const roa = razones_liquidez.roa(utilidad_neta, activo);
-    const roe = razones_liquidez.roe(utilidad_neta, patrimonio);
-    const ros = razones_liquidez.ros(utilidad_neta, ventas);
+    const roa = razones_liquidez.roa(utilidad_neta, activo).toFixed(2);
+    const roe = razones_liquidez.roe(utilidad_neta, patrimonio).toFixed(2);
+    const ros = razones_liquidez.ros(utilidad_neta, ventas).toFixed(2);
 
-    columns.value = ["Año", "Razón Circulante", "Razón Rápida", "Capital de Trabajo", "ROA", "ROE", "ROS"];
-    if(contador === 1){
-        rows2.value = [año ,razon_circulante, razon_rapida, capital_trabajo, roa, roe, ros];
+    return {
+        activo,
+        pasivo,
+        activo_corriente,
+        pasivo_corriente,
+        patrimonio,
+        inventarios,
+        utilidad_bruta,
+        utilidad_operativa,
+        utilidad_antes_impuestos,
+        utilidad_neta,
+        ventas,
+        razon_circulante,
+        razon_rapida,
+        capital_trabajo,
+        roa,
+        roe,
+        ros
     }
-    else if(contador === 0) {
-        rows.value = [año ,razon_circulante, razon_rapida, capital_trabajo, roa, roe, ros];
-        contador++;
-    } 
-    
 }
 
 </script>
