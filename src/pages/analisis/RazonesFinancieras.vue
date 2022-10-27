@@ -5,13 +5,20 @@
                 <label>Razones Financieras</label>
             </div>
             <div class="periodo-container">
-                <label>Periodo 1: </label>
-                <q-select filled v-model="año" :options="periods" label="Periodo" />
-                <label>Periodo 2: </label>
-                <q-select filled v-model="año2" :options="periods2" label="Periodo" />
+                <label>Periodo: </label>
+                <q-select
+                    filled
+                    v-model="año"
+                    multiple
+                    :options="periods"
+                    label="periodo"
+                    style="width: 250px"
+                />
+                <label>Razones: </label>
+                <q-select filled v-model="razon" :options="razones" label="Razon" />
             </div>
             <div class="button-container">
-                <button class="btn-activar" @click="activarRazones(año, año2)">
+                <button class="btn-activar" @click="activarRazones(año, razon)">
                     Activar
                 </button>
             </div>
@@ -32,36 +39,24 @@ onBeforeMount(() => {
     const tamanio = input.balance_general.length;
     for(let i = 0; i < tamanio; i++){
         periods.push(input.balance_general[i].año);
-        periods2.push(input.balance_general[i].año);
     }
 })
 
 const input = useCounterStore();
-let año = ref(null);
-let año2 = ref(null);
+let año = ref([]);
+let razon = ref(null);
 let periods = [];
-let periods2 = [];
+let razones = ["Razones de Liquidez", "Razones de Actividad", "Razones de Deuda", "Razones de Rendimiento", "Razones de Mercado" ];
 let title = ref("");
 let secondRow = ref(false);
 let contador = 0;
 
 let columns = ref([]);
 let rows = ref([]);
-let rows2 = ref([]);
 
-const activarRazones = (año, año2) => {
-    if(año === null && año2 === null) alert("Debes escoger un año de periodo");
-    else if(año === año2) alert("No puedes escoger el mismo periodo 2 veces")
-    else if(año === null) alert("Debes escoger el primer periodo primero");
-    else if(año !== null && año2 !== null) {
-        secondRow.value = true;
-        activarRazonesLiquidez(año);
-        activarRazonesLiquidez(año2);
-        contador = 0;
-    }
-    else if(año !== null && año2 === null) {
-        activarRazonesLiquidez(año);
-    }
+const activarRazones = (año, razon) => {
+    if(año.length < 1 || razon === null) return alert("Debe rellenar ambos campos");
+
 }
 
 const activarRazonesLiquidez = (año) => {

@@ -14,8 +14,23 @@
             <label> {{ item }} </label>
           </td>
         </tr>
-        <tr v-if="props.secondRow === true" class="table-rows_container">
-          <td class="table-rows" align="center" v-for="(item, index) in props.rows2" :key="index">
+        <tr v-if="rows.length > 1" class="table-rows_container">
+          <td class="table-rows" align="center" v-for="(item, index) in props.rows[1]" :key="index">
+            <label> {{ item }} </label>
+          </td>
+        </tr>
+        <tr v-if="rows.length > 2" class="table-rows_container">
+          <td class="table-rows" align="center" v-for="(item, index) in props.rows[2]" :key="index">
+            <label> {{ item }} </label>
+          </td>
+        </tr>
+        <tr v-if="rows.length > 3" class="table-rows_container">
+          <td class="table-rows" align="center" v-for="(item, index) in props.rows[3]" :key="index">
+            <label> {{ item }} </label>
+          </td>
+        </tr>
+        <tr v-if="rows.length > 4" class="table-rows_container">
+          <td class="table-rows" align="center" v-for="(item, index) in props.rows[4]" :key="index">
             <label> {{ item }} </label>
           </td>
         </tr>
@@ -28,9 +43,7 @@ import { ref } from "vue";
 const props = defineProps({
     title: String,
     columns: Array,
-    rows: Array,
-    rows2: Array,
-    secondRow: Boolean
+    rows: Array
 })
 
 </script>
