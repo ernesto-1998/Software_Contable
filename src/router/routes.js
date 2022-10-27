@@ -12,11 +12,6 @@ const routes = [
   },
 
   {
-    path: "/tabla",
-    component: () => import("src/components/RazonesFinancieras/TablaRazones.vue"),
-  },
-
-  {
     path: "/analisis",
     component: () => import("layouts/GeneralLayout.vue"),
     children: [

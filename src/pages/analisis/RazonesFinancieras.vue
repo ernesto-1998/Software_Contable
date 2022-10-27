@@ -23,8 +23,8 @@
                 </button>
             </div>
         </div>  
-        <div class="razones-container bg-positive" v-if="columns.length !== 0">
-            <RazonesLiquidez :columns="columns" :rows="rows" :rows2="rows2" :title="title" :secondRow="secondRow"/>
+        <div class="razones-container bg-positive" v-if="rows.length !== 0">
+            <RazonesLiquidez :columns="columns" :rows="rows" :title="razon"/>
         </div>      
     </div>
 </template>
@@ -47,33 +47,28 @@ let año = ref([]);
 let razon = ref(null);
 let periods = [];
 let razones = ["Razones de Liquidez", "Razones de Actividad", "Razones de Deuda", "Razones de Rendimiento", "Razones de Mercado" ];
-let title = ref("");
-let secondRow = ref(false);
-let contador = 0;
 
 let columns = ref([]);
 let rows = ref([]);
 
 const activarRazones = (año, razon) => {
     if(año.length < 1 || razon === null) return alert("Debe rellenar ambos campos");
-
+    limpiarTabla();
+    if(razon === "Razones de Liquidez"){
+        for(let añ of año){
+            activarRazonesLiquidez(añ);
+        }
+    }
 }
 
 const activarRazonesLiquidez = (año) => {
-    const datos = obetenerDatosRazones(año);
-    title.value = "Razones de Liquidez";
-
+    const datos = obtenerDatosRazones(año);
     columns.value = ["Año", "Razón Circulante", "Razón Rápida", "Capital de Trabajo", "ROA", "ROE", "ROS"];
-    if(contador === 1){
-        rows2.value = [año , datos.razon_circulante, datos.razon_rapida, datos.capital_trabajo, datos.roa, datos.roe, datos.ros];
-    }
-    else if(contador === 0) {
-        rows.value = [año , datos.razon_circulante, datos.razon_rapida, datos.capital_trabajo, datos.roa, datos.roe, datos.ros];
-        contador++;
-    }   
+    rows.value.push([año , datos.razon_circulante, datos.razon_rapida, datos.capital_trabajo, datos.roa, datos.roe, datos.ros]);
+ 
 }
 
-const obetenerDatosRazones = (año) => {
+const obtenerDatosRazones = (año) => {
     const totalesBalance = obtenerTotalesBalance(año);
     const totalesEstado = obtenerTotalesEstado(año);
     const balance = input.getBalanceGeneralByYear(año);
@@ -118,6 +113,10 @@ const obetenerDatosRazones = (año) => {
         roe,
         ros
     }
+}
+
+const limpiarTabla = () => {
+    rows.value = [];
 }
 
 </script>

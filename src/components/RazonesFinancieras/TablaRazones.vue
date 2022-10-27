@@ -4,33 +4,33 @@
         <label>{{ props.title }}</label>
       </div>
       <table class="table-container">
-        <tr class="table-titles_container">
-          <th class="table-rows" v-for="(item, index) in props.columns" :key="index">
+        <tr class="table-titles_container bg-secondary">
+          <th class="table-rows table-title" v-for="(item, index) in props.columns" :key="index">
             <label> {{ item }} </label>
           </th>
         </tr>
         <tr class="table-rows_container">
-          <td class="table-rows" align="center" v-for="(item, index) in props.rows" :key="index">
+          <td class="table-rows bg-accent" align="center" v-for="(item, index) in props.rows[0]" :key="index">
             <label> {{ item }} </label>
           </td>
         </tr>
         <tr v-if="rows.length > 1" class="table-rows_container">
-          <td class="table-rows" align="center" v-for="(item, index) in props.rows[1]" :key="index">
+          <td class="table-rows bg-accent" align="center" v-for="(item, index) in props.rows[1]" :key="index">
             <label> {{ item }} </label>
           </td>
         </tr>
         <tr v-if="rows.length > 2" class="table-rows_container">
-          <td class="table-rows" align="center" v-for="(item, index) in props.rows[2]" :key="index">
+          <td class="table-rows bg-accent" align="center" v-for="(item, index) in props.rows[2]" :key="index">
             <label> {{ item }} </label>
           </td>
         </tr>
         <tr v-if="rows.length > 3" class="table-rows_container">
-          <td class="table-rows" align="center" v-for="(item, index) in props.rows[3]" :key="index">
+          <td class="table-rows bg-accent" align="center" v-for="(item, index) in props.rows[3]" :key="index">
             <label> {{ item }} </label>
           </td>
         </tr>
         <tr v-if="rows.length > 4" class="table-rows_container">
-          <td class="table-rows" align="center" v-for="(item, index) in props.rows[4]" :key="index">
+          <td class="table-rows bg-accent" align="center" v-for="(item, index) in props.rows[4]" :key="index">
             <label> {{ item }} </label>
           </td>
         </tr>
@@ -56,6 +56,10 @@ const props = defineProps({
 
 .title-container {
   font-size: 1.5rem;
+}
+
+.table-title {
+  color: var(--table-color);
 }
 
 .table-container {
