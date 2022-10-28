@@ -64,6 +64,8 @@ import { useCounterStore } from "../stores/estados";
 import balanceDialog from "../components/BalanceGeneral.vue";
 import estadoDialog from "../components/EstadoResultados.vue";
 import useEventsBus from "../eventBus";
+import { scroll } from "quasar";
+const { getScrollTarget, setVerticalScrollPosition } = scroll;
 
 // DATA
 const { emit } = useEventsBus();
@@ -84,9 +86,11 @@ function showEstado() {
   emit("sendEstado", store.getEstadoByYear(parseInt(year.value)));
 }
 
-function scrollInto(elementId) {
-  const section = document.getElementById(elementId);
-  section.scrollIntoView({ behavior: "smooth" });
+function scrollInto(el) {
+  const target = getScrollTarget(el);
+  const offset = el.offsetTop;
+  const duration = 1000;
+  setVerticalScrollPosition(target, offset, duration);
 }
 
 // Computed
