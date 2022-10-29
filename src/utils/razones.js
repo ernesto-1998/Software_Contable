@@ -60,15 +60,16 @@ export const razones_actividad = {
 
   rotacion_activo_operacional: function (
     ventas,
-    total_cuentas_por_cobrar,
+    cuentas_por_cobrar,
     inventarios,
     activo_no_corriente,
-    total_depreciacion
+    total_depreciacion,
+    efectivo
   ) {
     return (
       ventas /
       (efectivo +
-        total_cuentas_por_cobrar +
+        cuentas_por_cobrar +
         inventarios +
         activo_no_corriente -
         total_depreciacion)
