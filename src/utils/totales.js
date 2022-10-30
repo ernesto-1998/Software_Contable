@@ -7,7 +7,7 @@ export const obtenerTotalesBalance = (año) => {
     const efectivo = balance.activo.activo_corriente.get("Efectivo y Equivalentes de Efectivo") + (balance.activo.activo_corriente.get("Efectivo Restringido") || 0);
     const cuentas_por_cobrar = balance.activo.activo_corriente.get("Cuentas por Cobrar") + balance.activo.activo_corriente.get("Cuentas por Cobrar Activo Regulatorio") + balance.activo.activo_corriente.get("Cuentas por Cobrar a partes relacionadas");
     const cuentas_por_pagar = (balance.pasivo.pasivo_corriente.get("Cuentas por Pagar Regulatorias") || 0) + balance.pasivo.pasivo_corriente.get("Cuentas por pagar a partes relacionadas") + balance.pasivo.pasivo_corriente.get("Cuentas por Pagar Comerciales") + balance.pasivo.pasivo_corriente.get("Otras cuentas por pagar y Gastos acumulados");
-    const total_depreciacion = (balance.activo.activo_no_corriente.get("Depreciación de Propiedad, Planta y Equipo") || 0) + (balance.activo.activo_no_corriente.get("Depreciación Acumulada de Revaluación PP&E") || 0) + (balance.activo.activo_no_corriente.get("Depreciación Acumulada de Propiedad, Planta y Equipo") || 0)
+    const total_depreciacion = (balance.activo.activo_no_corriente.get("Depreciación Acumulada de Revaluación PP&E") || 0) + (balance.activo.activo_no_corriente.get("Depreciación Acumulada de Propiedad, Planta y Equipo") || 0)
 
     // Totales de Activo Balance General
 

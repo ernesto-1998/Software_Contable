@@ -29,7 +29,7 @@ export const useCounterStore = defineStore("estados", {
               "Depreciación Acumulada de Propiedad, Planta y Equipo",
               -53_942_753.0,
             ],
-            ["Depreciación de Propiedad, Planta y Equipo", 16_159_669.02],
+            ["Revaluación de Propiedad, Planta y Equipo", 16_159_669.02],
             ["Depreciación Acumulada de Revaluación PP&E", -4_751_111.55],
             ["Obras en Proceso", 3_900_433.82],
             ["Bienes Intangibles", 13_817_347.96],

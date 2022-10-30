@@ -136,7 +136,7 @@ const obtenerDatosRazones = (año) => {
     const razon_circulante = razones_liquidez.razon_circulante(activo_corriente, pasivo_corriente).toFixed(2);
     const razon_rapida = razones_liquidez.razon_rapida(activo_corriente, inventarios, pasivo_corriente).toFixed(2);
     const capital_trabajo = razones_liquidez.capital_trabajo(activo_corriente, pasivo_corriente).toFixed(2);
-    const nivel_dependencia = razones_liquidez.nivel_de_dependencia_de_inventarios(pasivo_corriente, efectivo, cuentas_por_cobrar, inventarios);
+    const nivel_dependencia = razones_liquidez.nivel_de_dependencia_de_inventarios(pasivo_corriente, efectivo, cuentas_por_cobrar, inventarios).toFixed(2);
 
     // Razones de Actividad
 
