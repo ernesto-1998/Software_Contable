@@ -94,7 +94,6 @@ onMounted(() => {
           position: "bottom",
         },
         tooltip: {
-          bodyFont: { size: 10, weight: "normal" },
           padding: 3,
           usePointStyle: true,
           callbacks: {
@@ -102,10 +101,7 @@ onMounted(() => {
               return "Periodo: " + props.periodos[0];
             },
             label: (item) => {
-              return item.label + ": $" + item.formattedValue;
-            },
-            footer: () => {
-              return "Porcentaje: " + porcentajeActivoAño1.toFixed(2) + "%";
+              return item.label + ": " + porcentajeActivoAño1.toFixed(2) + "%";
             },
           },
         },
@@ -140,7 +136,6 @@ onMounted(() => {
           position: "bottom",
         },
         tooltip: {
-          bodyFont: { size: 10, weight: "normal" },
           padding: 3,
           usePointStyle: true,
           callbacks: {
@@ -148,10 +143,7 @@ onMounted(() => {
               return "Periodo: " + props.periodos[0];
             },
             label: (item) => {
-              return item.label + ": $" + item.formattedValue;
-            },
-            footer: () => {
-              return "Porcentaje: " + porcentajePasivoAño1.toFixed(2) + "%";
+              return item.label + ": " + porcentajePasivoAño1.toFixed(2) + "%";
             },
           },
         },
@@ -187,7 +179,6 @@ onMounted(() => {
           position: "bottom",
         },
         tooltip: {
-          bodyFont: { size: 10, weight: "normal" },
           padding: 3,
           usePointStyle: true,
           callbacks: {
@@ -195,10 +186,9 @@ onMounted(() => {
               return "Periodo: " + props.periodos[0];
             },
             label: (item) => {
-              return item.label + ": $" + item.formattedValue;
-            },
-            footer: () => {
-              return "Porcentaje: " + porcentajePatrimonioAño1.toFixed(2) + "%";
+              return (
+                item.label + ": " + porcentajePatrimonioAño1.toFixed(2) + "%"
+              );
             },
           },
         },
@@ -233,7 +223,6 @@ onMounted(() => {
           position: "bottom",
         },
         tooltip: {
-          bodyFont: { size: 10, weight: "normal" },
           padding: 3,
           usePointStyle: true,
           callbacks: {
@@ -241,10 +230,7 @@ onMounted(() => {
               return "Periodo: " + props.periodos[1];
             },
             label: (item) => {
-              return item.label + ": $" + item.formattedValue;
-            },
-            footer: () => {
-              return "Porcentaje: " + porcentajeActivoAño2.toFixed(2) + "%";
+              return item.label + ": " + porcentajeActivoAño2.toFixed(2) + "%";
             },
           },
         },
@@ -279,7 +265,6 @@ onMounted(() => {
           position: "bottom",
         },
         tooltip: {
-          bodyFont: { size: 10, weight: "normal" },
           padding: 3,
           usePointStyle: true,
           callbacks: {
@@ -287,10 +272,7 @@ onMounted(() => {
               return "Periodo: " + props.periodos[1];
             },
             label: (item) => {
-              return item.label + ": $" + item.formattedValue;
-            },
-            footer: () => {
-              return "Porcentaje: " + porcentajePasivoAño2.toFixed(2) + "%";
+              return item.label + ": " + porcentajePasivoAño2.toFixed(2) + "%";
             },
           },
         },
@@ -326,7 +308,6 @@ onMounted(() => {
           position: "bottom",
         },
         tooltip: {
-          bodyFont: { size: 10, weight: "normal" },
           padding: 3,
           usePointStyle: true,
           callbacks: {
@@ -334,10 +315,9 @@ onMounted(() => {
               return "Periodo: " + props.periodos[1];
             },
             label: (item) => {
-              return item.label + ": $" + item.formattedValue;
-            },
-            footer: () => {
-              return "Porcentaje: " + porcentajePatrimonioAño2.toFixed(2) + "%";
+              return (
+                item.label + ": " + porcentajePatrimonioAño2.toFixed(2) + "%"
+              );
             },
           },
         },

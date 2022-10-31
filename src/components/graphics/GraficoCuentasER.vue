@@ -16,13 +16,6 @@ const props = defineProps({
 });
 
 let graphicBarras = null;
-const options = [
-  "Activo corriente",
-  "Activo no corriente",
-  "Pasivo corriente",
-  "Pasivo no corriente",
-  "Patrimonio y reservas",
-];
 
 onMounted(() => {
   drawGraphics();
@@ -50,6 +43,7 @@ function drawGraphics() {
             obtenerTotalesEstado(props.periodos[0]).ProductosOperacion,
             obtenerTotalesEstado(props.periodos[0]).CostosEnergia,
             obtenerTotalesEstado(props.periodos[0]).costosYGastosOperacion,
+            obtenerTotalesEstado(props.periodos[0]).gastosFinancieros,
             obtenerTotalesEstado(props.periodos[0]).productosFinancieros,
           ],
           borderColor: "rgb(255, 99, 132)",
@@ -64,6 +58,8 @@ function drawGraphics() {
             obtenerTotalesEstado(props.periodos[1]).ProductosOperacion,
             obtenerTotalesEstado(props.periodos[1]).CostosEnergia,
             obtenerTotalesEstado(props.periodos[1]).costosYGastosOperacion,
+
+            obtenerTotalesEstado(props.periodos[1]).gastosFinancieros,
             obtenerTotalesEstado(props.periodos[1]).productosFinancieros,
           ],
           borderColor: "rgb(75, 192, 192)",
@@ -96,7 +92,7 @@ function drawGraphics() {
 }
 </script>
 
-<style>
+<style scoped>
 .box {
   border: 0px inset rgba(100, 100, 100, 1);
   border-radius: 20px;

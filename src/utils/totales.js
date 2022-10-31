@@ -159,5 +159,7 @@ export const obtenerTotalesEstado = (año) => {
     CostosEnergia,
     costosYGastosOperacion,
     productosFinancieros,
+    gastosFinancieros,
+    impuestos_y_reservas,
   };
 };
