@@ -8,7 +8,7 @@
         <label>Estado Financiero: </label>
         <q-select
           filled
-          v-model="model"
+          v-model="estado"
           :options="options"
           label="Estado Financiero"
         />
@@ -17,27 +17,61 @@
         <label>Periodos: </label>
         <q-select
           filled
-          v-model="model2"
+          v-model="periodo1"
           :options="periods"
-          label="Periodo 1"
+          label="Comparar periodo"
         />
 
         <q-select
           filled
           style="width: 250px"
-          v-model="model3"
+          v-model="periodo2"
           :options="periods"
-          label="Periodo 2"
+          label="Con el periodo"
           class="periodo2"
         />
+      </div>
+      <q-btn
+        color="white"
+        text-color="black"
+        label="Generar"
+        @click="showAnalisis"
+      />
+    </div>
+    <div class="info-container bg-secondary">
+      <div class="row q-gutter-x-lg justify-evenly">
+        <div class="col-md-auto">
+          <GraficoRosquillaBalance
+            v-if="showGraphicsBalance"
+            :periodos="[periodo1, periodo2]"
+          />
+          <GraficoCuentasER
+            v-if="showGraphicsER"
+            :periodos="[periodo1, periodo2]"
+          />
+        </div>
+        <div class="col-md-auto">
+          <GraficoUtilidades
+            v-if="showGraphicsER"
+            :periodos="[periodo1, periodo2]"
+          />
+          <GraficoCuentasBalance
+            v-if="showGraphicsBalance"
+            :periodos="[periodo1, periodo2]"
+          />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount, watch } from "vue";
 import { useCounterStore } from "stores/estados";
+import GraficoRosquillaBalance from "src/components/graphics/GraficoRosquillaBalance.vue";
+import GraficoUtilidades from "src/components/graphics/GraficoUtilidades.vue";
+import GraficoCuentasER from "src/components/graphics/GraficoCuentasER.vue";
+import GraficoCuentasBalance from "src/components/graphics/GraficoCuentasBalance.vue";
 
 onBeforeMount(() => {
   const tamanio = input.balance_general.length;
@@ -47,11 +81,52 @@ onBeforeMount(() => {
 });
 
 const input = useCounterStore();
-let model = ref(null);
+let estado = ref(null);
 let options = ["Balance General", "Estado de Resultados"];
-let model2 = ref(null);
-let model3 = ref(null);
+const showGraphicsBalance = ref(false);
+const showGraphicsER = ref(false);
+let periodo1 = ref(null);
+let periodo2 = ref(null);
 let periods = [];
+
+function showAnalisis() {
+  if (estado.value === "Balance General") {
+    showGraphicsBalance.value = true;
+    showGraphicsER.value = false;
+  } else {
+    showGraphicsBalance.value = false;
+    showGraphicsER.value = true;
+  }
+}
+
+watch(periodo1, () => {
+  if (showGraphicsBalance.value) {
+    showGraphicsBalance.value = false;
+  }
+
+  if (showGraphicsBalance.value) {
+    showGraphicsER.value = false;
+  }
+});
+
+watch(periodo2, () => {
+  if (showGraphicsBalance.value) {
+    showGraphicsBalance.value = false;
+  }
+
+  if (showGraphicsER.value) {
+    showGraphicsER.value = false;
+  }
+});
+
+watch(estado, () => {
+  if (showGraphicsBalance.value) {
+    showGraphicsBalance.value = false;
+  }
+  if (showGraphicsER.value) {
+    showGraphicsER.value = false;
+  }
+});
 </script>
 
 <style scoped>
