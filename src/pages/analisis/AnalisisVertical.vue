@@ -55,30 +55,39 @@ let options = [
 let estado = ref(null);
 let periods = [];
 let columns = ref([]);
-let rows = ref([]);
+let rowsActivo = ref([]);
 
 const activarAnalisis = (año, estado) => {
     if(estado === "Balance General"){
-        columns.value.push("ACTIVO")
+        columns.value.push("ACTIVO");
+        let controlador = -1;
         for(let a of año){
-            columns.value.push(año, "(%) Relativo", "(%) Absoluto");activarAnalisisBalance(a);
-            activarAnalisisBalance(a);
+            columns.value.push(año, "(%) Relativo", "(%) Absoluto");
+            activarAnalisisBalance(a, controlador);
+            controlador++;
         }
-
+        console.log(rowsActivo.value)
     }
 }
 
-const activarAnalisisBalance = (año) => {
+const activarAnalisisBalance = (año, controlador) => {
+    let contador = 0;
     const totales = obtenerDatosRazones(año);
+    if(controlador === -1){
+        for(let [key, value] of totales.balance.activo.activo_corriente){
+            rowsActivo.value.push([key, value, calcularPorcentaje(value, totales.activo_corriente), calcularPorcentaje(value, totales.activo)])
+        }   
+        return     
+    }
+    for(let [key, value] of totales.balance.activo.activo_corriente){
+        rowsActivo.value[controlador].push(value, calcularPorcentaje(value, totales.activo_corriente), calcularPorcentaje(value, totales.activo));
+    }     
+
     
-    // for(let a of año){
-        
-    // }
-    // totales.balance.activo.activo_corriente;
 }
 
 const calcularPorcentaje = (numerador, denominador) => {
-    return numerador / denominador;
+    return (numerador / denominador) * 100;
 }
 
 const obtenerDatosRazones = (año) => {
