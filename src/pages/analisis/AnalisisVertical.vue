@@ -1,5 +1,5 @@
 <template>
-    <div class="vertical-container">
+    <div class="analisis-vertical_container">
         <div class="info-container bg-secondary">
             <div class="title">
                 <label> Análisis Vertical </label>
@@ -16,9 +16,18 @@
                 />
             </div>
             <div class="periodo-container">
-                <label>Periodos: </label>
-                <q-select filled v-model="estado" :options="periods" label="Periodo" />
+                <label>Estados: </label>
+                <q-select filled v-model="estado" :options="options" label="Estado" />
             </div>
+            <div class="button-container">
+                <button class="btn-activar" @click="activarAnalisis(año, estado)">
+                    Activar
+                </button>
+            </div>            
+        </div>
+
+        <div class="vertical-seccion-container bg-positive">
+            <TablaVerticalBalance :columns="columns"/>
         </div>
 
     </div>
@@ -27,6 +36,8 @@
 <script setup>
 import { ref, onBeforeMount } from "vue";
 import { useCounterStore } from "stores/estados";
+import TablaVerticalBalance from "../../components/AnalisisVertical/TablaVerticalBalance.vue";
+import { obtenerTotalesBalance, obtenerTotalesEstado } from "../../utils/totales.js";
 
 onBeforeMount(() => {
     const tamanio = input.balance_general.length;
@@ -36,18 +47,62 @@ onBeforeMount(() => {
 })
 
 const input = useCounterStore();
-let año = ref(null);
+let año = ref([]);
 let options = [
     "Balance General",
     "Estado de Resultados"
 ];
 let estado = ref(null);
 let periods = [];
+let columns = ref([]);
+let rows = ref([]);
+
+const activarAnalisis = (año, estado) => {
+    if(estado === "Balance General"){
+        columns.value.push("ACTIVO")
+        for(let a of año){
+            columns.value.push(año, "(%) Relativo", "(%) Absoluto");activarAnalisisBalance(a);
+            activarAnalisisBalance(a);
+        }
+
+    }
+}
+
+const activarAnalisisBalance = (año) => {
+    const totales = obtenerDatosRazones(año);
+    
+    // for(let a of año){
+        
+    // }
+    // totales.balance.activo.activo_corriente;
+}
+
+const calcularPorcentaje = (numerador, denominador) => {
+    return numerador / denominador;
+}
+
+const obtenerDatosRazones = (año) => {
+    const totalesBalance = obtenerTotalesBalance(año);
+    const totalesEstado = obtenerTotalesEstado(año);
+
+    const balance = totalesBalance.balance;
+    const activo = totalesBalance.totalActivo;
+    const pasivo = totalesBalance.totalPasivo;
+    const activo_corriente = totalesBalance.totalActivoCorriente;
+    const pasivo_corriente = totalesBalance.totalPasivoCorriente;
+    const activo_no_corriente = totalesBalance.totalActivoNoCorriente;
+    const pasivo_no_corriente = totalesBalance.totalPasivoNoCorriente;
+
+    return {
+        balance, activo, pasivo, activo_corriente, activo_no_corriente, pasivo_corriente, pasivo_no_corriente
+    }
+}
+
 </script>
 
 <style>
 
-.vertical-container {
+.analisis-vertical_container {
     height: 100vh;
 }
 
@@ -79,5 +134,14 @@ let periods = [];
     font-size: 1rem;
 }
 
+.button-container {
+    margin-top: 1.5rem;
+}
+
+.vertical-seccion-container {
+    margin: 1.7rem 2.5rem;
+    padding: 1rem;
+    border-radius: 16px;
+}
 
 </style>

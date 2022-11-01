@@ -76,6 +76,8 @@ export const obtenerTotalesBalance = (año) => {
   totalPatrimonio = totalPatrimonio + totalCapitalSocial;
 
   return {
+    balance,
+
     efectivo,
     inventarios,
     cuentas_por_cobrar,

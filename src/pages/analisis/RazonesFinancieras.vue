@@ -24,14 +24,14 @@
             </div>
         </div>  
         <div class="razones-container bg-positive" v-if="rows.length !== 0">
-            <RazonesLiquidez :columns="columns" :rows="rows" :title="title"/>
+            <TablaRazones :columns="columns" :rows="rows" :title="title"/>
         </div>      
     </div>
 </template>
 <script setup>
 import { ref, onBeforeMount } from "vue";
 import { useCounterStore } from "stores/estados";
-import RazonesLiquidez from "src/components/RazonesFinancieras/TablaRazones.vue";
+import TablaRazones from "src/components/RazonesFinancieras/TablaRazones.vue";
 import { razones_liquidez, razones_actividad, razones_rendimiento, razones_deuda } from "../../utils/razones.js";
 import { obtenerTotalesBalance, obtenerTotalesEstado } from "../../utils/totales.js"
 
