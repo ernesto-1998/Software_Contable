@@ -5,17 +5,25 @@
                 <label> Análisis Vertical </label>
             </div>
             <div class="estado-financiero_container">
-                <label>Estado Financiero: </label>
-                <q-select filled v-model="model" :options="options" label="Escoja" />
+                <label>Periodo: </label>
+                <q-select
+                    filled
+                    v-model="año"
+                    multiple
+                    :options="periods"
+                    label="periodo"
+                    style="width: 250px"
+                />
             </div>
             <div class="periodo-container">
                 <label>Periodos: </label>
-                <q-select filled v-model="model2" :options="periods" label="Periodo" />
+                <q-select filled v-model="estado" :options="periods" label="Periodo" />
             </div>
         </div>
 
     </div>
 </template>
+
 <script setup>
 import { ref, onBeforeMount } from "vue";
 import { useCounterStore } from "stores/estados";
@@ -28,19 +36,21 @@ onBeforeMount(() => {
 })
 
 const input = useCounterStore();
-let model = ref(null);
+let año = ref(null);
 let options = [
     "Balance General",
     "Estado de Resultados"
 ];
-let model2 = ref(null);
+let estado = ref(null);
 let periods = [];
 </script>
+
 <style>
 
 .vertical-container {
     height: 100vh;
 }
+
 .info-container {
     margin: 1.5rem 2.5rem;
     padding: 1rem;
