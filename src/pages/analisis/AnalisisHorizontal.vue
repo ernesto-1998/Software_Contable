@@ -66,7 +66,7 @@
           v-if="showGraphicsBalance"
           :periodos="[periodo1, periodo2]"
         />
-        <radarER v-if="showGraphicsER" :periodos="[periodo1, periodo2]" />
+        <rosquillaER v-if="showGraphicsER" :periodos="[periodo1, periodo2]" />
       </div>
     </div>
   </div>
@@ -80,7 +80,7 @@ import GraficoUtilidades from "src/components/graphics/GraficoUtilidades.vue";
 import GraficoCuentasER from "src/components/graphics/GraficoCuentasER.vue";
 import GraficoCuentasBalance from "src/components/graphics/GraficoCuentasBalance.vue";
 import radarBalance from "src/components/graphics/radarBalance.vue";
-import radarER from "src/components/graphics/radarER.vue";
+import rosquillaER from "src/components/graphics/rosquillaER.vue";
 
 onBeforeMount(() => {
   const tamanio = input.balance_general.length;

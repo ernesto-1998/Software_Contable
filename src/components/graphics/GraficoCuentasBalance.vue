@@ -1,6 +1,6 @@
 <template>
   <div class="bg-white box">
-    <canvas id="cuentasBalance" width="650" height="450"></canvas>
+    <canvas id="cuentasBalance" width="640" height="450"></canvas>
   </div>
 </template>
 

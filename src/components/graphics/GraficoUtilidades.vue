@@ -33,6 +33,21 @@ onBeforeUnmount(() => {
 });
 
 function drawGraphics() {
+  const dataAño2 = [
+    obtenerTotalesEstado(props.periodos[1]).utilidadBruta,
+    obtenerTotalesEstado(props.periodos[1]).utilidadOperacion,
+    obtenerTotalesEstado(props.periodos[1]).utilidadAntesImpuestos,
+    obtenerTotalesEstado(props.periodos[1]).utilidadNeta,
+  ];
+  const dataAño1 = [
+    obtenerTotalesEstado(props.periodos[0]).utilidadBruta,
+    obtenerTotalesEstado(props.periodos[0]).utilidadOperacion,
+    obtenerTotalesEstado(props.periodos[0]).utilidadAntesImpuestos,
+    obtenerTotalesEstado(props.periodos[0]).utilidadNeta,
+  ];
+  const data3 = dataAño1.map(
+    (value, index) => parseFloat(value) - parseFloat(dataAño2[index])
+  );
   graphicBarras = new Chart(document.getElementById("utilidades"), {
     type: "bar",
     data: {
@@ -40,29 +55,25 @@ function drawGraphics() {
       datasets: [
         {
           label: "Periodo " + props.periodos[0],
-          data: [
-            obtenerTotalesEstado(props.periodos[0]).utilidadBruta,
-            obtenerTotalesEstado(props.periodos[0]).utilidadOperacion,
-            obtenerTotalesEstado(props.periodos[0]).utilidadAntesImpuestos,
-            obtenerTotalesEstado(props.periodos[0]).utilidadNeta,
-          ],
-          borderColor: "rgb(255, 99, 132)",
-          backgroundColor: "rgba(255, 99, 132, 0.2)",
-          borderWidth: 2,
+          data: dataAño1,
+          backgroundColor: "rgb(255, 99, 132)",
+          borderWidth: 0,
           borderRadius: 5,
           borderSkipped: false,
         },
         {
           label: "Periodo " + props.periodos[1],
-          data: [
-            obtenerTotalesEstado(props.periodos[1]).utilidadBruta,
-            obtenerTotalesEstado(props.periodos[1]).utilidadOperacion,
-            obtenerTotalesEstado(props.periodos[1]).utilidadAntesImpuestos,
-            obtenerTotalesEstado(props.periodos[1]).utilidadNeta,
-          ],
-          borderColor: "rgb(75, 192, 192)",
-          backgroundColor: "rgba(75, 192, 192, 0.2)",
-          borderWidth: 2,
+          data: dataAño2,
+          backgroundColor: "rgb(75, 192, 192)",
+          borderWidth: 0,
+          borderRadius: 5,
+          borderSkipped: false,
+        },
+        {
+          label: "Diferencia ",
+          data: data3,
+          backgroundColor: "rgb(255, 149, 0)",
+          borderWidth: 0,
           borderRadius: 5,
           borderSkipped: false,
         },
