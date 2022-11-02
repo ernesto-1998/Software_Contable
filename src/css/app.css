@@ -1,4 +1,8 @@
 /* app global css */
+* {
+    box-sizing: border-box;
+}
+
 :root {
     --table-color: #fff;
 }

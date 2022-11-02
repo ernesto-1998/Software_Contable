@@ -27,7 +27,7 @@
         </div>
 
         <div class="vertical-seccion-container bg-positive">
-            <TablaVerticalBalance :columns="columns"/>
+            <TablaVerticalBalance :columns="columns" :rowsActivo="rowsActivo"/>
         </div>
 
     </div>
@@ -72,29 +72,58 @@ let columns = ref([]);
 let rowsActivo = ref([]);
 
 const activarAnalisis = (año, estado) => {
+    limpiarVariables();
     if(estado === "Balance General"){
         columns.value.push("ACTIVO");
         for(let a of año){
-            columns.value.push(año, "(%) Relativo", "(%) Absoluto");
+            columns.value.push(a, "(%) Relativo", "(%) Absoluto");
         }
         activarAnalisisBalance(año);
     }
     
 }
-// [val, (totales.balance.activo.activo_corriente.get(val) || 0)]
+
 const activarAnalisisBalance = (años) => {
     let contador = 0;
+    for(let val of keysBalance.activo_corriente){
+        rowsActivo.value.push([val]);
+        for(let año of años){
+            let totales = obtenerTotalesBalance(año);
+            let activoCorriente = (totales.balance.activo.activo_corriente.get(val) || 0); 
+            rowsActivo.value[contador].push(activoCorriente, calcularPorcentaje(activoCorriente, totales.totalActivoCorriente).toFixed(1) + "%", calcularPorcentaje(activoCorriente, totales.totalActivo).toFixed(1) + "%");   
+        }
+        contador++;
+    }
+
+    // Esta parte es para crear la fila del total activo corriente
+
+    rowsActivo.value.push(["Total Activo Corriente"])
     for(let año of años){
         let totales = obtenerTotalesBalance(año);
-        // rowsActivo.value[contador].push()
-        for(let val of keysBalance.activo_corriente){
-            let activoCorrienteVal = (totales.balance.activo.activo_corriente.get(val) || 0); 
-            rowsActivo.value[0].push(val, año, )
-           
-        //         
-
-        }
+        rowsActivo.value[contador].push(totales.totalActivoCorriente, calcularPorcentaje(totales.totalActivoCorriente, totales.totalActivoCorriente).toFixed(1) + "%", calcularPorcentaje(totales.totalActivoCorriente, totales.totalActivo).toFixed(1) + "%")
     }
+
+    contador++;
+
+    for(let val of keysBalance.activo_no_corriente){
+        rowsActivo.value.push([val]);
+        for(let año of años){
+            let totales = obtenerTotalesBalance(año);
+            let activoNoCorriente = (totales.balance.activo.activo_no_corriente.get(val) || 0); 
+            rowsActivo.value[contador].push(activoNoCorriente, calcularPorcentaje(activoNoCorriente, totales.totalActivoNoCorriente).toFixed(1) + "%", calcularPorcentaje(activoNoCorriente, totales.totalActivo).toFixed(1) + "%");   
+        }
+        contador++;
+    }   
+    
+    // Esta parte es para crear la final del total del activo no corriente
+
+    rowsActivo.value.push(["Total Activo No Corriente"])
+    for(let año of años){
+        let totales = obtenerTotalesBalance(año);
+        rowsActivo.value[contador].push(totales.totalActivoNoCorriente, calcularPorcentaje(totales.totalActivoNoCorriente, totales.totalActivoNoCorriente).toFixed(1) + "%", calcularPorcentaje(totales.totalActivoNoCorriente, totales.totalActivo).toFixed(1) + "%")
+    }    
+
+    contador++;
 }
 
 const calcularPorcentaje = (numerador, denominador) => {
@@ -118,12 +147,17 @@ const obtenerDatosRazones = (año) => {
     }
 }
 
+const limpiarVariables = () => {
+    columns.value = [];
+    rowsActivo.value = [];
+}
 </script>
 
 <style>
 
 .analisis-vertical_container {
-    height: 100vh;
+    height: 100%;
+    /* margin-bottom: 2.5rem; */
 }
 
 .info-container {

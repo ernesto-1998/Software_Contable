@@ -69,7 +69,7 @@ const props = defineProps({
 }
 
 .table-container {
-  background-color: var(--table-color);
+  /* background-color: var(--table-color); */
   width: 100%;
   margin-top: 0.8rem;
 }
