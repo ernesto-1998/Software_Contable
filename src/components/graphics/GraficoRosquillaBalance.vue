@@ -10,7 +10,7 @@
       <canvas id="pasivo1" width="150" height="200"></canvas>
     </div>
     <div class="col-md-auto bg-grey-2">
-      <canvas id="patrimonio1" width="150" height="200"></canvas>
+      <canvas id="patrimonio1" width="160" height="200"></canvas>
     </div>
   </div>
   <div class="row justify-center q-mt-xl">
@@ -24,7 +24,7 @@
       <canvas id="pasivo2" width="150" height="200"></canvas>
     </div>
     <div class="col-md-auto bg-grey-2">
-      <canvas id="patrimonio2" width="150" height="200"></canvas>
+      <canvas id="patrimonio2" width="160" height="200"></canvas>
     </div>
   </div>
 </template>
@@ -75,11 +75,10 @@ onMounted(() => {
         {
           data: [activoAño1],
           backgroundColor: ["#44EE00"],
-          hoverOffset: 5,
+          hoverOffset: 15,
           borderAlign: "inner",
           circumference: (porcentajeActivoAño1 / 100) * 360,
           borderWidth: 0.5,
-          offset: 20,
         },
       ],
     },
@@ -92,6 +91,10 @@ onMounted(() => {
       plugins: {
         legend: {
           position: "bottom",
+        },
+        title: {
+          display: true,
+          text: "Porcentaje de activo",
         },
         tooltip: {
           padding: 3,
@@ -117,11 +120,10 @@ onMounted(() => {
         {
           data: [pasivoAño1],
           backgroundColor: ["#B200FF"],
-          hoverOffset: 5,
+          hoverOffset: 27,
           borderAlign: "inner",
           circumference: (porcentajePasivoAño1 / 100) * 360,
           borderWidth: 0.5,
-          offset: 20,
         },
       ],
     },
@@ -134,6 +136,10 @@ onMounted(() => {
       plugins: {
         legend: {
           position: "bottom",
+        },
+        title: {
+          display: true,
+          text: "Porcentaje de pasivo",
         },
         tooltip: {
           padding: 3,
@@ -159,12 +165,11 @@ onMounted(() => {
         {
           data: [patrimonioAño1],
           backgroundColor: ["#FFB900"],
-          hoverOffset: 5,
+          hoverOffset: 27,
           borderAlign: "inner",
           circumference: (porcentajePatrimonioAño1 / 100) * 360,
           borderWidth: 0.5,
-          offset: 20,
-          spacing: 70,
+          spacing: 85,
         },
       ],
     },
@@ -177,6 +182,10 @@ onMounted(() => {
       plugins: {
         legend: {
           position: "bottom",
+        },
+        title: {
+          display: true,
+          text: "Porcentaje de patrimonio",
         },
         tooltip: {
           padding: 3,
@@ -204,11 +213,10 @@ onMounted(() => {
         {
           data: [activoAño2],
           backgroundColor: ["#44EE00"],
-          hoverOffset: 5,
+          hoverOffset: 15,
           borderAlign: "inner",
           circumference: (porcentajeActivoAño2 / 100) * 360,
           borderWidth: 0.5,
-          offset: 20,
         },
       ],
     },
@@ -221,6 +229,10 @@ onMounted(() => {
       plugins: {
         legend: {
           position: "bottom",
+        },
+        title: {
+          display: true,
+          text: "Porcentaje de activo",
         },
         tooltip: {
           padding: 3,
@@ -246,11 +258,10 @@ onMounted(() => {
         {
           data: [pasivoAño2],
           backgroundColor: ["#B200FF"],
-          hoverOffset: 5,
+          hoverOffset: 27,
           borderAlign: "inner",
           circumference: (porcentajePasivoAño2 / 100) * 360,
           borderWidth: 0.5,
-          offset: 20,
         },
       ],
     },
@@ -263,6 +274,10 @@ onMounted(() => {
       plugins: {
         legend: {
           position: "bottom",
+        },
+        title: {
+          display: true,
+          text: "Porcentaje de pasivo",
         },
         tooltip: {
           padding: 3,
@@ -288,12 +303,11 @@ onMounted(() => {
         {
           data: [patrimonioAño2],
           backgroundColor: ["#FFB900"],
-          hoverOffset: 5,
+          hoverOffset: 27,
           borderAlign: "inner",
           circumference: (porcentajePatrimonioAño2 / 100) * 360,
           borderWidth: 0.5,
-          offset: 20,
-          spacing: 70,
+          spacing: 85,
         },
       ],
     },
@@ -306,6 +320,10 @@ onMounted(() => {
       plugins: {
         legend: {
           position: "bottom",
+        },
+        title: {
+          display: true,
+          text: "Porcentaje de patrimonio",
         },
         tooltip: {
           padding: 3,

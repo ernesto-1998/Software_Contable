@@ -26,6 +26,24 @@ onBeforeUnmount(() => {
 });
 
 function drawGraphics() {
+  const dataAño1 = [
+    obtenerTotalesEstado(props.periodos[0]).ProductosOperacion,
+    obtenerTotalesEstado(props.periodos[0]).CostosEnergia,
+    obtenerTotalesEstado(props.periodos[0]).costosYGastosOperacion,
+    obtenerTotalesEstado(props.periodos[0]).gastosFinancieros,
+    obtenerTotalesEstado(props.periodos[0]).productosFinancieros,
+  ];
+  const dataAño2 = [
+    obtenerTotalesEstado(props.periodos[1]).ProductosOperacion,
+    obtenerTotalesEstado(props.periodos[1]).CostosEnergia,
+    obtenerTotalesEstado(props.periodos[1]).costosYGastosOperacion,
+    obtenerTotalesEstado(props.periodos[1]).gastosFinancieros,
+    obtenerTotalesEstado(props.periodos[1]).productosFinancieros,
+  ];
+
+  const data3 = dataAño1.map(
+    (value, index) => parseFloat(value) - parseFloat(dataAño2[index])
+  );
   graphicBarras = new Chart(document.getElementById("cuentasER"), {
     type: "bar",
     data: {
@@ -39,32 +57,25 @@ function drawGraphics() {
       datasets: [
         {
           label: "Periodo " + props.periodos[0],
-          data: [
-            obtenerTotalesEstado(props.periodos[0]).ProductosOperacion,
-            obtenerTotalesEstado(props.periodos[0]).CostosEnergia,
-            obtenerTotalesEstado(props.periodos[0]).costosYGastosOperacion,
-            obtenerTotalesEstado(props.periodos[0]).gastosFinancieros,
-            obtenerTotalesEstado(props.periodos[0]).productosFinancieros,
-          ],
-          borderColor: "rgb(255, 99, 132)",
-          backgroundColor: "rgba(255, 99, 132, 0.2)",
-          borderWidth: 2,
+          data: dataAño1,
+          backgroundColor: "rgb(255, 99, 132)",
+          borderWidth: 0,
           borderRadius: 5,
           borderSkipped: false,
         },
         {
           label: "Periodo " + props.periodos[1],
-          data: [
-            obtenerTotalesEstado(props.periodos[1]).ProductosOperacion,
-            obtenerTotalesEstado(props.periodos[1]).CostosEnergia,
-            obtenerTotalesEstado(props.periodos[1]).costosYGastosOperacion,
-
-            obtenerTotalesEstado(props.periodos[1]).gastosFinancieros,
-            obtenerTotalesEstado(props.periodos[1]).productosFinancieros,
-          ],
-          borderColor: "rgb(75, 192, 192)",
-          backgroundColor: "rgba(75, 192, 192, 0.2)",
-          borderWidth: 2,
+          data: dataAño2,
+          backgroundColor: "rgb(75, 192, 192)",
+          borderWidth: 0,
+          borderRadius: 5,
+          borderSkipped: false,
+        },
+        {
+          label: "Diferencia ",
+          data: data3,
+          backgroundColor: "rgb(255, 149, 0)",
+          borderWidth: 0,
           borderRadius: 5,
           borderSkipped: false,
         },

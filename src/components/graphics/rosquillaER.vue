@@ -33,44 +33,45 @@ onBeforeUnmount(() => {
 });
 
 function drawGraphic() {
-  graphicRadar2 = new Chart(document.getElementById("radarER1"), {
-    type: "polarArea",
+  graphicRadar2 = new Chart(document.getElementById("radarER2"), {
+    type: "doughnut",
     data: {
-      labels: ["Ventas", "Costos de venta", "C/G operativos"],
+      labels: [
+        "Ventas",
+        "Costos de venta",
+        "C/G operativos",
+        "Gastos Financieros",
+        "Productos Financieros",
+      ],
       datasets: [
         {
-          label: "Periodo " + props.periodos[1],
+          label: "Periodo " + props.periodos[0],
           data: [
-            obtenerTotalesEstado(props.periodos[1]).ProductosOperacion /
-              1000000,
-            obtenerTotalesEstado(props.periodos[1]).CostosEnergia / 1000000,
-            obtenerTotalesEstado(props.periodos[1]).costosYGastosOperacion /
-              1000000,
+            obtenerTotalesEstado(props.periodos[1]).ProductosOperacion,
+            obtenerTotalesEstado(props.periodos[1]).CostosEnergia,
+            obtenerTotalesEstado(props.periodos[1]).costosYGastosOperacion,
+            obtenerTotalesEstado(props.periodos[1]).gastosFinancieros,
+            obtenerTotalesEstado(props.periodos[1]).productosFinancieros,
           ],
+          hoverOffset: 15,
+          borderAlign: "inner",
           backgroundColor: [
             "rgba(255, 149, 0,0.5)",
             "rgba(0, 216, 255,0.5)",
             "rgba(170, 0, 255,0.5)",
+            "rgba(54, 0, 211 ,0.5)",
+            "rgba(209, 25, 0,0.8)",
           ],
         },
       ],
     },
     options: {
       responsive: true,
-      scales: {
-        r: {
-          pointLabels: {
-            display: true,
-            centerPointLabels: true,
-            font: {
-              size: 10,
-            },
-          },
-          ticks: {
-            z: 2,
-          },
-        },
+      maintainAspectRatio: false,
+      animation: {
+        animateScale: true,
       },
+      borderWidth: 1,
       plugins: {
         legend: {
           position: "bottom",
@@ -86,7 +87,7 @@ function drawGraphic() {
               return (
                 item.label +
                 ": $" +
-                new Intl.NumberFormat("en-US").format(item.raw * 1000000)
+                new Intl.NumberFormat("en-US").format(item.raw)
               );
             },
           },
@@ -94,45 +95,45 @@ function drawGraphic() {
       },
     },
   });
-  graphicRadar1 = new Chart(document.getElementById("radarER2"), {
-    type: "polarArea",
+  graphicRadar1 = new Chart(document.getElementById("radarER1"), {
+    type: "doughnut",
     data: {
-      labels: ["Ventas", "Costos de venta", "C/G operativos"],
+      labels: [
+        "Ventas",
+        "Costos de venta",
+        "C/G operativos",
+        "Gastos Financieros",
+        "Productos Financieros",
+      ],
       datasets: [
         {
           label: "Periodo " + props.periodos[0],
           data: [
-            obtenerTotalesEstado(props.periodos[0]).ProductosOperacion /
-              1000000,
-            obtenerTotalesEstado(props.periodos[0]).CostosEnergia / 1000000,
-            obtenerTotalesEstado(props.periodos[0]).costosYGastosOperacion /
-              1000000,
+            obtenerTotalesEstado(props.periodos[0]).ProductosOperacion,
+            obtenerTotalesEstado(props.periodos[0]).CostosEnergia,
+            obtenerTotalesEstado(props.periodos[0]).costosYGastosOperacion,
+            obtenerTotalesEstado(props.periodos[0]).gastosFinancieros,
+            obtenerTotalesEstado(props.periodos[0]).productosFinancieros,
           ],
+          hoverOffset: 15,
+          borderAlign: "inner",
           backgroundColor: [
             "rgba(255, 149, 0,0.5)",
             "rgba(0, 216, 255,0.5)",
             "rgba(170, 0, 255,0.5)",
+            "rgba(54, 0, 211 ,0.5)",
+            "rgba(209, 25, 0,0.8)",
           ],
         },
       ],
     },
     options: {
       responsive: true,
-      scales: {
-        r: {
-          pointLabels: {
-            display: true,
-            centerPointLabels: true,
-            font: {
-              size: 10,
-            },
-          },
-          ticks: {
-            z: 2,
-            stepSize: 30,
-          },
-        },
+      maintainAspectRatio: false,
+      animation: {
+        animateScale: true,
       },
+      borderWidth: 1,
       plugins: {
         legend: {
           position: "bottom",
@@ -148,7 +149,7 @@ function drawGraphic() {
               return (
                 item.label +
                 ": $" +
-                new Intl.NumberFormat("en-US").format(item.raw * 1000000)
+                new Intl.NumberFormat("en-US").format(item.raw)
               );
             },
           },
