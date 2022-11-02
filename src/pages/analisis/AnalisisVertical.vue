@@ -27,7 +27,7 @@
         </div>
 
         <div class="vertical-seccion-container bg-positive">
-            <TablaVerticalBalance :columns="columns" :rowsActivo="rowsActivo"/>
+            <TablaVerticalBalance :columns="columns" :rowsActivo="rowsActivo" :rowsPasivo="rowsPasivo"/>
         </div>
 
     </div>
@@ -70,6 +70,8 @@ let temporalVals = {};
 
 let columns = ref([]);
 let rowsActivo = ref([]);
+let rowsPasivo = ref([]);
+let rowsPatrimonio = ref([]);
 
 const activarAnalisis = (año, estado) => {
     limpiarVariables();
@@ -84,6 +86,7 @@ const activarAnalisis = (año, estado) => {
 }
 
 const activarAnalisisBalance = (años) => {
+
     let contador = 0;
     for(let val of keysBalance.activo_corriente){
         rowsActivo.value.push([val]);
@@ -115,7 +118,7 @@ const activarAnalisisBalance = (años) => {
         contador++;
     }   
     
-    // Esta parte es para crear la final del total del activo no corriente
+    // Esta parte es para crear el total del activo no corriente
 
     rowsActivo.value.push(["Total Activo No Corriente"])
     for(let año of años){
@@ -124,7 +127,71 @@ const activarAnalisisBalance = (años) => {
     }    
 
     contador++;
+
+    // Finalmente la fila que crea el total del Activo
+
+    rowsActivo.value.push(["Total Activo"])
+    for(let año of años){
+        let totales = obtenerTotalesBalance(año);
+        rowsActivo.value[contador].push(totales.totalActivoNoCorriente, 0, calcularPorcentaje(totales.totalActivo, totales.totalActivo).toFixed(1) + "%")
+    }    
+
+    contador++;
+
+    // COMIENZA LA SECCION QUE LLENA LAS FILAS DEL PASIVO
+
+    let contador2 = 0;
+
+    for(let val of keysBalance.pasivo_corriente){
+        rowsPasivo.value.push([val]);
+        for(let año of años){
+            let totales = obtenerTotalesBalance(año);
+            let pasivoCorriente = (totales.balance.pasivo.pasivo_corriente.get(val) || 0); 
+            rowsPasivo.value[contador2].push(pasivoCorriente, calcularPorcentaje(pasivoCorriente, totales.totalPasivoCorriente).toFixed(1) + "%", calcularPorcentaje(pasivoCorriente, totales.totalPasivo).toFixed(1) + "%");   
+        }
+        contador2++;
+    }    
+
+    // Esta parte es para crear la fila del total del pasivo corriente
+
+    rowsPasivo.value.push(["Total Pasivo Corriente"]);
+    for(let año of años){
+        let totales = obtenerTotalesBalance(año);
+        rowsPasivo.value[contador2].push(totales.totalPasivoCorriente, calcularPorcentaje(totales.totalPasivoCorriente, totales.totalPasivoCorriente).toFixed(1) + "%", calcularPorcentaje(totales.totalPasivoCorriente, totales.totalPasivo).toFixed(1) + "%");
+    }    
+
+    contador2++;
+
+    for(let val of keysBalance.pasivo_no_corriente){
+        rowsPasivo.value.push([val]);
+        for(let año of años){
+            let totales = obtenerTotalesBalance(año);
+            let pasivoNoCorriente = (totales.balance.pasivo.pasivo_no_corriente.get(val) || 0); 
+            rowsPasivo.value[contador2].push(pasivoNoCorriente, calcularPorcentaje(pasivoNoCorriente, totales.totalPasivoNoCorriente).toFixed(1) + "%", calcularPorcentaje(pasivoNoCorriente, totales.totalPasivo).toFixed(1) + "%");   
+        }
+        contador2++;
+    }  
+
+    // Esta parte es para crear la fila del total del pasivo no corriente
+
+    rowsPasivo.value.push(["Total Pasivo No Corriente"]);
+    for(let año of años){
+        let totales = obtenerTotalesBalance(año);
+        rowsPasivo.value[contador2].push(totales.totalPasivoNoCorriente, calcularPorcentaje(totales.totalPasivoNoCorriente, totales.totalPasivoNoCorriente).toFixed(1) + "%", calcularPorcentaje(totales.totalPasivoNoCorriente, totales.totalPasivo).toFixed(1) + "%");
+    }    
+
+    contador2++;
+
+    // Finalmente la fila que crea el total del Pasivo
+
+    rowsPasivo.value.push(["Total Pasivo"])
+    for(let año of años){
+        let totales = obtenerTotalesBalance(año);
+        rowsPasivo.value[contador2].push(totales.totalPasivo, 0, calcularPorcentaje(totales.totalPasivo, totales.totalPasivo).toFixed(1) + "%");
+    }    
 }
+
+
 
 const calcularPorcentaje = (numerador, denominador) => {
     return (numerador / denominador) * 100;

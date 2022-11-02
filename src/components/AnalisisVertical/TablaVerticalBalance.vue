@@ -15,7 +15,8 @@
                 </tr>
                 <tr class="table-row" v-for="(item, index) in props.rowsActivo" :key="index">
                     <td class="table-ceil bg-accent" align="center" v-for="(childItem, index) in item" :key="index">
-                        <span>{{ ((childItem === "Total Activo Corriente") || (childItem === "Total No Activo Corriente")) ? childItem.toUpperCase() : childItem }} </span>
+                        <span class="conditionalBinding" v-if="(childItem === 'Total Activo Corriente') || (childItem === 'Total Activo No Corriente') || (childItem === 'Total Activo')">{{ childItem }} </span>
+                        <span v-else>{{ childItem }} </span>
                     </td>
                 </tr>
                 <tr class="table-head bg-secondary">
@@ -23,12 +24,13 @@
                         <span>PASIVO</span>
                     </th>
                 </tr>
-                <!-- <tr class="table-row">
-                    <td class="table-ceil" v-for="(item, index) in props.rowsPasivo" :key="index">
-                        <span>{{ item }}</span>
+                <tr class="table-row" v-for="(item, index) in props.rowsPasivo" :key="index">
+                    <td class="table-ceil bg-accent" align="center" v-for="(childItem, index) in item" :key="index">
+                        <span class="conditionalBinding" v-if="(childItem === 'Total Pasivo Corriente') || (childItem === 'Total Pasivo No Corriente') || (childItem === 'Total Pasivo')">{{ childItem }} </span>
+                        <span v-else>{{ childItem }} </span>
                     </td>
-                </tr>  
-                <tr class="table-head">
+                </tr> 
+                <!--<tr class="table-head">
                     <th class="table-head-titles">
                         <span>Patrimonio</span>
                     </th>
@@ -57,7 +59,9 @@ const props = defineProps({
 
 <style>
     .vertical-table_container {
-        width: 98%;
+        display: grid;
+        justify-content: center;
+        /* width: 98%; */
         margin: auto;
     }
 
@@ -82,7 +86,7 @@ const props = defineProps({
     }
 
     .conditionalBinding {
-        color: var(--table-color);
         text-transform: uppercase;
+        font-weight: bold;
     }
 </style>
