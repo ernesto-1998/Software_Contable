@@ -38,13 +38,24 @@ import { ref, onBeforeMount } from "vue";
 import { useCounterStore } from "stores/estados";
 import TablaVerticalBalance from "../../components/AnalisisVertical/TablaVerticalBalance.vue";
 import { obtenerTotalesBalance, obtenerTotalesEstado } from "../../utils/totales.js";
+import { getKeysBalance } from "../../utils/getKeys.js";
 
 onBeforeMount(() => {
     const tamanio = input.balance_general.length;
     for(let i = 0; i < tamanio; i++){
         periods.push(input.balance_general[i].año);
     }
-})
+
+    let años = [2018, 2019, 2020, 2021, 2022];
+    let temporalKeys = getKeysBalance(años);
+    keysBalance = {
+        activo_corriente: Array.from(new Set(temporalKeys.ActivoCorriente)),
+        activo_no_corriente: Array.from(new Set(temporalKeys.ActivoNoCorriente)),
+        pasivo_corriente: Array.from(new Set(temporalKeys.PasivoCorriente)),
+        pasivo_no_corriente: Array.from(new Set(temporalKeys.PasivoNoCorriente)),
+        patrimonio: Array.from(new Set(temporalKeys.Patrimonio)),
+    }
+});
 
 const input = useCounterStore();
 let año = ref([]);
@@ -54,36 +65,36 @@ let options = [
 ];
 let estado = ref(null);
 let periods = [];
+let keysBalance = {};
+let temporalVals = {};
+
 let columns = ref([]);
 let rowsActivo = ref([]);
 
 const activarAnalisis = (año, estado) => {
     if(estado === "Balance General"){
         columns.value.push("ACTIVO");
-        let controlador = -1;
         for(let a of año){
             columns.value.push(año, "(%) Relativo", "(%) Absoluto");
-            activarAnalisisBalance(a, controlador);
-            controlador++;
         }
-        console.log(rowsActivo.value)
+        activarAnalisisBalance(año);
     }
-}
-
-const activarAnalisisBalance = (año, controlador) => {
-    let contador = 0;
-    const totales = obtenerDatosRazones(año);
-    if(controlador === -1){
-        for(let [key, value] of totales.balance.activo.activo_corriente){
-            rowsActivo.value.push([key, value, calcularPorcentaje(value, totales.activo_corriente), calcularPorcentaje(value, totales.activo)])
-        }   
-        return     
-    }
-    for(let [key, value] of totales.balance.activo.activo_corriente){
-        rowsActivo.value[controlador].push(value, calcularPorcentaje(value, totales.activo_corriente), calcularPorcentaje(value, totales.activo));
-    }     
-
     
+}
+// [val, (totales.balance.activo.activo_corriente.get(val) || 0)]
+const activarAnalisisBalance = (años) => {
+    let contador = 0;
+    for(let año of años){
+        let totales = obtenerTotalesBalance(año);
+        // rowsActivo.value[contador].push()
+        for(let val of keysBalance.activo_corriente){
+            let activoCorrienteVal = (totales.balance.activo.activo_corriente.get(val) || 0); 
+            rowsActivo.value[0].push(val, año, )
+           
+        //         
+
+        }
+    }
 }
 
 const calcularPorcentaje = (numerador, denominador) => {
