@@ -96,10 +96,7 @@
                 periodo + 'eR6',
               ]"
             />
-            <AbsolutosER
-              :periodo="periodo"
-              :ids="[periodo + 'aeR1', periodo + 'aeRB2']"
-            />
+            <AbsolutosER :periodo="periodo" :ids="[periodo + 'aeR1']" />
           </div>
         </q-tab-panel>
       </q-tab-panels>

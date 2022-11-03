@@ -53,28 +53,26 @@ let graphicIP = null;
 const simbolos = "0123456789ABCDEF";
 
 const COLORS = [
+  "rgb(173, 255, 47)",
   "rgb(240, 128, 128)",
   "rgb(255, 192, 203)",
   "rgb(199, 21, 133)",
+  "rgb(152, 251, 152)",
   "rgb(255, 165, 0)",
   "rgb(240, 230, 140)",
   "rgb(189, 183, 107)",
   "rgb(255, 215, 0)",
-  "rgb(255, 228, 181)",
-  "rgb(230, 230, 250)",
   "rgb(102, 51, 153)",
+  "rgb(0, 250, 154)",
   "rgb(255, 0, 255)",
   "rgb(106, 90, 205)",
-  "rgb(173, 255, 47)",
-  "rgb(152, 251, 152)",
-  "rgb(0, 250, 154)",
-  "rgb(50, 205, 50)",
-  "rgb(154, 205, 50)",
   "rgb(128, 128, 0)",
+  "rgb(50, 205, 50)",
   "rgb(102, 205, 170)",
   "rgb(143, 188, 139)",
   "rgb(70, 130, 180)",
   "rgb(123, 104, 238)",
+  "rgb(154, 205, 50)",
   "rgb(0, 0, 255)",
   "rgb(255, 222, 173)",
   "rgb(244, 164, 96)",
@@ -164,11 +162,14 @@ onMounted(() => {
       },
       plugins: {
         legend: {
-          position: "bottom",
+          position: "left",
         },
         title: {
           display: true,
           text: "Productos de Operación",
+          font: {
+            size: 17,
+          },
         },
         tooltip: {
           padding: 3,
@@ -234,11 +235,14 @@ onMounted(() => {
       },
       plugins: {
         legend: {
-          position: "bottom",
+          position: "right",
         },
         title: {
           display: true,
           text: "Costos de Venta",
+          font: {
+            size: 17,
+          },
         },
         tooltip: {
           padding: 3,
@@ -305,11 +309,14 @@ onMounted(() => {
       },
       plugins: {
         legend: {
-          position: "bottom",
+          position: "left",
         },
         title: {
           display: true,
           text: "Costos y Gastos de Operación",
+          font: {
+            size: 17,
+          },
         },
         tooltip: {
           padding: 3,
@@ -375,11 +382,14 @@ onMounted(() => {
       },
       plugins: {
         legend: {
-          position: "bottom",
+          position: "right",
         },
         title: {
           display: true,
           text: "Gastos Financieros",
+          font: {
+            size: 17,
+          },
         },
         tooltip: {
           padding: 3,
@@ -445,11 +455,14 @@ onMounted(() => {
       },
       plugins: {
         legend: {
-          position: "bottom",
+          position: "left",
         },
         title: {
           display: true,
           text: "Productos Financieros",
+          font: {
+            size: 17,
+          },
         },
         tooltip: {
           padding: 3,
@@ -515,11 +528,14 @@ onMounted(() => {
       },
       plugins: {
         legend: {
-          position: "bottom",
+          position: "right",
         },
         title: {
           display: true,
           text: "Impuestos y Reservas",
+          font: {
+            size: 17,
+          },
         },
         tooltip: {
           padding: 3,

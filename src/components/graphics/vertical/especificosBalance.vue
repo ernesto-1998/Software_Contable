@@ -1,6 +1,6 @@
 <template>
   <div class="label text-center q-mb-md text-overline text-weight-bold">
-    <p class="q-pt-sm">Porcentajes Específicos para el periodo {{ periodo }}</p>
+    <p class="q-pt-sm">Porcentajes Relativos para el periodo {{ periodo }}</p>
   </div>
   <div class="container q-mb-xl">
     <div class="row">
@@ -66,28 +66,26 @@ function generateRandomColor(limit) {
   return colors;
 }
 const COLORS = [
+  "rgb(173, 255, 47)",
   "rgb(240, 128, 128)",
   "rgb(255, 192, 203)",
   "rgb(199, 21, 133)",
+  "rgb(152, 251, 152)",
   "rgb(255, 165, 0)",
   "rgb(240, 230, 140)",
   "rgb(189, 183, 107)",
   "rgb(255, 215, 0)",
-  "rgb(255, 228, 181)",
-  "rgb(230, 230, 250)",
   "rgb(102, 51, 153)",
+  "rgb(0, 250, 154)",
   "rgb(255, 0, 255)",
   "rgb(106, 90, 205)",
-  "rgb(173, 255, 47)",
-  "rgb(152, 251, 152)",
-  "rgb(0, 250, 154)",
-  "rgb(50, 205, 50)",
-  "rgb(154, 205, 50)",
   "rgb(128, 128, 0)",
+  "rgb(50, 205, 50)",
   "rgb(102, 205, 170)",
   "rgb(143, 188, 139)",
   "rgb(70, 130, 180)",
   "rgb(123, 104, 238)",
+  "rgb(154, 205, 50)",
   "rgb(0, 0, 255)",
   "rgb(255, 222, 173)",
   "rgb(244, 164, 96)",
@@ -190,6 +188,9 @@ onMounted(() => {
         title: {
           display: true,
           text: "Activo Corriente",
+          font: {
+            size: 17,
+          },
         },
         tooltip: {
           padding: 3,
@@ -260,6 +261,9 @@ onMounted(() => {
         title: {
           display: true,
           text: "Activo no Corriente",
+          font: {
+            size: 17,
+          },
         },
         tooltip: {
           padding: 3,
@@ -331,6 +335,9 @@ onMounted(() => {
         title: {
           display: true,
           text: "Pasivo Corriente",
+          font: {
+            size: 17,
+          },
         },
         tooltip: {
           padding: 3,
@@ -401,6 +408,9 @@ onMounted(() => {
         title: {
           display: true,
           text: "Pasivo no Corriente",
+          font: {
+            size: 17,
+          },
         },
         tooltip: {
           padding: 3,
@@ -471,6 +481,9 @@ onMounted(() => {
         title: {
           display: true,
           text: "Capital Social",
+          font: {
+            size: 17,
+          },
         },
         tooltip: {
           padding: 3,
@@ -540,7 +553,10 @@ onMounted(() => {
         },
         title: {
           display: true,
-          text: "Capital Social",
+          text: "Patrimonio",
+          font: {
+            size: 17,
+          },
         },
         tooltip: {
           padding: 3,

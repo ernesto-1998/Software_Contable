@@ -6,9 +6,6 @@
     <div class="col bg-grey-1 q-px-sm">
       <canvas :id="props.ids[0]" width="600" height="1200"></canvas>
     </div>
-    <div class="col bg-grey-1 q-px-sm">
-      <canvas :id="props.ids[1]" width="600" height="1200"></canvas>
-    </div>
   </div>
 </template>
 
