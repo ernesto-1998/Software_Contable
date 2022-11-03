@@ -5,26 +5,26 @@
   <div class="container q-mb-xl">
     <div class="row">
       <div class="col-6 q-py-sm bg-grey-1">
-        <canvas :id="props.ids[0]" height="700"></canvas>
+        <canvas :id="props.ids[0]" height="450"></canvas>
       </div>
       <div class="col-6 q-py-sm bg-grey-1">
-        <canvas :id="props.ids[1]" height="700"></canvas>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-6 q-py-sm bg-grey-1">
-        <canvas :id="props.ids[2]" height="700"></canvas>
-      </div>
-      <div class="col-6 q-py-sm bg-grey-1">
-        <canvas :id="props.ids[3]" height="700"></canvas>
+        <canvas :id="props.ids[1]" height="450"></canvas>
       </div>
     </div>
     <div class="row">
       <div class="col-6 q-py-sm bg-grey-1">
-        <canvas :id="props.ids[4]" height="700"></canvas>
+        <canvas :id="props.ids[2]" height="450"></canvas>
       </div>
       <div class="col-6 q-py-sm bg-grey-1">
-        <canvas :id="props.ids[5]" height="700"></canvas>
+        <canvas :id="props.ids[3]" height="450"></canvas>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 q-py-sm bg-grey-1">
+        <canvas :id="props.ids[4]" height="450"></canvas>
+      </div>
+      <div class="col-6 q-py-sm bg-grey-1">
+        <canvas :id="props.ids[5]" height="450"></canvas>
       </div>
     </div>
   </div>
@@ -34,7 +34,7 @@
 import { useCounterStore } from "../../../stores/estados";
 import { Chart, registerables } from "chart.js";
 import { onMounted, onBeforeUnmount } from "vue";
-import { obtenerTotalesBalance } from "../../../utils/totales.js";
+import { obtenerTotalesEstado } from "../../../utils/totales.js";
 Chart.register(...registerables);
 
 const props = defineProps({
@@ -44,27 +44,14 @@ const props = defineProps({
 
 const store = useCounterStore();
 
-let graphicAC = null;
-let graphicANC = null;
-let graphicPVC = null;
-let graphicPVNC = null;
-let graphicCS = null;
-let graphicPT = null;
+let graphicPO = null;
+let graphicCV = null;
+let graphicCGO = null;
+let graphicGF = null;
+let graphicPF = null;
+let graphicIP = null;
 const simbolos = "0123456789ABCDEF";
 
-function generateRandomColor(limit) {
-  let colors = [];
-  for (let j = 0; j < limit; j++) {
-    console.log("crenado el color num: ", j);
-    let color = "#";
-    for (let i = 0; i < 6; i++) {
-      color = color + simbolos[Math.floor(Math.random() * 16)];
-    }
-    colors.push(color);
-  }
-  console.log(colors);
-  return colors;
-}
 const COLORS = [
   "rgb(240, 128, 128)",
   "rgb(255, 192, 203)",
@@ -97,78 +84,70 @@ const COLORS = [
   "rgb(160, 82, 45)",
   "rgb(210, 105, 30)",
 ];
-const balance_general = store.getBalanceGeneralByYear(parseInt(props.periodo));
+const estado_resultados = store.getEstadoByYear(parseInt(props.periodo));
 
 onMounted(() => {
   // obteniendo todas las cuentas de activo corriente y su total
-  let dataActivosCorrientes = [];
-  let labelsActivosCorrientes = [];
-  balance_general.activo.activo_corriente.forEach((amount, acount) => {
-    dataActivosCorrientes.push(amount);
-    labelsActivosCorrientes.push(acount);
+  let dataProductosOperacion = [];
+  let labelsProductosOperacion = [];
+  estado_resultados.sub_productos_de_operacion.forEach((amount, acount) => {
+    dataProductosOperacion.push(amount);
+    labelsProductosOperacion.push(acount);
   });
 
   // obteniendo todas las cuentas de activo no corriente y su total
-  let dataActivosNoCorrientes = [];
-  let labelsActivosNoCorrientes = [];
-  balance_general.activo.activo_no_corriente.forEach((amount, acount) => {
-    dataActivosNoCorrientes.push(amount);
-    labelsActivosNoCorrientes.push(acount);
+  let dataCostoVentas = [];
+  let labelsCostoVentas = [];
+  estado_resultados.sub_costos_de_energia.forEach((amount, acount) => {
+    dataCostoVentas.push(amount);
+    labelsCostoVentas.push(acount);
   });
 
   // obteniendo todas las cuentas de pasivo corriente y su total
-  let dataPasivosCorrientes = [];
-  let labelsPasivosCorrientes = [];
-  balance_general.pasivo.pasivo_corriente.forEach((amount, acount) => {
-    dataPasivosCorrientes.push(amount);
-    labelsPasivosCorrientes.push(acount);
-  });
+  let dataCGOperacion = [];
+  let labelsCGOperacion = [];
+  estado_resultados.sub_costos_y_gastos_de_operacion.forEach(
+    (amount, acount) => {
+      dataCGOperacion.push(amount);
+      labelsCGOperacion.push(acount);
+    }
+  );
 
   // obteniendo todas las cuentas de pasivo no corriente y su total
-  let dataPasivosNoCorrientes = [];
-  let labelsPasivosNoCorrientes = [];
-  balance_general.pasivo.pasivo_no_corriente.forEach((amount, acount) => {
-    dataPasivosNoCorrientes.push(amount);
-    labelsPasivosNoCorrientes.push(acount);
+  let dataGastosFinancieros = [];
+  let labelsGastosFinancieros = [];
+  estado_resultados.sub_gastos_financieros.forEach((amount, acount) => {
+    dataGastosFinancieros.push(amount);
+    labelsGastosFinancieros.push(acount);
   });
 
   // obteniendo todas las cuentas de capital social y su total
-  let dataCapitalSocial = [];
-  let labelsCapitalSocial = [];
-  let totalCapitalSocial = 0;
-  console.log(balance_general.patrimonio.get("sub_capital_social"));
-  balance_general.patrimonio
-    .get("sub_capital_social")
-    .forEach((amount, acount) => {
-      dataCapitalSocial.push(amount);
-      labelsCapitalSocial.push(acount);
-      totalCapitalSocial += amount;
-    });
+  let dataProductosFinancieros = [];
+  let labelsProductosFinancieros = [];
+  estado_resultados.sub_productos_financieros.forEach((amount, acount) => {
+    dataProductosFinancieros.push(amount);
+    labelsProductosFinancieros.push(acount);
+  });
 
   // obteniendo todas las cuentas de patrimonio no corriente y su total
-  let dataPatrimonio = [];
-  let labelsPatrimonio = [];
-  balance_general.patrimonio.forEach((amount, acount) => {
-    if (acount === "sub_capital_social") {
-      labelsPatrimonio.push("Total Capital Social");
-      dataPatrimonio.push(totalCapitalSocial);
-    } else {
-      labelsPatrimonio.push(acount);
-      dataPatrimonio.push(amount);
-    }
+  let dataImpuestos = [];
+  let labelsImpuestos = [];
+  estado_resultados.sub_impuestos_y_reservas.forEach((amount, acount) => {
+    labelsImpuestos.push(acount);
+    dataImpuestos.push(amount);
   });
 
   let COLORS_COPY = [...COLORS];
-  graphicAC = new Chart(document.getElementById(props.ids[0]), {
+  graphicPO = new Chart(document.getElementById(props.ids[0]), {
     type: "doughnut",
     data: {
-      labels: labelsActivosCorrientes,
+      labels: labelsProductosOperacion,
       datasets: [
         {
-          data: dataActivosCorrientes,
+          data: dataProductosOperacion,
           backgroundColor: COLORS_COPY.sort(() => Math.random() - 0.5).splice(
             0,
-            dataActivosCorrientes.length
+            dataProductosOperacion.length
           ),
           hoverOffset: 5,
           borderAlign: "center",
@@ -189,7 +168,7 @@ onMounted(() => {
         },
         title: {
           display: true,
-          text: "Activo Corriente",
+          text: "Productos de Operación",
         },
         tooltip: {
           padding: 3,
@@ -219,7 +198,7 @@ onMounted(() => {
               return (
                 (
                   (item.raw * 100) /
-                  obtenerTotalesBalance(props.periodo).totalActivoCorriente
+                  obtenerTotalesEstado(props.periodo).ProductosOperacion
                 ).toFixed(2) + "%"
               );
             },
@@ -229,16 +208,16 @@ onMounted(() => {
     },
   });
 
-  graphicANC = new Chart(document.getElementById(props.ids[1]), {
+  graphicCV = new Chart(document.getElementById(props.ids[1]), {
     type: "doughnut",
     data: {
-      labels: labelsActivosNoCorrientes,
+      labels: labelsCostoVentas,
       datasets: [
         {
-          data: dataActivosNoCorrientes,
+          data: dataCostoVentas,
           backgroundColor: COLORS_COPY.sort(() => Math.random() - 0.5).splice(
             0,
-            dataActivosNoCorrientes.length
+            dataCostoVentas.length
           ),
           hoverOffset: 5,
           borderAlign: "center",
@@ -259,7 +238,7 @@ onMounted(() => {
         },
         title: {
           display: true,
-          text: "Activo no Corriente",
+          text: "Costos de Venta",
         },
         tooltip: {
           padding: 3,
@@ -289,7 +268,7 @@ onMounted(() => {
               return (
                 (
                   (item.raw * 100) /
-                  obtenerTotalesBalance(props.periodo).totalActivoNoCorriente
+                  obtenerTotalesEstado(props.periodo).CostosEnergia
                 ).toFixed(2) + "%"
               );
             },
@@ -300,16 +279,16 @@ onMounted(() => {
   });
 
   COLORS_COPY = [...COLORS];
-  graphicPVC = new Chart(document.getElementById(props.ids[2]), {
+  graphicCGO = new Chart(document.getElementById(props.ids[2]), {
     type: "doughnut",
     data: {
-      labels: labelsPasivosCorrientes,
+      labels: labelsCGOperacion,
       datasets: [
         {
-          data: dataPasivosCorrientes,
+          data: dataCGOperacion,
           backgroundColor: COLORS_COPY.sort(() => Math.random() - 0.5).splice(
             0,
-            dataPasivosCorrientes.length
+            dataCGOperacion.length
           ),
           hoverOffset: 5,
           borderAlign: "center",
@@ -330,7 +309,7 @@ onMounted(() => {
         },
         title: {
           display: true,
-          text: "Pasivo Corriente",
+          text: "Costos y Gastos de Operación",
         },
         tooltip: {
           padding: 3,
@@ -360,7 +339,7 @@ onMounted(() => {
               return (
                 (
                   (item.raw * 100) /
-                  obtenerTotalesBalance(props.periodo).totalPasivoCorriente
+                  obtenerTotalesEstado(props.periodo).costosYGastosOperacion
                 ).toFixed(2) + "%"
               );
             },
@@ -370,16 +349,16 @@ onMounted(() => {
     },
   });
 
-  graphicPVNC = new Chart(document.getElementById(props.ids[3]), {
+  graphicGF = new Chart(document.getElementById(props.ids[3]), {
     type: "doughnut",
     data: {
-      labels: labelsPasivosNoCorrientes,
+      labels: labelsGastosFinancieros,
       datasets: [
         {
-          data: dataPasivosNoCorrientes,
+          data: dataGastosFinancieros,
           backgroundColor: COLORS_COPY.sort(() => Math.random() - 0.5).splice(
             0,
-            dataPasivosNoCorrientes.length
+            dataGastosFinancieros.length
           ),
           hoverOffset: 5,
           borderAlign: "center",
@@ -400,7 +379,7 @@ onMounted(() => {
         },
         title: {
           display: true,
-          text: "Pasivo no Corriente",
+          text: "Gastos Financieros",
         },
         tooltip: {
           padding: 3,
@@ -430,7 +409,7 @@ onMounted(() => {
               return (
                 (
                   (item.raw * 100) /
-                  obtenerTotalesBalance(props.periodo).totalPasivoNoCorriente
+                  obtenerTotalesEstado(props.periodo).gastosFinancieros
                 ).toFixed(2) + "%"
               );
             },
@@ -440,16 +419,16 @@ onMounted(() => {
     },
   });
 
-  graphicCS = new Chart(document.getElementById(props.ids[4]), {
+  graphicPF = new Chart(document.getElementById(props.ids[4]), {
     type: "doughnut",
     data: {
-      labels: labelsCapitalSocial,
+      labels: labelsProductosFinancieros,
       datasets: [
         {
-          data: dataCapitalSocial,
+          data: dataProductosFinancieros,
           backgroundColor: COLORS_COPY.sort(() => Math.random() - 0.5).splice(
             0,
-            dataCapitalSocial.length
+            dataProductosFinancieros.length
           ),
           hoverOffset: 5,
           borderAlign: "center",
@@ -470,7 +449,7 @@ onMounted(() => {
         },
         title: {
           display: true,
-          text: "Capital Social",
+          text: "Productos Financieros",
         },
         tooltip: {
           padding: 3,
@@ -500,7 +479,7 @@ onMounted(() => {
               return (
                 (
                   (item.raw * 100) /
-                  obtenerTotalesBalance(props.periodo).totalCapitalSocial
+                  obtenerTotalesEstado(props.periodo).productosFinancieros
                 ).toFixed(2) + "%"
               );
             },
@@ -510,16 +489,16 @@ onMounted(() => {
     },
   });
 
-  graphicPT = new Chart(document.getElementById(props.ids[5]), {
+  graphicIP = new Chart(document.getElementById(props.ids[5]), {
     type: "doughnut",
     data: {
-      labels: labelsPatrimonio,
+      labels: labelsImpuestos,
       datasets: [
         {
-          data: dataPatrimonio,
+          data: dataImpuestos,
           backgroundColor: COLORS_COPY.sort(() => Math.random() - 0.5).splice(
             0,
-            dataPatrimonio.length
+            dataImpuestos.length
           ),
           hoverOffset: 5,
           borderAlign: "center",
@@ -540,7 +519,7 @@ onMounted(() => {
         },
         title: {
           display: true,
-          text: "Capital Social",
+          text: "Impuestos y Reservas",
         },
         tooltip: {
           padding: 3,
@@ -570,7 +549,7 @@ onMounted(() => {
               return (
                 (
                   (item.raw * 100) /
-                  obtenerTotalesBalance(props.periodo).totalPatrimonio
+                  obtenerTotalesEstado(props.periodo).impuestos_y_reservas
                 ).toFixed(2) + "%"
               );
             },
@@ -582,12 +561,12 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  graphicAC.destroy();
-  graphicANC.destroy();
-  graphicPVC.destroy();
-  graphicPVNC.destroy();
-  graphicCS.destroy();
-  graphicPT.destroy();
+  graphicPO.destroy();
+  graphicCGO.destroy();
+  graphicGF.destroy();
+  graphicPF.destroy();
+  graphicCV.destroy();
+  graphicIP.destroy();
 });
 </script>
 

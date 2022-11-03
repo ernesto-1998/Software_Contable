@@ -34,20 +34,75 @@
       />
     </div>
 
-    <div v-if="showGraphicsBalance" class="info-container bg-secondary">
-      <div v-for="periodo in periodos" :key="periodo">
-        <EspecificosBalance
-          :periodo="periodo"
-          :ids="[
-            periodo + '1',
-            periodo + '2',
-            periodo + '3',
-            periodo + '4',
-            periodo + '5',
-            periodo + '6',
-          ]"
+    <div
+      v-if="showGraphicsBalance || showGraphicsER"
+      class="graphics-container bg-secondary"
+    >
+      <q-tabs
+        active-color="purple-13"
+        active-bg-color="indigo-1"
+        v-model="tab"
+        no-caps
+        class="bg-secondary text-white"
+      >
+        <q-tab
+          v-for="periodo in periodos"
+          :key="periodo"
+          :name="periodo"
+          :label="'Periodo ' + periodo"
         />
-      </div>
+      </q-tabs>
+
+      <q-tab-panels
+        v-model="tab"
+        animated
+        vertical
+        transition-prev="fade "
+        transition-next="fade"
+        transition-duration="500"
+        class="bg-secondary"
+      >
+        <q-tab-panel v-for="periodo in periodos" :key="periodo" :name="periodo">
+          <div v-if="showGraphicsBalance" class="q-pa-none">
+            <div>
+              <EspecificosBalance
+                :periodo="periodo"
+                :ids="[
+                  periodo + 'eB1',
+                  periodo + 'eB2',
+                  periodo + 'eB3',
+                  periodo + 'eB4',
+                  periodo + 'eB5',
+                  periodo + 'eB6',
+                ]"
+              />
+            </div>
+            <div>
+              <AbsolutosBalance
+                :periodo="periodo"
+                :ids="[periodo + 'aB1', periodo + 'aB2']"
+              />
+            </div>
+          </div>
+          <div v-if="showGraphicsER" class="q-pa-none">
+            <EspecificosER
+              :periodo="periodo"
+              :ids="[
+                periodo + 'eR1',
+                periodo + 'eR2',
+                periodo + 'eR3',
+                periodo + 'eR4',
+                periodo + 'eR5',
+                periodo + 'eR6',
+              ]"
+            />
+            <AbsolutosER
+              :periodo="periodo"
+              :ids="[periodo + 'aeR1', periodo + 'aeRB2']"
+            />
+          </div>
+        </q-tab-panel>
+      </q-tab-panels>
     </div>
   </div>
 </template>
@@ -62,7 +117,9 @@ import {
 } from "../../utils/totales.js";
 import { getKeysBalance } from "../../utils/getKeys.js";
 import EspecificosBalance from "src/components/graphics/vertical/especificosBalance.vue";
-
+import AbsolutosBalance from "src/components/graphics/vertical/absolutosBalance.vue";
+import EspecificosER from "src/components/graphics/vertical/especificosER.vue";
+import AbsolutosER from "src/components/graphics/vertical/absolutosER.vue";
 onBeforeMount(() => {
   const tamanio = input.balance_general.length;
   for (let i = 0; i < tamanio; i++) {
@@ -83,6 +140,7 @@ onBeforeMount(() => {
 const input = useCounterStore();
 const showGraphicsBalance = ref(false);
 const showGraphicsER = ref(false);
+let tab = ref("mails");
 let año = ref([]);
 let options = ["Balance General", "Estado de Resultados"];
 let estado = ref(null);
@@ -99,6 +157,7 @@ let rowsPatrimonio = ref([]);
 const activarAnalisis = (año, estado) => {
   limpiarVariables();
   periodos.value = Object.values(año);
+  tab.value = periodos.value[0];
   if (estado === "Balance General") {
     showGraphicsBalance.value = true;
     columns.value.push("ACTIVO");
@@ -357,7 +416,7 @@ watch(estado, () => {
 });
 </script>
 
-<style>
+<style scoped>
 .analisis-vertical_container {
   height: 100%;
   /* margin-bottom: 2.5rem; */
@@ -369,6 +428,11 @@ watch(estado, () => {
   border-radius: 16px;
 }
 
+.graphics-container {
+  margin: 1.5rem 2.5rem;
+  padding: 1rem;
+  border-radius: 16px;
+}
 .title label {
   color: #fff;
   font-size: 1.5rem;
