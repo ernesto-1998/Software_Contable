@@ -63,6 +63,9 @@ export const obtenerTotalesBalance = (año) => {
 
   // Total Patrimonio Balance
 
+  let CapitalSocialMinimo = balance.patrimonio.get("sub_capital_social").get("Capital social mínimo");
+  let CapitalSocialVariable = balance.patrimonio.get("sub_capital_social").get("Capital social variable");
+
   let totalCapitalSocial = 0;
   balance.patrimonio.get("sub_capital_social").forEach((value) => {
     totalCapitalSocial += value;
@@ -91,6 +94,8 @@ export const obtenerTotalesBalance = (año) => {
     totalPasivoCorriente,
     totalPasivoNoCorriente,
     totalCapitalSocial,
+    CapitalSocialMinimo,
+    CapitalSocialVariable,
     totalPatrimonio,
   };
 };
