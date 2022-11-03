@@ -26,8 +26,8 @@
             </div>            
         </div>
 
-        <div class="vertical-seccion-container bg-positive">
-            <TablaVerticalBalance :columns="columns" :rowsActivo="rowsActivo" :rowsPasivo="rowsPasivo"/>
+        <div v-if="generador === true" class="vertical-seccion-container bg-positive">
+            <TablaVerticalBalance :columns="columns" :rowsActivo="rowsActivo" :rowsPasivo="rowsPasivo" />
         </div>
 
     </div>
@@ -58,6 +58,7 @@ onBeforeMount(() => {
 });
 
 const input = useCounterStore();
+let generador = ref(false);
 let año = ref([]);
 let options = [
     "Balance General",
@@ -74,6 +75,7 @@ let rowsPasivo = ref([]);
 let rowsPatrimonio = ref([]);
 
 const activarAnalisis = (año, estado) => {
+    generador.value = true;
     limpiarVariables();
     if(estado === "Balance General"){
         columns.value.push("ACTIVO");
@@ -189,6 +191,28 @@ const activarAnalisisBalance = (años) => {
         let totales = obtenerTotalesBalance(año);
         rowsPasivo.value[contador2].push(totales.totalPasivo, 0, calcularPorcentaje(totales.totalPasivo, totales.totalPasivo).toFixed(1) + "%");
     }    
+
+    // COMIENZA LA SECCION DEL PATRIMONIO
+    let contador3 = 0;      
+
+    for(let val of keysBalance.patrimonio){
+        if(val === "Capital social mínimo"){
+            rowsPatrimonio.value.push([val]);
+            for(let año of años){
+                let totales = obtenerTotalesBalance(año);
+                let patrimonio = (totales.balance.patrimonio.get(val) || 0); 
+                rowsPatrimonio.value[contador].push(patrimonio, calcularPorcentaje(patrimonio, totales.totalPatrimonio).toFixed(1) + "%", calcularPorcentaje(patrimonio, totales.totalPatrimonio).toFixed(1) + "%");   
+            }
+        }
+        rowsPatrimonio.value.push([val]);
+        for(let año of años){
+            let totales = obtenerTotalesBalance(año);
+            let patrimonio = (totales.balance.patrimonio.get(val) || 0); 
+            rowsPatrimonio.value[contador].push(patrimonio, calcularPorcentaje(patrimonio, totales.totalPatrimonio).toFixed(1) + "%", calcularPorcentaje(patrimonio, totales.totalPatrimonio).toFixed(1) + "%");   
+        }
+        contador3++;
+    }
+
 }
 
 
@@ -217,6 +241,7 @@ const obtenerDatosRazones = (año) => {
 const limpiarVariables = () => {
     columns.value = [];
     rowsActivo.value = [];
+    rowsPasivo.value = [];
 }
 </script>
 

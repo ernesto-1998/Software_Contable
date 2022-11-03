@@ -30,16 +30,17 @@
                         <span v-else>{{ childItem }} </span>
                     </td>
                 </tr> 
-                <!--<tr class="table-head">
-                    <th class="table-head-titles">
-                        <span>Patrimonio</span>
+                <tr class="table-head bg-secondary">
+                    <th class="table-head_titles table-ceil">
+                        <span>PATRIMONIO</span>
                     </th>
-                </tr> 
-                <tr class="table-row">
-                    <td class="table-ceil" v-for="(item, index) in props.rowsPatrimonio" :key="index">
-                        <span>{{ item }}</span>
+                </tr>
+                <tr class="table-row" v-for="(item, index) in props.rowsPatrimonio" :key="index">
+                    <td class="table-ceil bg-accent" align="center" v-for="(childItem, index) in item" :key="index">
+                        <span class="conditionalBinding" v-if="(childItem === 'Total Patrimonio')">{{ childItem }} </span>
+                        <span v-else>{{ childItem }} </span>
                     </td>
-                </tr>                               -->
+                </tr> 
             </table>
         </div>
     </div>
@@ -53,6 +54,7 @@ const props = defineProps({
     rowsActivo: Array,
     rowsPasivo: Array,
     rowsPatrimonio: Array,
+    generador: Boolean
 });
 
 </script>
@@ -66,8 +68,12 @@ const props = defineProps({
     }
 
     .table-container {
-        overflow-x: auto;
+        overflow: auto;
         height: 25.5rem;
+    }
+
+    .table-content {
+        max-width: 100%;
     }
 
     .table-head_titles {

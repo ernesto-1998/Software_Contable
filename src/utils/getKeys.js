@@ -22,13 +22,14 @@ export const getKeysBalance = (años) => {
         for(let [key, value] of totales.balance.pasivo.pasivo_no_corriente){
                 PasivoNoCorriente.push(key);
         }
-        for(let [key, value] of totales.balance.patrimonio){
-                Patrimonio.push(key);
-        }
         for(let [key, value] of totales.balance.patrimonio.get("sub_capital_social")){
                 Patrimonio.push(key);
         }
-    }
+        for(let [key, value] of totales.balance.patrimonio){
+                Patrimonio.push(key);
+        }
+}
+console.table(Patrimonio)
     return {
         ActivoCorriente,
         ActivoNoCorriente,
