@@ -63,7 +63,8 @@ export const razones_actividad = {
     total_cuentas_por_cobrar,
     inventarios,
     activo_no_corriente,
-    total_depreciacion
+    total_depreciacion,
+    efectivo
   ) {
     return (
       ventas /
@@ -81,8 +82,8 @@ export const razones_deuda = {
     return (pasivos_totales / activos_totales) * 100;
   },
 
-  razon_cargos_interes_fijo: function (utilidad_antes_impuestos, intereses) {
-    return utilidad_antes_impuestos / intereses;
+  razon_cargos_interes_fijo: function (utilidad_antes_impuestos, impuestos) {
+    return utilidad_antes_impuestos / impuestos;
   },
 
   MAF: function (activos_totales, patrimonio) {

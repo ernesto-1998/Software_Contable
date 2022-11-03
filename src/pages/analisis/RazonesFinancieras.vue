@@ -137,11 +137,12 @@ const activarRazonesActividad = (año) => {
 const activarRazonesDeuda = (año) => {
   title.value = razon.value;
   const datos = obtenerDatosRazones(año);
-  columns.value = ["Año", "Razon de Endeudamiento", "Razon Cargo Interes Fijo"];
+  columns.value = ["Año", "Razon de Endeudamiento", "Razon Cargo Interes Fijo", "MAF"];
   rows.value.push([
     año,
     datos.razon_endeudamiento,
     datos.razon_cargos_interes_fijo,
+    datos.maf
   ]);
 };
 
@@ -184,6 +185,7 @@ const obtenerDatosRazones = (año) => {
   const cuentas_por_pagar = totalesBalance.cuentas_por_pagar;
   const total_depreciacion = totalesBalance.total_depreciacion;
 
+  const impuestos = totalesEstado.impuestos;
   const utilidad_bruta = totalesEstado.utilidadBruta;
   const utilidad_operativa = totalesEstado.utilidadOperacion;
   const utilidad_antes_impuestos = totalesEstado.utilidadAntesImpuestos;
@@ -251,8 +253,9 @@ const obtenerDatosRazones = (año) => {
     .razon_endeudamiento(pasivo, activo)
     .toFixed(2);
   const razon_cargos_interes_fijo = razones_deuda
-    .razon_cargos_interes_fijo(utilidad_antes_impuestos, 1)
+    .razon_cargos_interes_fijo(utilidad_antes_impuestos, impuestos)
     .toFixed(2);
+  const maf = razones_deuda.MAF(activo, patrimonio).toFixed(2);
 
   // Razones de Rendimiento
 
@@ -297,6 +300,7 @@ const obtenerDatosRazones = (año) => {
     // Razon de Deuda
     razon_endeudamiento,
     razon_cargos_interes_fijo,
+    maf,
     // Razones de Rendimiento
     roa,
     roe,

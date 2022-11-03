@@ -103,6 +103,8 @@ export const obtenerTotalesBalance = (año) => {
 export const obtenerTotalesEstado = (año) => {
   let estado = useCounterStore().getEstadoByYear(año);
 
+  let impuestos = (estado.sub_impuestos_y_reservas.get("Impuesto Sobre la Renta") || 0) + (estado.sub_impuestos_y_reservas.get("Impuesto Sobre la Renta Diferido") || 0) + (estado.sub_impuestos_y_reservas.get("Contribucion especial (CESC)") || 0);
+
   // Total Productos de operacion
 
   let ProductosOperacion = 0;
@@ -158,6 +160,7 @@ export const obtenerTotalesEstado = (año) => {
   let utilidadNeta = utilidadAntesImpuestos - impuestos_y_reservas;
 
   return {
+    impuestos,
     utilidadBruta,
     utilidadOperacion,
     utilidadAntesImpuestos,

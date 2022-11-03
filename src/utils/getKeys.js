@@ -29,7 +29,7 @@ export const getKeysBalance = (años) => {
                 Patrimonio.push(key);
         }
 }
-console.table(Patrimonio)
+
     return {
         ActivoCorriente,
         ActivoNoCorriente,

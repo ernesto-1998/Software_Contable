@@ -151,9 +151,9 @@ let rowsPasivo = ref([]);
 let rowsPatrimonio = ref([]);
 
 const activarAnalisis = (año, estado) => {
-    generador.value = true;
     limpiarVariables();
     if(estado === "Balance General"){
+        generador.value = true;
         columnsActivo.value.push("ACTIVO");
         columnsPasivo.value.push("PASIVO");
         columnsPatrimonio.value.push("PATRIMONIO");
@@ -253,7 +253,7 @@ const activarAnalisisBalance = (años) => {
   for (let año of años) {
     let totales = obtenerTotalesBalance(año);
     rowsActivo.value[contador].push(
-      totales.totalActivoNoCorriente,
+      totales.totalActivo,
       0,
       calcularPorcentaje(totales.totalActivo, totales.totalActivo).toFixed(1) +
         "%"
