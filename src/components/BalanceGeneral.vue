@@ -538,7 +538,6 @@ watch(
     rows.value[index].isHeaderPT = true;
     index += 1;
     for (const [cuenta, monto] of val[0].patrimonio.get("sub_capital_social")) {
-      console.log("si");
       rows.value[index].cuentaPasivo = cuenta;
       rows.value[index].sub_pasivo = monto;
       rows.value[index].isCS = true;
