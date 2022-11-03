@@ -9,7 +9,7 @@
         <div class="table-container">
             <table class="table-content">
                 <tr class="table-head bg-secondary">
-                    <th class="table-head_titles table-ceil" align="center" v-for="(item, index) in props.columns" :key="index">
+                    <th class="table-head_titles table-ceil" align="center" v-for="(item, index) in props.columnsActivo" :key="index">
                         <span>{{ item }}</span>
                     </th>
                 </tr>
@@ -20,8 +20,8 @@
                     </td>
                 </tr>
                 <tr class="table-head bg-secondary">
-                    <th class="table-head_titles table-ceil">
-                        <span>PASIVO</span>
+                    <th class="table-head_titles table-ceil" align="center" v-for="(item, index) in props.columnsPasivo" :key="index">
+                        <span>{{ item }}</span>
                     </th>
                 </tr>
                 <tr class="table-row" v-for="(item, index) in props.rowsPasivo" :key="index">
@@ -31,8 +31,8 @@
                     </td>
                 </tr> 
                 <tr class="table-head bg-secondary">
-                    <th class="table-head_titles table-ceil">
-                        <span>PATRIMONIO</span>
+                    <th class="table-head_titles table-ceil" align="center" v-for="(item, index) in props.columnsPatrimonio" :key="index">
+                        <span>{{ item }}</span>
                     </th>
                 </tr>
                 <tr class="table-row" v-for="(item, index) in props.rowsPatrimonio" :key="index">
@@ -50,7 +50,9 @@
 
 const props = defineProps({
     title: String,
-    columns: Array,
+    columnsActivo: Array,
+    columnsPasivo: Array,
+    columnsPatrimonio: Array,
     rowsActivo: Array,
     rowsPasivo: Array,
     rowsPatrimonio: Array,

@@ -27,7 +27,7 @@
         </div>
 
         <div v-if="generador === true" class="vertical-seccion-container bg-positive">
-            <TablaVerticalBalance :columns="columns" :rowsActivo="rowsActivo" :rowsPasivo="rowsPasivo" :rowsPatrimonio="rowsPatrimonio"/>
+            <TablaVerticalBalance :columnsActivo="columnsActivo" :columnsPasivo="columnsPasivo" :columnsPatrimonio="columnsPatrimonio" :rowsActivo="rowsActivo" :rowsPasivo="rowsPasivo" :rowsPatrimonio="rowsPatrimonio"/>
         </div>
 
     </div>
@@ -69,7 +69,9 @@ let periods = [];
 let keysBalance = {};
 let temporalVals = {};
 
-let columns = ref([]);
+let columnsActivo = ref([]);
+let columnsPasivo = ref([]);
+let columnsPatrimonio = ref([]);
 let rowsActivo = ref([]);
 let rowsPasivo = ref([]);
 let rowsPatrimonio = ref([]);
@@ -78,9 +80,13 @@ const activarAnalisis = (año, estado) => {
     generador.value = true;
     limpiarVariables();
     if(estado === "Balance General"){
-        columns.value.push("ACTIVO");
+        columnsActivo.value.push("ACTIVO");
+        columnsPasivo.value.push("PASIVO");
+        columnsPatrimonio.value.push("PATRIMONIO");
         for(let a of año){
-            columns.value.push(a, "(%) Relativo", "(%) Absoluto");
+            columnsActivo.value.push(a, "(%) Relativo", "(%) Absoluto");
+            columnsPasivo.value.push(a, "(%) Relativo", "(%) Absoluto");
+            columnsPatrimonio.value.push(a, "(%) Relativo", "(%) Absoluto");
         }
         activarAnalisisBalance(año);
     }
@@ -287,7 +293,9 @@ const obtenerDatosRazones = (año) => {
 }
 
 const limpiarVariables = () => {
-    columns.value = [];
+    columnsActivo.value = [];
+    columnsPasivo.value = [];
+    columnsPatrimonio.value = [];
     rowsActivo.value = [];
     rowsPasivo.value = [];
     rowsPatrimonio.value = [];
