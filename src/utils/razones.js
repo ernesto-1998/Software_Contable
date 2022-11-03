@@ -22,7 +22,7 @@ export const razones_liquidez = {
 
 export const razones_actividad = {
   rotacion_cuentas_por_cobrar: function (cuentas_por_cobrar, ventas) {
-    return (365 * cuentas_por_cobrar) / ventas; // Cantidad de veces al año en que se hace el cobro total de las cuentas por cobrar
+    return 365 / this.periodo_promedio_cobro(cuentas_por_cobrar, ventas); // Cantidad de veces al año en que se hace el cobro total de las cuentas por cobrar
   },
 
   rotacion_inventarios: function (costo_de_ventas, inventarios) {
@@ -50,8 +50,8 @@ export const razones_actividad = {
   },
 
   // *************************************************
-  periodo_promedio_pago: function (cuentas_por_pagar, compras_anuales) {
-    return cuentas_por_pagar / (compras_anuales / 365);
+  periodo_promedio_pago: function (cuentas_por_pagar, ventas) {
+    return cuentas_por_pagar / ((ventas * 0.7) / 365);
   },
 
   rotacion_activo_total: function (ventas, activos_totales) {
@@ -60,16 +60,15 @@ export const razones_actividad = {
 
   rotacion_activo_operacional: function (
     ventas,
-    cuentas_por_cobrar,
+    total_cuentas_por_cobrar,
     inventarios,
     activo_no_corriente,
-    total_depreciacion,
-    efectivo
+    total_depreciacion
   ) {
     return (
       ventas /
       (efectivo +
-        cuentas_por_cobrar +
+        total_cuentas_por_cobrar +
         inventarios +
         activo_no_corriente -
         total_depreciacion)
@@ -85,23 +84,27 @@ export const razones_deuda = {
   razon_cargos_interes_fijo: function (utilidad_antes_impuestos, intereses) {
     return utilidad_antes_impuestos / intereses;
   },
+
+  MAF: function (activos_totales, patrimonio) {
+    return activos_totales / patrimonio;
+  },
 };
 
 export const razones_rendimiento = {
   ROA: function (utilidad_neta, activos) {
-    return utilidad_neta / activos;
+    return (utilidad_neta / activos) * 100;
   },
 
   ROE: function (utilidad_neta, patrimonio) {
-    return utilidad_neta / patrimonio;
+    return (utilidad_neta / patrimonio) * 100;
   },
 
   margen_utilidad_bruta: function (utilidad_bruta, ventas) {
-    return utilidad_bruta / ventas; // utilidades_brutas = ventas - costo de los bienes vendidos
+    return (utilidad_bruta / ventas) * 100; // utilidades_brutas = ventas - costo de los bienes vendidos
   },
 
   margen_utilidad_operativa: function (utilidad_operativa, ventas) {
-    return utilidad_operativa / ventas;
+    return (utilidad_operativa / ventas) * 100;
   },
 
   margen_utilidad_neta: function (utilidad_neta, ventas) {

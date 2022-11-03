@@ -40,6 +40,11 @@ const routes = [
         name: "horizontal",
         component: () => import("src/pages/analisis/AnalisisHorizontal.vue"),
       },
+      {
+        path: "/dupont",
+        name: "dupont",
+        component: () => import("src/pages/analisis/AnalisisDUPONT.vue"),
+      },
     ],
   },
 
