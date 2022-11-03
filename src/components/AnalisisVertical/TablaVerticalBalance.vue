@@ -37,7 +37,7 @@
                 </tr>
                 <tr class="table-row" v-for="(item, index) in props.rowsPatrimonio" :key="index">
                     <td class="table-ceil bg-accent" align="center" v-for="(childItem, index) in item" :key="index">
-                        <span class="conditionalBinding" v-if="(childItem === 'Total Patrimonio')">{{ childItem }} </span>
+                        <span class="conditionalBinding" v-if="((childItem === 'Total Patrimonio Neto') || (childItem === 'Total Pasivo + Patrimonio Neto') || (childItem === 'sub_capital_social'))">{{ childItem === 'sub_capital_social' ? "Sub Capital Social": childItem }} </span>
                         <span v-else>{{ childItem }} </span>
                     </td>
                 </tr> 
