@@ -14,7 +14,9 @@ export const obtenerTotalesBalance = (año) => {
     ) +
     balance.activo.activo_corriente.get(
       "Cuentas por Cobrar a partes relacionadas"
-    );
+    ) +
+    balance.activo.activo_corriente.get("Estimación para Cuentas Incobrables");
+
   const cuentas_por_pagar =
     (balance.pasivo.pasivo_corriente.get("Cuentas por Pagar Regulatorias") ||
       0) +
@@ -63,8 +65,12 @@ export const obtenerTotalesBalance = (año) => {
 
   // Total Patrimonio Balance
 
-  let CapitalSocialMinimo = balance.patrimonio.get("sub_capital_social").get("Capital social mínimo");
-  let CapitalSocialVariable = balance.patrimonio.get("sub_capital_social").get("Capital social variable");
+  let CapitalSocialMinimo = balance.patrimonio
+    .get("sub_capital_social")
+    .get("Capital social mínimo");
+  let CapitalSocialVariable = balance.patrimonio
+    .get("sub_capital_social")
+    .get("Capital social variable");
 
   let totalCapitalSocial = 0;
   balance.patrimonio.get("sub_capital_social").forEach((value) => {
@@ -103,7 +109,11 @@ export const obtenerTotalesBalance = (año) => {
 export const obtenerTotalesEstado = (año) => {
   let estado = useCounterStore().getEstadoByYear(año);
 
-  let impuestos = (estado.sub_impuestos_y_reservas.get("Impuesto Sobre la Renta") || 0) + (estado.sub_impuestos_y_reservas.get("Impuesto Sobre la Renta Diferido") || 0) + (estado.sub_impuestos_y_reservas.get("Contribucion especial (CESC)") || 0);
+  let impuestos =
+    (estado.sub_impuestos_y_reservas.get("Impuesto Sobre la Renta") || 0) +
+    (estado.sub_impuestos_y_reservas.get("Impuesto Sobre la Renta Diferido") ||
+      0) +
+    (estado.sub_impuestos_y_reservas.get("Contribucion especial (CESC)") || 0);
 
   // Total Productos de operacion
 

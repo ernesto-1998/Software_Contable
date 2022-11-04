@@ -1,5 +1,5 @@
 <template>
-  <router-view class="bg-accent" />
+  <router-view />
 </template>
 
 <script>
@@ -9,4 +9,3 @@ export default defineComponent({
   name: "App",
 });
 </script>
-

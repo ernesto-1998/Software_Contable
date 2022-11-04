@@ -1,12 +1,10 @@
 <template>
-  <q-layout view="lHh lpR lFf">
-    <q-header reveal elevated class="bg-primary text-white">
+  <q-layout view="lHh LpR lFf">
+    <q-header reveal reveal-offset="200" elevated class="bg-primary text-white">
       <q-toolbar>
         <q-toolbar-title>
-          <q-avatar>
-            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg" />
-          </q-avatar>
-          Title
+          <q-avatar icon="fa-solid fa-scale-balanced" size="70px"> </q-avatar>
+          Software <span class="text-weight-bold">Financiero</span>
         </q-toolbar-title>
       </q-toolbar>
     </q-header>
@@ -22,7 +20,6 @@
 <script setup>
 import { ref } from "vue";
 import Sidebar from "../components/Side-bar.vue";
-
 </script>
 <style>
 .drawer {
