@@ -21,7 +21,7 @@
 import { ref } from "vue";
 import Sidebar from "../components/Side-bar.vue";
 </script>
-<style>
+<style scoped>
 .drawer {
   background-color: #f67e7d;
   box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px,

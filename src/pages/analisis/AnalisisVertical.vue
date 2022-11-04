@@ -2,27 +2,71 @@
   <div class="">
     <div class="info-container bg-secondary">
       <div class="title">
-        <label> Análisis Vertical </label>
+        <label> Análisis <span class="text-weight-bold">Vertical</span> </label>
       </div>
-      <div class="estado-financiero_container">
-        <label>Periodo: </label>
+      <div class="estado-financiero_container q-mb-xl">
+        <label>Periodos: </label>
         <q-select
-          filled
+          label-color="purple-13"
+          bg-color="white"
+          color="purple-13"
+          clearable
+          transition-show="flip-up"
+          transition-hide="scale"
+          rounded
+          outlined
           v-model="año"
           multiple
           :options="periods"
           label="Periodos"
-          style="width: 250px"
+          popup-content-style="border-top-left-radius: 15px 50px;
+  border-top-right-radius: 15px 50px;
+  border-bottom-left-radius: 80px 19px;
+  border-bottom-right-radius: 80px 19px;
+  border: solid 3px #6e7491;
+  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;"
+          style="
+            width: 320px;
+            border-radius: 30px;
+            box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+          "
         />
       </div>
       <div class="periodo-container">
-        <label>Estados: </label>
-        <q-select filled v-model="estado" :options="options" label="Estado" />
+        <label>Estado: </label>
+        <q-select
+          label-color="purple-13"
+          bg-color="white"
+          color="purple-13"
+          clearable
+          transition-show="flip-up"
+          transition-hide="scale"
+          rounded
+          outlined
+          popup-content-style="border-top-left-radius: 15px 50px;
+  border-top-right-radius: 15px 50px;
+  border-bottom-left-radius: 80px 19px;
+  border-bottom-right-radius: 80px 19px;
+  border: solid 3px #6e7491;
+  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;"
+          style="
+            width: 320px;
+            border-radius: 30px;
+            box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+          "
+          v-model="estado"
+          :options="options"
+          label="Estado"
+        />
       </div>
-      <div class="button-container">
-        <button class="btn-activar" @click="activarAnalisis(año, estado)">
-          Generar
-        </button>
+      <div class="row justify-end q-py-md">
+        <q-btn
+          color="primary"
+          label="Generar Análisis"
+          no-caps
+          @click="activarAnalisis(año, estado)"
+          class="q-mr-xl buttom"
+        />
       </div>
     </div>
 
@@ -639,14 +683,9 @@ const limpiarVariables = () => {
 </script>
 
 <style scoped>
-.analisis-vertical_container {
-  height: 100%;
-  /* margin-bottom: 2.5rem; */
-}
-
 .info-container {
   margin: 1.5rem 2.5rem;
-  padding: 1rem;
+  padding: 1.5rem;
   border-radius: 16px;
 }
 
@@ -672,14 +711,19 @@ const limpiarVariables = () => {
   color: #fff;
   font-size: 1rem;
 }
+/* CSS */
+.buttom {
+  border-radius: 24px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 3px 5px -1px,
+    rgba(0, 0, 0, 0.14) 0 6px 10px 0, rgba(0, 0, 0, 0.12) 0 1px 18px 0;
+  height: 48px;
+  letter-spacing: 0.25px;
+  padding: 2px 24px;
+}
 
 .periodo-container label {
   color: #fff;
   font-size: 1rem;
-}
-
-.button-container {
-  margin-top: 1.5rem;
 }
 
 .vertical-seccion-container {

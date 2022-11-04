@@ -101,7 +101,7 @@ function drawGraphics() {
 }
 </script>
 
-<style>
+<style scoped>
 .box {
   border: 0px inset rgba(100, 100, 100, 1);
   border-radius: 20px;

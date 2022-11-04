@@ -2,25 +2,72 @@
   <div class="razones-financieras_container">
     <div class="info-container bg-secondary">
       <div class="title">
-        <label>Razones Financieras</label>
+        <label>
+          Razones <span class="text-weight-bold">Financieras</span>
+        </label>
       </div>
       <div class="periodo-container">
         <label>Periodo: </label>
         <q-select
-          filled
+          label-color="purple-13"
+          bg-color="white"
+          color="purple-13"
+          clearable
+          transition-show="flip-up"
+          transition-hide="scale"
+          rounded
+          outlined
+          popup-content-style="border-top-left-radius: 15px 50px;
+  border-top-right-radius: 15px 50px;
+  border-bottom-left-radius: 80px 19px;
+  border-bottom-right-radius: 80px 19px;
+  border: solid 3px #6e7491;
+  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;"
+          style="
+            width: 350px;
+            border-radius: 30px;
+            box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+          "
           v-model="año"
           multiple
           :options="periods"
           label="periodo"
-          style="width: 250px"
         />
-        <label>Razones: </label>
-        <q-select filled v-model="razon" :options="razones" label="Razon" />
+        <label class="q-ml-xl">Razones: </label>
+        <q-select
+          class="q-ml-xl"
+          label-color="purple-13"
+          bg-color="white"
+          color="purple-13"
+          clearable
+          transition-show="flip-up"
+          transition-hide="scale"
+          rounded
+          outlined
+          popup-content-style="border-top-left-radius: 15px 50px;
+  border-top-right-radius: 15px 50px;
+  border-bottom-left-radius: 80px 19px;
+  border-bottom-right-radius: 80px 19px;
+  border: solid 3px #6e7491;
+  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;"
+          style="
+            width: 300px;
+            border-radius: 30px;
+            box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+          "
+          v-model="razon"
+          :options="razones"
+          label="Razon"
+        />
       </div>
-      <div class="button-container">
-        <button class="btn-activar" @click="activarRazones(año, razon)">
-          Activar
-        </button>
+      <div class="row justify-end q-py-md">
+        <q-btn
+          color="primary"
+          label="Generar Razones"
+          no-caps
+          @click="activarRazones(año, razon)"
+          class="q-mr-xl buttom"
+        />
       </div>
     </div>
     <div class="razones-container bg-positive" v-if="rows.length !== 0">
@@ -137,12 +184,17 @@ const activarRazonesActividad = (año) => {
 const activarRazonesDeuda = (año) => {
   title.value = razon.value;
   const datos = obtenerDatosRazones(año);
-  columns.value = ["Año", "Razon de Endeudamiento", "Razon Cargo Interes Fijo", "MAF"];
+  columns.value = [
+    "Año",
+    "Razon de Endeudamiento",
+    "Razon Cargo Interes Fijo",
+    "MAF",
+  ];
   rows.value.push([
     año,
     datos.razon_endeudamiento,
     datos.razon_cargos_interes_fijo,
-    datos.maf
+    datos.maf,
   ]);
 };
 
@@ -334,7 +386,7 @@ const limpiarTabla = () => {
 
 .periodo-container {
   display: grid;
-  grid-template-columns: 90px 250px 90px 250px;
+  grid-template-columns: 90px 350px 90px 250px;
   gap: 10px;
   align-items: center;
   margin-top: 1.5rem;
@@ -352,7 +404,12 @@ const limpiarTabla = () => {
   /* height: 350px; */
 }
 
-.button-container {
-  margin-top: 1.5rem;
+.buttom {
+  border-radius: 24px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 3px 5px -1px,
+    rgba(0, 0, 0, 0.14) 0 6px 10px 0, rgba(0, 0, 0, 0.12) 0 1px 18px 0;
+  height: 48px;
+  letter-spacing: 0.25px;
+  padding: 2px 24px;
 }
 </style>

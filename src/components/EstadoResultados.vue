@@ -484,7 +484,7 @@ function getNewAmount(value) {
 }
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
 
 .text-sub
   box-shadow: 0 1px 0px  rgb(0 0 0) !important
