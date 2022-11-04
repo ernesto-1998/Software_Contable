@@ -43,7 +43,7 @@ const routes = [
       {
         path: "/dupont",
         name: "dupont",
-        component: () => import("src/pages/analisis/AnalisisDUPONT.vue"),
+        component: () => import("src/pages/analisis/AnalisisDupont.vue"),
       },
     ],
   },
