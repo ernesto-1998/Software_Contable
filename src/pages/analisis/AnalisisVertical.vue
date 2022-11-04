@@ -198,6 +198,8 @@ onBeforeMount(() => {
     sub_productos_financieros: Array.from(new Set(temporalKeysEstado.sub_productos_financieros)),
     sub_impuestos_y_reservas: Array.from(new Set(temporalKeysEstado.sub_impuestos_y_reservas))
   }
+
+  console.log(keysEstado)
 });
 
 const input = useCounterStore();
@@ -721,7 +723,6 @@ const activarAnalisisEstado = (años) => {
 
   contador++;
 
-  console.log(rowsAnalisisEstado.value)
 }
 
 const calcularPorcentaje = (numerador, denominador) => {

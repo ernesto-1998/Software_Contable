@@ -384,7 +384,7 @@ export const useCounterStore = defineStore("estados", {
           ["Ventas de energia entre compañias distribuidoras", 1_914_807.92],
           ["Ingresos por uso de red", 28_877_072.46],
           ["Ingresos por transacciones en el MRS", 5_705_568.58],
-          ["Otros Productos de Operacion", 5_464_267.36],
+          ["Otros Productos de Operación", 5_464_267.36],
         ]),
         sub_costos_de_energia: new Map([["Compra de energia", 108_739_922.53]]),
         sub_costos_y_gastos_de_operacion: new Map([
@@ -418,7 +418,7 @@ export const useCounterStore = defineStore("estados", {
           ["Ventas de energia entre compañias distribuidoras", 2_010_332.85],
           ["Ingresos por uso de red", 30_371_219.9],
           ["Ingresos por transacciones en el MRS", 5_804_280.87],
-          ["Otros Productos de Operacion", 5_497_749.86],
+          ["Otros Productos de Operación", 5_497_749.86],
         ]),
         sub_costos_de_energia: new Map([["Compra de energia", 125_321_771.49]]),
         sub_costos_y_gastos_de_operacion: new Map([
@@ -453,7 +453,7 @@ export const useCounterStore = defineStore("estados", {
           ["Ventas de energia entre compañias distribuidoras", 1_492_441.82],
           ["Ingresos por uso de red", 30_070_472.23],
           ["Ingresos por transacciones en el MRS", 4_805_440.58],
-          ["Otros Productos de Operacion", 5_389_696.72],
+          ["Otros Productos de Operación", 5_389_696.72],
         ]),
         sub_costos_de_energia: new Map([["Compra de energia", 96_738_227.56]]),
         sub_costos_y_gastos_de_operacion: new Map([
