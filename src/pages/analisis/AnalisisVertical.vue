@@ -26,13 +26,17 @@
       </div>
     </div>
 
-    <div v-if="generador === true" class="vertical-seccion-container bg-positive">
+    <div v-if="generadorBalance === true" class="vertical-seccion-container bg-positive">
       <TablaVerticalBalance
         :columnsActivo="columnsActivo"
         :columnsPasivo="columnsPasivo"
         :columnsPatrimonio="columnsPatrimonio"
         :rowsActivo="rowsActivo"
         :rowsPasivo="rowsPasivo" :rowsPatrimonio="rowsPatrimonio"
+      />
+    </div>
+    <div v-if="generadorEstado === true" class="vertical-seccion-container bg-positive">
+      <TablaVerticalBalance
       />
     </div>
 
@@ -154,7 +158,8 @@ onBeforeMount(() => {
 
 const input = useCounterStore();
 let tab = ref(null);
-let generador = ref(false);
+let generadorBalance = ref(false);
+let generadorEstado = ref(false);
 let showGraphicsBalance = ref(false);
 let showGraphicsER = ref(false);
 let año = ref([]);
@@ -177,17 +182,17 @@ let rowsPatrimonio = ref([]);
 // Variables que controlan la tabla del estado
 
 let columnsTitulo = ref([]);
-let columnsProductosOperacion = ref([]);
-let columnsUtilidadBruta = ref([]);
-let columnsUtilidadOperacion = ref([]);
-let columnsUtilidadAntesImpuestos = ref([]);
-let columnsUtilidadNeta = ref([]);
+// let columnsProductosOperacion = ref([]);
+// let columnsUtilidadBruta = ref([]);
+// let columnsUtilidadOperacion = ref([]);
+// let columnsUtilidadAntesImpuestos = ref([]);
+// let columnsUtilidadNeta = ref([]);
 
-let rowsProductosOperacion = ref([]);
-let rowsUtilidadBruta = ref([]);
-let rowsUtilidadOperacion = ref([]);
-let rowsUtilidadAntesImpuestos = ref([]);
-let rowsUtilidadNeta = ref([]);
+let rowsAnalisisEstado = ref([]);
+// let rowsUtilidadBruta = ref([]);
+// let rowsUtilidadOperacion = ref([]);
+// let rowsUtilidadAntesImpuestos = ref([]);
+// let rowsUtilidadNeta = ref([]);
 
 const activarAnalisis = (año, estado) => {
   limpiarVariables();
@@ -195,7 +200,7 @@ const activarAnalisis = (año, estado) => {
   if (estado === "Balance General") {
     showGraphicsBalance.value = true;
     showGraphicsER.value = false;
-    generador.value = true;
+    generadorEstado.value = true;
     columnsActivo.value.push("ACTIVO");
     columnsPasivo.value.push("PASIVO");
     columnsPatrimonio.value.push("PATRIMONIO");
@@ -205,7 +210,11 @@ const activarAnalisis = (año, estado) => {
       columnsPatrimonio.value.push(a, "(%) Relativo", "(%) Absoluto");
     }
     activarAnalisisBalance(año);
-  } else {
+  } 
+  else if("Estado de Resultados"){
+
+  }
+  else {
     showGraphicsBalance.value = false;
     showGraphicsBalance.value = true;
   }
@@ -519,12 +528,12 @@ const activarAnalisisEstado = (años) => {
   // Cuentas de Productos de Operacion
 
   for(let val of keysEstado.sub_productos_de_operacion){
-    rowsProductosOperacion.value.push([val]);
+    rowsAnalisisEstado.value.push([val]);
     for (let año of años) {
       let totales = obtenerTotalesEstado(año);
       let productosOperacion =
         totales.estado.sub_productos_de_operacion.get(val) || 0;
-      rowsProductosOperacion.value[contador].push(
+      rowsAnalisisEstado.value[contador].push(
         productosOperacion,
         calcularPorcentaje(
           productosOperacion,
@@ -562,7 +571,7 @@ const activarAnalisisEstado = (años) => {
   // Cuentas de Utilidad Operativa
 
   for(let val of keysEstado.sub_costos_y_gastos_de_operacion){
-    rowsProductosOperacion.value.push([val]);
+    rowsAnalisisEstado.value.push([val]);
     for (let año of años) {
       let totales = obtenerTotalesEstado(año);
       let cuentaUtilidadOperativa =
