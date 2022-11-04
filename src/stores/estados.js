@@ -390,7 +390,7 @@ export const useCounterStore = defineStore("estados", {
         sub_costos_y_gastos_de_operacion: new Map([
           ["Gastos de Operacion y Mantenimiento", 9_531_724.8],
           ["Gastos de Comercializacion", 3_953_024.38],
-          ["Gastos por cuenta de Consumidores", 785_642.01],
+          ["Gastos por Cuenta de Consumidores", 785_642.01],
           ["Gastos de Administracion", 4_013_427.33],
           ["Gastos por Depreciacion", 2_881_276.81],
           ["Amortizacion de Intangibles", 574_392.68],
@@ -502,7 +502,7 @@ export const useCounterStore = defineStore("estados", {
           ["Costos por Servicios a Terceros", 858_824.22],
           ["Gastos de Periodos Anteriores", -171_921.71],
           ["Otros Gastos", 0.0],
-          ["Perdidas por retiro de activos fijos", 73_015.92],
+          ["Pérdidas por retiro de activos fijos", 73_015.92],
         ]),
         sub_gastos_financieros: new Map([["Gastos Financieros", 1_297_683.3]]),
         sub_productos_financieros: new Map([
@@ -534,7 +534,7 @@ export const useCounterStore = defineStore("estados", {
           ["Amortizacion de Activos por Derecho de uso", 473_317.18],
           ["Costos por Servicios a Terceros", 875_759.53],
           ["Gastos de Periodos Anteriores", -45_729.89],
-          ["Perdidas por retiro de activos fijos", 145_955.52],
+          ["Pérdidas por retiro de activos fijos", 145_955.52],
         ]),
         sub_gastos_financieros: new Map([["Gastos Financieros", 1_734_784.46]]),
         sub_productos_financieros: new Map([

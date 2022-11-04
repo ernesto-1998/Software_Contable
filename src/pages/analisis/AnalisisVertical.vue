@@ -229,17 +229,7 @@ let rowsPatrimonio = ref([]);
 // Variables que controlan la tabla del estado
 
 let columnsTitulo = ref([]);
-// let columnsProductosOperacion = ref([]);
-// let columnsUtilidadBruta = ref([]);
-// let columnsUtilidadOperacion = ref([]);
-// let columnsUtilidadAntesImpuestos = ref([]);
-// let columnsUtilidadNeta = ref([]);
-
 let rowsAnalisisEstado = ref([]);
-// let rowsUtilidadBruta = ref([]);
-// let rowsUtilidadOperacion = ref([]);
-// let rowsUtilidadAntesImpuestos = ref([]);
-// let rowsUtilidadNeta = ref([]);
 
 const activarAnalisis = (año, estado) => {
   limpiarVariables();
@@ -254,19 +244,20 @@ const activarAnalisis = (año, estado) => {
     columnsPasivo.value.push("PASIVO");
     columnsPatrimonio.value.push("PATRIMONIO");
     for (let a of año) {
-      columnsActivo.value.push(a, "(%) Relativo", "(%) Absoluto");
-      columnsPasivo.value.push(a, "(%) Relativo", "(%) Absoluto");
-      columnsPatrimonio.value.push(a, "(%) Relativo", "(%) Absoluto");
+      columnsActivo.value.push(a, "(%) Absoluto");
+      columnsPasivo.value.push(a, "(%) Absoluto");
+      columnsPatrimonio.value.push(a, "(%) Absoluto");
     }
     activarAnalisisBalance(año);
   } 
   else if(estado === "Estado de Resultados"){
-    limpiarVariables();
+    showGraphicsBalance.value = false;
+    showGraphicsER.value = true;
     generadorBalance.value = false;
     generadorEstado.value = true;
     columnsTitulo.value.push("CUENTAS");
     for (let a of año) {
-      columnsTitulo.value.push(a, "(%) Relativo", "(%) Absoluto");
+      columnsTitulo.value.push(a, "(%) Absoluto");
     }
     activarAnalisisEstado(año);
   }
@@ -286,10 +277,6 @@ const activarAnalisisBalance = (años) => {
         totales.balance.activo.activo_corriente.get(val) || 0;
       rowsActivo.value[contador].push(
         activoCorriente,
-        calcularPorcentaje(
-          activoCorriente,
-          totales.totalActivoCorriente
-        ).toFixed(1) + "%",
         calcularPorcentaje(activoCorriente, totales.totalActivo).toFixed(1) +
           "%"
       );
@@ -304,10 +291,6 @@ const activarAnalisisBalance = (años) => {
     let totales = obtenerTotalesBalance(año);
     rowsActivo.value[contador].push(
       totales.totalActivoCorriente,
-      calcularPorcentaje(
-        totales.totalActivoCorriente,
-        totales.totalActivoCorriente
-      ).toFixed(1) + "%",
       calcularPorcentaje(
         totales.totalActivoCorriente,
         totales.totalActivo
@@ -325,10 +308,6 @@ const activarAnalisisBalance = (años) => {
         totales.balance.activo.activo_no_corriente.get(val) || 0;
       rowsActivo.value[contador].push(
         activoNoCorriente,
-        calcularPorcentaje(
-          activoNoCorriente,
-          totales.totalActivoNoCorriente
-        ).toFixed(1) + "%",
         calcularPorcentaje(activoNoCorriente, totales.totalActivo).toFixed(1) +
           "%"
       );
@@ -345,10 +324,6 @@ const activarAnalisisBalance = (años) => {
       totales.totalActivoNoCorriente,
       calcularPorcentaje(
         totales.totalActivoNoCorriente,
-        totales.totalActivoNoCorriente
-      ).toFixed(1) + "%",
-      calcularPorcentaje(
-        totales.totalActivoNoCorriente,
         totales.totalActivo
       ).toFixed(1) + "%"
     );
@@ -363,7 +338,6 @@ const activarAnalisisBalance = (años) => {
     let totales = obtenerTotalesBalance(año);
     rowsActivo.value[contador].push(
       totales.totalActivo,
-      0,
       calcularPorcentaje(totales.totalActivo, totales.totalActivo).toFixed(1) +
         "%"
     );
@@ -383,10 +357,6 @@ const activarAnalisisBalance = (años) => {
         totales.balance.pasivo.pasivo_corriente.get(val) || 0;
       rowsPasivo.value[contador2].push(
         pasivoCorriente,
-        calcularPorcentaje(
-          pasivoCorriente,
-          totales.totalPasivoCorriente
-        ).toFixed(1) + "%",
         calcularPorcentaje(pasivoCorriente, totales.totalPasivo).toFixed(1) +
           "%"
       );
@@ -401,10 +371,6 @@ const activarAnalisisBalance = (años) => {
     let totales = obtenerTotalesBalance(año);
     rowsPasivo.value[contador2].push(
       totales.totalPasivoCorriente,
-      calcularPorcentaje(
-        totales.totalPasivoCorriente,
-        totales.totalPasivoCorriente
-      ).toFixed(1) + "%",
       calcularPorcentaje(
         totales.totalPasivoCorriente,
         totales.totalPasivo
@@ -422,10 +388,6 @@ const activarAnalisisBalance = (años) => {
         totales.balance.pasivo.pasivo_no_corriente.get(val) || 0;
       rowsPasivo.value[contador2].push(
         pasivoNoCorriente,
-        calcularPorcentaje(
-          pasivoNoCorriente,
-          totales.totalPasivoNoCorriente
-        ).toFixed(1) + "%",
         calcularPorcentaje(pasivoNoCorriente, totales.totalPasivo).toFixed(1) +
           "%"
       );
@@ -442,10 +404,6 @@ const activarAnalisisBalance = (años) => {
       totales.totalPasivoNoCorriente,
       calcularPorcentaje(
         totales.totalPasivoNoCorriente,
-        totales.totalPasivoNoCorriente
-      ).toFixed(1) + "%",
-      calcularPorcentaje(
-        totales.totalPasivoNoCorriente,
         totales.totalPasivo
       ).toFixed(1) + "%"
     );
@@ -460,7 +418,6 @@ const activarAnalisisBalance = (años) => {
     let totales = obtenerTotalesBalance(año);
     rowsPasivo.value[contador2].push(
       totales.totalPasivo,
-      0,
       calcularPorcentaje(totales.totalPasivo, totales.totalPasivo).toFixed(1) +
         "%"
     );
@@ -481,8 +438,6 @@ const activarAnalisisBalance = (años) => {
           totales.totalPasivo + totales.totalPatrimonio || 0;
         rowsPatrimonio.value[contador3].push(
           patrimonio,
-          calcularPorcentaje(patrimonio, totales.totalPatrimonio).toFixed(1) +
-            "%",
           calcularPorcentaje(patrimonio, patrimonioPasivo).toFixed(1) + "%"
         );
       }
@@ -497,8 +452,6 @@ const activarAnalisisBalance = (años) => {
           totales.totalPasivo + totales.totalPatrimonio || 0;
         rowsPatrimonio.value[contador3].push(
           patrimonio,
-          calcularPorcentaje(patrimonio, totales.totalPatrimonio).toFixed(1) +
-            "%",
           calcularPorcentaje(patrimonio, patrimonioPasivo).toFixed(1) + "%"
         );
       }
@@ -513,8 +466,6 @@ const activarAnalisisBalance = (años) => {
           totales.totalPasivo + totales.totalPatrimonio || 0;
         rowsPatrimonio.value[contador3].push(
           patrimonio,
-          calcularPorcentaje(patrimonio, totales.totalPatrimonio).toFixed(1) +
-            "%",
           calcularPorcentaje(patrimonio, patrimonioPasivo).toFixed(1) + "%"
         );
       }
@@ -528,8 +479,6 @@ const activarAnalisisBalance = (años) => {
           totales.totalPasivo + totales.totalPatrimonio || 0;
         rowsPatrimonio.value[contador3].push(
           patrimonio,
-          calcularPorcentaje(patrimonio, totales.totalPatrimonio).toFixed(1) +
-            "%",
           calcularPorcentaje(patrimonio, patrimonioPasivo).toFixed(1) + "%"
         );
       }
@@ -545,10 +494,6 @@ const activarAnalisisBalance = (años) => {
     let patrimonioPasivo = totales.totalPasivo + totales.totalPatrimonio || 0;
     rowsPatrimonio.value[contador3].push(
       totales.totalPatrimonio,
-      calcularPorcentaje(
-        totales.totalPatrimonio,
-        totales.totalPatrimonio
-      ).toFixed(1) + "%",
       calcularPorcentaje(totales.totalPatrimonio, patrimonioPasivo).toFixed(1) +
         "%"
     );
@@ -562,7 +507,6 @@ const activarAnalisisBalance = (años) => {
     let patrimonioPasivo = totales.totalPasivo + totales.totalPatrimonio || 0;
     rowsPatrimonio.value[contador3].push(
       patrimonioPasivo,
-      0 + "%",
       calcularPorcentaje(patrimonioPasivo, patrimonioPasivo).toFixed(1) + "%"
     );
   }
@@ -576,7 +520,7 @@ const activarAnalisisEstado = (años) => {
   rowsAnalisisEstado.value.push(["PRODUCTOS DE OPERACIÓN"]);
   for(let año of años){
       let totales = obtenerTotalesEstado(año);
-      rowsAnalisisEstado.value[contador].push(totales.ProductosOperacion, calcularPorcentaje(totales.ProductosOperacion, totales.ProductosOperacion).toFixed(1) + "%", calcularPorcentaje(totales.ProductosOperacion, totales.ProductosOperacion).toFixed(1) + "%");
+      rowsAnalisisEstado.value[contador].push(totales.ProductosOperacion, calcularPorcentaje(totales.ProductosOperacion, totales.ProductosOperacion).toFixed(1) + "%");
   }   
 
   contador++;
@@ -591,10 +535,6 @@ const activarAnalisisEstado = (años) => {
         totales.estado.sub_productos_de_operacion.get(val) || 0;
       rowsAnalisisEstado.value[contador].push(
         productosOperacion,
-        calcularPorcentaje(
-          productosOperacion,
-          totales.ProductosOperacion
-        ).toFixed(1) + "%",
         calcularPorcentaje(productosOperacion, totales.ProductosOperacion).toFixed(1) +
           "%"
       );
@@ -607,7 +547,7 @@ const activarAnalisisEstado = (años) => {
   rowsAnalisisEstado.value.push(["Costos de Energía"]);
   for(let año of años){
       let totales = obtenerTotalesEstado(año);
-      rowsAnalisisEstado.value[contador].push(totales.CostosEnergia, calcularPorcentaje(totales.CostosEnergia, totales.ProductosOperacion).toFixed(1) + "%", calcularPorcentaje(totales.CostosEnergia, totales.ProductosOperacion).toFixed(1) + "%");
+      rowsAnalisisEstado.value[contador].push(totales.CostosEnergia, calcularPorcentaje(totales.CostosEnergia, totales.ProductosOperacion).toFixed(1) + "%");
   }   
 
   contador++;
@@ -617,7 +557,7 @@ const activarAnalisisEstado = (años) => {
   rowsAnalisisEstado.value.push(["MARGEN COMPRA VENTA DE ENERGIA"]);
   for(let año of años){
       let totales = obtenerTotalesEstado(año);
-      rowsAnalisisEstado.value[contador].push(totales.utilidadBruta, calcularPorcentaje(totales.utilidadBruta, totales.utilidadBruta).toFixed(1) + "%", calcularPorcentaje(totales.utilidadBruta, totales.ProductosOperacion).toFixed(1) + "%");
+      rowsAnalisisEstado.value[contador].push(totales.utilidadBruta, calcularPorcentaje(totales.utilidadBruta, totales.ProductosOperacion).toFixed(1) + "%");
   }   
   
   contador++;
@@ -634,10 +574,6 @@ const activarAnalisisEstado = (años) => {
         totales.estado.sub_costos_y_gastos_de_operacion.get(val) || 0;
       rowsAnalisisEstado.value[contador].push(
         cuentaUtilidadOperativa,
-        calcularPorcentaje(
-          cuentaUtilidadOperativa,
-          totales.utilidadOperacion
-        ).toFixed(1) + "%",
         calcularPorcentaje(cuentaUtilidadOperativa, totales.ProductosOperacion).toFixed(1) +
           "%"
       );
@@ -650,7 +586,7 @@ const activarAnalisisEstado = (años) => {
   rowsAnalisisEstado.value.push(["UTILIDAD DE OPERACIÓN"]);
   for(let año of años){
       let totales = obtenerTotalesEstado(año);
-      rowsAnalisisEstado.value[contador].push(totales.utilidadOperacion, calcularPorcentaje(totales.utilidadOperacion, totales.utilidadOperacion).toFixed(1) + "%", calcularPorcentaje(totales.utilidadOperacion, totales.ProductosOperacion).toFixed(1) + "%");
+      rowsAnalisisEstado.value[contador].push(totales.utilidadOperacion, calcularPorcentaje(totales.utilidadOperacion, totales.ProductosOperacion).toFixed(1) + "%");
   }   
 
   contador++;
@@ -660,7 +596,7 @@ const activarAnalisisEstado = (años) => {
   rowsAnalisisEstado.value.push(["Gastos Financieros"]);
   for(let año of años){
       let totales = obtenerTotalesEstado(año);
-      rowsAnalisisEstado.value[contador].push(totales.gastosFinancieros, calcularPorcentaje(totales.gastosFinancieros, totales.utilidadAntesImpuestos).toFixed(1) + "%", calcularPorcentaje(totales.gastosFinancieros, totales.ProductosOperacion).toFixed(1) + "%");
+      rowsAnalisisEstado.value[contador].push(totales.gastosFinancieros, calcularPorcentaje(totales.gastosFinancieros, totales.ProductosOperacion).toFixed(1) + "%");
   }   
 
   contador++;
@@ -670,13 +606,9 @@ const activarAnalisisEstado = (años) => {
     for (let año of años) {
       let totales = obtenerTotalesEstado(año);
       let cuentaUtilidadAntesImpuestos =
-        totales.estado.sub_costos_y_gastos_de_operacion.get(val) || 0;
+        totales.estado.sub_productos_financieros.get(val) || 0;
       rowsAnalisisEstado.value[contador].push(
         cuentaUtilidadAntesImpuestos,
-        calcularPorcentaje(
-          cuentaUtilidadAntesImpuestos,
-          totales.utilidadAntesImpuestos
-        ).toFixed(1) + "%",
         calcularPorcentaje(cuentaUtilidadAntesImpuestos, totales.ProductosOperacion).toFixed(1) +
           "%"
       );
@@ -689,7 +621,7 @@ const activarAnalisisEstado = (años) => {
   rowsAnalisisEstado.value.push(["UTILIDAD ANTES DE IMPUESTOS Y RESERVAS"]);
   for(let año of años){
       let totales = obtenerTotalesEstado(año);
-      rowsAnalisisEstado.value[contador].push(totales.gastosFinancieros, calcularPorcentaje(totales.gastosFinancieros, totales.utilidadAntesImpuestos).toFixed(1) + "%", calcularPorcentaje(totales.gastosFinancieros, totales.ProductosOperacion).toFixed(1) + "%");
+      rowsAnalisisEstado.value[contador].push(totales.gastosFinancieros, calcularPorcentaje(totales.gastosFinancieros, totales.ProductosOperacion).toFixed(1) + "%");
   }   
 
   contador++;
@@ -704,10 +636,6 @@ const activarAnalisisEstado = (años) => {
         totales.estado.sub_impuestos_y_reservas.get(val) || 0;
       rowsAnalisisEstado.value[contador].push(
         cuentaUtilidadNeta,
-        calcularPorcentaje(
-          cuentaUtilidadNeta,
-          totales.utilidadNeta
-        ).toFixed(1) + "%",
         calcularPorcentaje(cuentaUtilidadNeta, totales.ProductosOperacion).toFixed(1) +
           "%"
       );
@@ -718,7 +646,7 @@ const activarAnalisisEstado = (años) => {
   rowsAnalisisEstado.value.push(["UTILIDAD POR DISTRIBUIR"]);
   for(let año of años){
       let totales = obtenerTotalesEstado(año);
-      rowsAnalisisEstado.value[contador].push(totales.utilidadNeta, calcularPorcentaje(totales.utilidadNeta, totales.utilidadNeta).toFixed(1) + "%", calcularPorcentaje(totales.utilidadNeta, totales.ProductosOperacion).toFixed(1) + "%");
+      rowsAnalisisEstado.value[contador].push(totales.utilidadNeta, calcularPorcentaje(totales.utilidadNeta, totales.ProductosOperacion).toFixed(1) + "%");
   }   
 
   contador++;
