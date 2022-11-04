@@ -26,11 +26,17 @@
       </div>
     </div>
 
-    <div v-if="generador === true" class="vertical-seccion-container bg-positive">
+    <div
+      v-if="generador === true"
+      class="vertical-seccion-container bg-positive"
+    >
       <TablaVerticalBalance
-        :columnsActivo="columnsActivo" :columnsPasivo="columnsPasivo" :columnsPatrimonio="columnsPatrimonio"
+        :columnsActivo="columnsActivo"
+        :columnsPasivo="columnsPasivo"
+        :columnsPatrimonio="columnsPatrimonio"
         :rowsActivo="rowsActivo"
-        :rowsPasivo="rowsPasivo" :rowsPatrimonio="rowsPatrimonio"
+        :rowsPasivo="rowsPasivo"
+        :rowsPatrimonio="rowsPatrimonio"
       />
     </div>
 
@@ -46,7 +52,7 @@
         class="bg-secondary text-white"
       >
         <q-tab
-          v-for="periodo in periodos"
+          v-for="periodo in año"
           :key="periodo"
           :name="periodo"
           :label="'Periodo ' + periodo"
@@ -62,11 +68,11 @@
         transition-duration="500"
         class="bg-secondary"
       >
-        <q-tab-panel v-for="periodo in periodos" :key="periodo" :name="periodo">
+        <q-tab-panel v-for="periodo in año" :key="periodo" :name="periodo">
           <div v-if="showGraphicsBalance" class="q-pa-none">
             <div>
               <EspecificosBalance
-                :periodo="periodo"
+                :periodo="parseInt(periodo)"
                 :ids="[
                   periodo + 'eB1',
                   periodo + 'eB2',
@@ -86,7 +92,7 @@
           </div>
           <div v-if="showGraphicsER" class="q-pa-none">
             <EspecificosER
-              :periodo="periodo"
+              :periodo="parseInt(periodo)"
               :ids="[
                 periodo + 'eR1',
                 periodo + 'eR2',
@@ -96,7 +102,10 @@
                 periodo + 'eR6',
               ]"
             />
-            <AbsolutosER :periodo="periodo" :ids="[periodo + 'aeR1']" />
+            <AbsolutosER
+              :periodo="parseInt(periodo)"
+              :ids="[periodo + 'aeR1']"
+            />
           </div>
         </q-tab-panel>
       </q-tab-panels>
@@ -135,7 +144,10 @@ onBeforeMount(() => {
 });
 
 const input = useCounterStore();
+let tab = ref(null);
 let generador = ref(false);
+let showGraphicsBalance = ref(false);
+let showGraphicsER = ref(false);
 let año = ref([]);
 let options = ["Balance General", "Estado de Resultados"];
 let estado = ref(null);
@@ -151,21 +163,26 @@ let rowsPasivo = ref([]);
 let rowsPatrimonio = ref([]);
 
 const activarAnalisis = (año, estado) => {
-    limpiarVariables();
-    if(estado === "Balance General"){
-        generador.value = true;
-        columnsActivo.value.push("ACTIVO");
-        columnsPasivo.value.push("PASIVO");
-        columnsPatrimonio.value.push("PATRIMONIO");
-        for(let a of año){
-            columnsActivo.value.push(a, "(%) Relativo", "(%) Absoluto");
-            columnsPasivo.value.push(a, "(%) Relativo", "(%) Absoluto");
-            columnsPatrimonio.value.push(a, "(%) Relativo", "(%) Absoluto");
-        }
-        activarAnalisisBalance(año);
+  limpiarVariables();
+  tab.value = año[0];
+  if (estado === "Balance General") {
+    showGraphicsBalance.value = true;
+    showGraphicsER.value = false;
+    generador.value = true;
+    columnsActivo.value.push("ACTIVO");
+    columnsPasivo.value.push("PASIVO");
+    columnsPatrimonio.value.push("PATRIMONIO");
+    for (let a of año) {
+      columnsActivo.value.push(a, "(%) Relativo", "(%) Absoluto");
+      columnsPasivo.value.push(a, "(%) Relativo", "(%) Absoluto");
+      columnsPatrimonio.value.push(a, "(%) Relativo", "(%) Absoluto");
     }
-    
-}
+    activarAnalisisBalance(año);
+  } else {
+    showGraphicsBalance.value = false;
+    showGraphicsBalance.value = true;
+  }
+};
 
 const activarAnalisisBalance = (años) => {
   let contador = 0;
@@ -346,84 +363,118 @@ const activarAnalisisBalance = (años) => {
 
   // Finalmente la fila que crea el total del Pasivo
 
-    rowsPasivo.value.push(["Total Pasivo"])
-    for(let año of años){
+  rowsPasivo.value.push(["Total Pasivo"]);
+  for (let año of años) {
+    let totales = obtenerTotalesBalance(año);
+    rowsPasivo.value[contador2].push(
+      totales.totalPasivo,
+      0,
+      calcularPorcentaje(totales.totalPasivo, totales.totalPasivo).toFixed(1) +
+        "%"
+    );
+  }
+
+  // COMIENZA LA SECCION DEL PATRIMONIO
+
+  let contador3 = 0;
+
+  for (let val of keysBalance.patrimonio) {
+    if (val === "Capital social mínimo") {
+      rowsPatrimonio.value.push([val]);
+      for (let año of años) {
         let totales = obtenerTotalesBalance(año);
-        rowsPasivo.value[contador2].push(totales.totalPasivo, 0, calcularPorcentaje(totales.totalPasivo, totales.totalPasivo).toFixed(1) + "%");
-    }    
-
-    // COMIENZA LA SECCION DEL PATRIMONIO
-
-    let contador3 = 0;      
-
-    for(let val of keysBalance.patrimonio){
-        if(val === "Capital social mínimo"){
-            rowsPatrimonio.value.push([val]);
-            for(let año of años){
-                let totales = obtenerTotalesBalance(año);
-                // let patrimonio = (totales.balance.patrimonio.get("sub_capital_social").get(val) || 0); 
-                let patrimonio = (totales.CapitalSocialMinimo || 0); 
-                let patrimonioPasivo = ((totales.totalPasivo + totales.totalPatrimonio) || 0);
-                rowsPatrimonio.value[contador3].push(patrimonio, calcularPorcentaje(patrimonio, totales.totalPatrimonio).toFixed(1) + "%", calcularPorcentaje(patrimonio, patrimonioPasivo).toFixed(1) + "%");   
-            }
-            contador3++;
-        }  
-        else if(val === "Capital social variable"){
-            rowsPatrimonio.value.push([val]);
-            for(let año of años){
-                let totales = obtenerTotalesBalance(año);
-                // let patrimonio = (totales.balance.patrimonio.get("sub_capital_social").get(val) || 0); 
-                let patrimonio = (totales.CapitalSocialVariable || 0); 
-                let patrimonioPasivo = ((totales.totalPasivo + totales.totalPatrimonio) || 0);
-                rowsPatrimonio.value[contador3].push(patrimonio, calcularPorcentaje(patrimonio, totales.totalPatrimonio).toFixed(1) + "%", calcularPorcentaje(patrimonio, patrimonioPasivo).toFixed(1) + "%");   
-            }
-            contador3++;
-        }
-        else if(val === "sub_capital_social"){
-            rowsPatrimonio.value.push([val]);
-            for(let año of años){
-                let totales = obtenerTotalesBalance(año);
-                // let patrimonio = (totales.balance.patrimonio.get("sub_capital_social").get(val) || 0); 
-                let patrimonio = (totales.totalCapitalSocial || 0); 
-                let patrimonioPasivo = ((totales.totalPasivo + totales.totalPatrimonio) || 0);
-                rowsPatrimonio.value[contador3].push(patrimonio, calcularPorcentaje(patrimonio, totales.totalPatrimonio).toFixed(1) + "%", calcularPorcentaje(patrimonio, patrimonioPasivo).toFixed(1) + "%");   
-            }
-            contador3++;
-        }
-        else {
-            rowsPatrimonio.value.push([val]);
-            for(let año of años){
-                let totales = obtenerTotalesBalance(año);
-                let patrimonio = (totales.balance.patrimonio.get(val) || 0); 
-                let patrimonioPasivo = ((totales.totalPasivo + totales.totalPatrimonio) || 0);
-                rowsPatrimonio.value[contador3].push(patrimonio, calcularPorcentaje(patrimonio, totales.totalPatrimonio).toFixed(1) + "%", calcularPorcentaje(patrimonio, patrimonioPasivo).toFixed(1) + "%");   
-            }
-            contador3++;
-        }
-    }
-
-    // Esta parte es para crear la fila del total patrimonio neto
-
-    rowsPatrimonio.value.push(["Total Patrimonio Neto"])
-    for(let año of años){
+        // let patrimonio = (totales.balance.patrimonio.get("sub_capital_social").get(val) || 0);
+        let patrimonio = totales.CapitalSocialMinimo || 0;
+        let patrimonioPasivo =
+          totales.totalPasivo + totales.totalPatrimonio || 0;
+        rowsPatrimonio.value[contador3].push(
+          patrimonio,
+          calcularPorcentaje(patrimonio, totales.totalPatrimonio).toFixed(1) +
+            "%",
+          calcularPorcentaje(patrimonio, patrimonioPasivo).toFixed(1) + "%"
+        );
+      }
+      contador3++;
+    } else if (val === "Capital social variable") {
+      rowsPatrimonio.value.push([val]);
+      for (let año of años) {
         let totales = obtenerTotalesBalance(año);
-        let patrimonioPasivo = ((totales.totalPasivo + totales.totalPatrimonio) || 0);        
-        rowsPatrimonio.value[contador3].push(totales.totalPatrimonio, calcularPorcentaje(totales.totalPatrimonio, totales.totalPatrimonio).toFixed(1) + "%", calcularPorcentaje(totales.totalPatrimonio, patrimonioPasivo).toFixed(1) + "%");
-    }
-
-    contador3++;
-
-    rowsPatrimonio.value.push(["Total Pasivo + Patrimonio Neto"])
-    for(let año of años){
+        // let patrimonio = (totales.balance.patrimonio.get("sub_capital_social").get(val) || 0);
+        let patrimonio = totales.CapitalSocialVariable || 0;
+        let patrimonioPasivo =
+          totales.totalPasivo + totales.totalPatrimonio || 0;
+        rowsPatrimonio.value[contador3].push(
+          patrimonio,
+          calcularPorcentaje(patrimonio, totales.totalPatrimonio).toFixed(1) +
+            "%",
+          calcularPorcentaje(patrimonio, patrimonioPasivo).toFixed(1) + "%"
+        );
+      }
+      contador3++;
+    } else if (val === "sub_capital_social") {
+      rowsPatrimonio.value.push([val]);
+      for (let año of años) {
         let totales = obtenerTotalesBalance(año);
-        let patrimonioPasivo = ((totales.totalPasivo + totales.totalPatrimonio) || 0);        
-        rowsPatrimonio.value[contador3].push(patrimonioPasivo, 0 + "%", calcularPorcentaje(patrimonioPasivo, patrimonioPasivo).toFixed(1) + "%");
+        // let patrimonio = (totales.balance.patrimonio.get("sub_capital_social").get(val) || 0);
+        let patrimonio = totales.totalCapitalSocial || 0;
+        let patrimonioPasivo =
+          totales.totalPasivo + totales.totalPatrimonio || 0;
+        rowsPatrimonio.value[contador3].push(
+          patrimonio,
+          calcularPorcentaje(patrimonio, totales.totalPatrimonio).toFixed(1) +
+            "%",
+          calcularPorcentaje(patrimonio, patrimonioPasivo).toFixed(1) + "%"
+        );
+      }
+      contador3++;
+    } else {
+      rowsPatrimonio.value.push([val]);
+      for (let año of años) {
+        let totales = obtenerTotalesBalance(año);
+        let patrimonio = totales.balance.patrimonio.get(val) || 0;
+        let patrimonioPasivo =
+          totales.totalPasivo + totales.totalPatrimonio || 0;
+        rowsPatrimonio.value[contador3].push(
+          patrimonio,
+          calcularPorcentaje(patrimonio, totales.totalPatrimonio).toFixed(1) +
+            "%",
+          calcularPorcentaje(patrimonio, patrimonioPasivo).toFixed(1) + "%"
+        );
+      }
+      contador3++;
     }
+  }
 
+  // Esta parte es para crear la fila del total patrimonio neto
 
-}
+  rowsPatrimonio.value.push(["Total Patrimonio Neto"]);
+  for (let año of años) {
+    let totales = obtenerTotalesBalance(año);
+    let patrimonioPasivo = totales.totalPasivo + totales.totalPatrimonio || 0;
+    rowsPatrimonio.value[contador3].push(
+      totales.totalPatrimonio,
+      calcularPorcentaje(
+        totales.totalPatrimonio,
+        totales.totalPatrimonio
+      ).toFixed(1) + "%",
+      calcularPorcentaje(totales.totalPatrimonio, patrimonioPasivo).toFixed(1) +
+        "%"
+    );
+  }
 
+  contador3++;
 
+  rowsPatrimonio.value.push(["Total Pasivo + Patrimonio Neto"]);
+  for (let año of años) {
+    let totales = obtenerTotalesBalance(año);
+    let patrimonioPasivo = totales.totalPasivo + totales.totalPatrimonio || 0;
+    rowsPatrimonio.value[contador3].push(
+      patrimonioPasivo,
+      0 + "%",
+      calcularPorcentaje(patrimonioPasivo, patrimonioPasivo).toFixed(1) + "%"
+    );
+  }
+};
 
 const calcularPorcentaje = (numerador, denominador) => {
   return (numerador / denominador) * 100;
@@ -453,13 +504,13 @@ const obtenerDatosRazones = (año) => {
 };
 
 const limpiarVariables = () => {
-    columnsActivo.value = [];
-    columnsPasivo.value = [];
-    columnsPatrimonio.value = [];
-    rowsActivo.value = [];
-    rowsPasivo.value = [];
-    rowsPatrimonio.value = [];
-}
+  columnsActivo.value = [];
+  columnsPasivo.value = [];
+  columnsPatrimonio.value = [];
+  rowsActivo.value = [];
+  rowsPasivo.value = [];
+  rowsPatrimonio.value = [];
+};
 </script>
 
 <style scoped>
