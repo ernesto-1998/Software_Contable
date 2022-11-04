@@ -80,7 +80,7 @@
       />
     </div>
     <div v-if="generadorEstado === true" class="vertical-seccion-container bg-positive">
-      <TablaVerticalBalance
+      <TablaVerticalEstado :columnsTitulo="columnsTitulo" :rowsAnalisisEstado="rowsAnalisisEstado"
       />
     </div>
 
@@ -246,6 +246,7 @@ const activarAnalisis = (año, estado) => {
   if (estado === "Balance General") {
     showGraphicsBalance.value = true;
     showGraphicsER.value = false;
+    generadorEstado.value = false;
     generadorBalance.value = true;
     columnsActivo.value.push("ACTIVO");
     columnsPasivo.value.push("PASIVO");
@@ -258,6 +259,9 @@ const activarAnalisis = (año, estado) => {
     activarAnalisisBalance(año);
   } 
   else if(estado === "Estado de Resultados"){
+    limpiarVariables();
+    generadorBalance.value = false;
+    generadorEstado.value = true;
     columnsTitulo.value.push("CUENTAS");
     for (let a of año) {
       columnsTitulo.value.push(a, "(%) Relativo", "(%) Absoluto");
@@ -680,7 +684,7 @@ const activarAnalisisEstado = (años) => {
 
   // Utilidad Antes de Impuestos
 
-  rowsProductosOperacion.value.push(["UTILIDAD ANTES DE IMPUESTOS Y RESERVAS"]);
+  rowsAnalisisEstado.value.push(["UTILIDAD ANTES DE IMPUESTOS Y RESERVAS"]);
   for(let año of años){
       let totales = obtenerTotalesEstado(año);
       rowsAnalisisEstado.value[contador].push(totales.gastosFinancieros, calcularPorcentaje(totales.gastosFinancieros, totales.utilidadAntesImpuestos).toFixed(1) + "%", calcularPorcentaje(totales.gastosFinancieros, totales.ProductosOperacion).toFixed(1) + "%");
@@ -700,7 +704,7 @@ const activarAnalisisEstado = (años) => {
         cuentaUtilidadNeta,
         calcularPorcentaje(
           cuentaUtilidadNeta,
-          totales.cuentaUtilidadNeta
+          totales.utilidadNeta
         ).toFixed(1) + "%",
         calcularPorcentaje(cuentaUtilidadNeta, totales.ProductosOperacion).toFixed(1) +
           "%"
@@ -709,13 +713,15 @@ const activarAnalisisEstado = (años) => {
     contador++;    
   } 
   
-  rowsProductosOperacion.value.push(["UTILIDAD POR DISTRIBUIR"]);
+  rowsAnalisisEstado.value.push(["UTILIDAD POR DISTRIBUIR"]);
   for(let año of años){
       let totales = obtenerTotalesEstado(año);
       rowsAnalisisEstado.value[contador].push(totales.utilidadNeta, calcularPorcentaje(totales.utilidadNeta, totales.utilidadNeta).toFixed(1) + "%", calcularPorcentaje(totales.utilidadNeta, totales.ProductosOperacion).toFixed(1) + "%");
   }   
 
   contador++;
+
+  console.log(rowsAnalisisEstado.value)
 }
 
 const calcularPorcentaje = (numerador, denominador) => {
@@ -752,6 +758,9 @@ const limpiarVariables = () => {
   rowsActivo.value = [];
   rowsPasivo.value = [];
   rowsPatrimonio.value = [];
+
+  columnsTitulo.value = [];
+  rowsAnalisisEstado.value = [];
 };
 </script>
 
