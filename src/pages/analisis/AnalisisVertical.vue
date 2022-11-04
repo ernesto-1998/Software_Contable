@@ -503,6 +503,95 @@ const activarAnalisisBalance = (años) => {
   }
 };
 
+const activarAnalisisEstado = (años) => {
+  let contador = 0;
+
+  // Productos de Operacion (Que viene a ser las Ventas)
+
+  rowsAnalisisEstado.value.push(["PRODUCTOS DE OPERACIÓN"]);
+  for(let año of años){
+      let totales = obtenerTotalesEstado(año);
+      rowsAnalisisEstado.value[contador].push(totales.ProductosOperacion, calcularPorcentaje(totales.ProductosOperacion, totales.ProductosOperacion).toFixed(1) + "%", calcularPorcentaje(totales.ProductosOperacion, totales.ProductosOperacion).toFixed(1) + "%");
+  }   
+
+  contador++;
+
+  // Cuentas de Productos de Operacion
+
+  for(let val of keysEstado.sub_productos_de_operacion){
+    rowsProductosOperacion.value.push([val]);
+    for (let año of años) {
+      let totales = obtenerTotalesEstado(año);
+      let productosOperacion =
+        totales.estado.sub_productos_de_operacion.get(val) || 0;
+      rowsProductosOperacion.value[contador].push(
+        productosOperacion,
+        calcularPorcentaje(
+          productosOperacion,
+          totales.ProductosOperacion
+        ).toFixed(1) + "%",
+        calcularPorcentaje(productosOperacion, totales.ProductosOperacion).toFixed(1) +
+          "%"
+      );
+    }
+    contador++;    
+  }
+
+  // Costos de Energia
+
+  rowsAnalisisEstado.value.push(["Costos de Energía"]);
+  for(let año of años){
+      let totales = obtenerTotalesEstado(año);
+      rowsAnalisisEstado.value[contador].push(totales.CostosEnergia, calcularPorcentaje(totales.CostosEnergia, totales.ProductosOperacion).toFixed(1) + "%", calcularPorcentaje(totales.CostosEnergia, totales.ProductosOperacion).toFixed(1) + "%");
+  }   
+
+  contador++;
+
+  // Utilidad Bruta
+
+  rowsAnalisisEstado.value.push(["MARGEN COMPRA VENTA DE ENERGIA"]);
+  for(let año of años){
+      let totales = obtenerTotalesEstado(año);
+      rowsAnalisisEstado.value[contador].push(totales.utilidadBruta, calcularPorcentaje(totales.utilidadBruta, totales.utilidadBruta).toFixed(1) + "%", calcularPorcentaje(totales.utilidadBruta, totales.ProductosOperacion).toFixed(1) + "%");
+  }   
+  
+  contador++;
+
+  // let contador2 = 0;
+
+  // Cuentas de Utilidad Operativa
+
+  for(let val of keysEstado.sub_costos_y_gastos_de_operacion){
+    rowsProductosOperacion.value.push([val]);
+    for (let año of años) {
+      let totales = obtenerTotalesEstado(año);
+      let cuentaUtilidadOperativa =
+        totales.estado.sub_costos_y_gastos_de_operacion.get(val) || 0;
+      rowsAnalisisEstado.value[contador].push(
+        cuentaUtilidadOperativa,
+        calcularPorcentaje(
+          cuentaUtilidadOperativa,
+          totales.utilidadOperacion
+        ).toFixed(1) + "%",
+        calcularPorcentaje(cuentaUtilidadOperativa, totales.ProductosOperacion).toFixed(1) +
+          "%"
+      );
+    }
+    contador++;    
+  }  
+
+  // Utilidad Operativa
+
+  rowsProductosOperacion.value.push(["UTILIDAD DE OPERACIÓN"]);
+  for(let año of años){
+      let totales = obtenerTotalesEstado(año);
+      rowsAnalisisEstado.value[contador].push(totales.utilidadOperacion, calcularPorcentaje(totales.utilidadOperacion, totales.utilidadOperacion).toFixed(1) + "%", calcularPorcentaje(totales.utilidadOperacion, totales.ProductosOperacion).toFixed(1) + "%");
+  }   
+
+  contador++;
+
+}
+
 const calcularPorcentaje = (numerador, denominador) => {
   return (numerador / denominador) * 100;
 };
