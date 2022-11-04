@@ -70,17 +70,13 @@
       </div>
     </div>
 
-    <div
-      v-if="generador === true"
-      class="vertical-seccion-container bg-positive"
-    >
+    <div v-if="generador === true" class="vertical-seccion-container bg-positive">
       <TablaVerticalBalance
         :columnsActivo="columnsActivo"
         :columnsPasivo="columnsPasivo"
         :columnsPatrimonio="columnsPatrimonio"
         :rowsActivo="rowsActivo"
-        :rowsPasivo="rowsPasivo"
-        :rowsPatrimonio="rowsPatrimonio"
+        :rowsPasivo="rowsPasivo" :rowsPatrimonio="rowsPatrimonio"
       />
     </div>
 
@@ -161,30 +157,43 @@
 import { ref, onBeforeMount, watch } from "vue";
 import { useCounterStore } from "stores/estados";
 import TablaVerticalBalance from "../../components/AnalisisVertical/TablaVerticalBalance.vue";
+import TablaVerticalEstado from "../../components/AnalisisVertical/TablaVerticalEstado.vue";
 import {
   obtenerTotalesBalance,
   obtenerTotalesEstado,
 } from "../../utils/totales.js";
-import { getKeysBalance } from "../../utils/getKeys.js";
+import { getKeysBalance, getKeysEstado } from "../../utils/getKeys.js";
 import EspecificosBalance from "src/components/graphics/vertical/especificosBalance.vue";
 import AbsolutosBalance from "src/components/graphics/vertical/absolutosBalance.vue";
 import EspecificosER from "src/components/graphics/vertical/especificosER.vue";
 import AbsolutosER from "src/components/graphics/vertical/absolutosER.vue";
+
 onBeforeMount(() => {
   const tamanio = input.balance_general.length;
   for (let i = 0; i < tamanio; i++) {
     periods.push(input.balance_general[i].año);
-  }
+  }        
 
   let años = [2018, 2019, 2020, 2021, 2022];
-  let temporalKeys = getKeysBalance(años);
+  let temporalKeysBalance = getKeysBalance(años);
+  let temporalKeysEstado = getKeysEstado(años);
+
   keysBalance = {
-    activo_corriente: Array.from(new Set(temporalKeys.ActivoCorriente)),
-    activo_no_corriente: Array.from(new Set(temporalKeys.ActivoNoCorriente)),
-    pasivo_corriente: Array.from(new Set(temporalKeys.PasivoCorriente)),
-    pasivo_no_corriente: Array.from(new Set(temporalKeys.PasivoNoCorriente)),
-    patrimonio: Array.from(new Set(temporalKeys.Patrimonio)),
+    activo_corriente: Array.from(new Set(temporalKeysBalance.ActivoCorriente)),
+    activo_no_corriente: Array.from(new Set(temporalKeysBalance.ActivoNoCorriente)),
+    pasivo_corriente: Array.from(new Set(temporalKeysBalance.PasivoCorriente)),
+    pasivo_no_corriente: Array.from(new Set(temporalKeysBalance.PasivoNoCorriente)),
+    patrimonio: Array.from(new Set(temporalKeysBalance.Patrimonio)),
   };
+
+  keysEstado = {
+    sub_productos_de_operacion: Array.from(new Set(temporalKeysEstado.sub_productos_de_operacion)),
+    sub_costos_de_energia: Array.from(new Set(temporalKeysEstado.sub_costos_de_energia)),
+    sub_costos_y_gastos_de_operacion: Array.from(new Set(temporalKeysEstado.sub_costos_y_gastos_de_operacion)),
+    sub_gastos_financieros: Array.from(new Set(temporalKeysEstado.sub_gastos_financieros)),
+    sub_productos_financieros: Array.from(new Set(temporalKeysEstado.sub_productos_financieros)),
+    sub_impuestos_y_reservas: Array.from(new Set(temporalKeysEstado.sub_impuestos_y_reservas))
+  }
 });
 
 const input = useCounterStore();
@@ -197,14 +206,32 @@ let options = ["Balance General", "Estado de Resultados"];
 let estado = ref(null);
 let periods = [];
 let keysBalance = {};
-let temporalVals = {};
+let keysEstado = {};
+// let temporalVals = {};
 
+// Variables que controlan la tabla del balance
 let columnsActivo = ref([]);
 let columnsPasivo = ref([]);
 let columnsPatrimonio = ref([]);
+
 let rowsActivo = ref([]);
 let rowsPasivo = ref([]);
 let rowsPatrimonio = ref([]);
+
+// Variables que controlan la tabla del estado
+
+let columnsTitulo = ref([]);
+let columnsProductosOperacion = ref([]);
+let columnsUtilidadBruta = ref([]);
+let columnsUtilidadOperacion = ref([]);
+let columnsUtilidadAntesImpuestos = ref([]);
+let columnsUtilidadNeta = ref([]);
+
+let rowsProductosOperacion = ref([]);
+let rowsUtilidadBruta = ref([]);
+let rowsUtilidadOperacion = ref([]);
+let rowsUtilidadAntesImpuestos = ref([]);
+let rowsUtilidadNeta = ref([]);
 
 const activarAnalisis = (año, estado) => {
   limpiarVariables();
