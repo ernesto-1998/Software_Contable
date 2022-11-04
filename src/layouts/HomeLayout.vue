@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh lpR lFf">
+  <q-layout view="lHh LpR lFf">
     <Sidebar />
     <footer class="fixed-bottom footer"></footer>
     <q-page-container>

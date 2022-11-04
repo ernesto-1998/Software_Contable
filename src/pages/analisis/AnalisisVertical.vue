@@ -1,5 +1,5 @@
 <template>
-  <div class="analisis-vertical_container">
+  <div class="">
     <div class="info-container bg-secondary">
       <div class="title">
         <label> Análisis Vertical </label>

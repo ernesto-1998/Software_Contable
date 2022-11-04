@@ -7,12 +7,13 @@
     :mini="miniState"
     @mouseover="miniState = false"
     @mouseout="miniState = true"
-    :breakpoint="500"
+    elevated
+    mini-to-overlay
   >
-    <q-list padding>
+    <q-list padding class="q-mt-xl">
       <div class="item q-mt-lg" style="margin-bottom: 12px">
         <q-item-label header class="subdiv">Home</q-item-label>
-        <q-item to="/" exact-active-class="q-py-md active-item">
+        <q-item class="q-my-md" to="/" exact-active-class="q-py-md active-item">
           <q-item-section avatar top>
             <q-avatar class="ico" icon="fa-solid fa-house-user" />
           </q-item-section>
@@ -28,26 +29,32 @@
         <q-separator color="blue-grey-6" spaced />
         <q-item-label header class="subdiv">General</q-item-label>
         <q-item
-          class="analisis-container"
-          exact-active-class="q-py-md active-item"
+          class="q-mt-lg"
+          to="/razones"
+          exact-active-class="q-py-md q-mb-sm active-item"
         >
           <div class="analisis-menu">
             <q-item-section avatar top>
-              <q-avatar class="ico" icon="fa-solid fa-chart-pie" />
+              <q-avatar class="ico" icon="fa-solid fa-coins" />
             </q-item-section>
 
             <q-item-section>
-              <q-item-label lines="1">Analisis</q-item-label>
+              <q-item-label lines="1">Razones Financieras</q-item-label>
+            </q-item-section>
+          </div>
+        </q-item>
+        <q-item class="analisis-container q-my-md">
+          <div class="analisis-menu">
+            <q-item-section avatar top>
+              <q-avatar class="ico" icon="fas fa-chart-simple" />
+            </q-item-section>
+
+            <q-item-section>
+              <q-item-label lines="1">Análisis Financieros</q-item-label>
             </q-item-section>
           </div>
 
           <div class="hover-menu">
-            <router-link :to="{ name: 'razones' }"
-              ><li class="hover-menu_link">Razones Financieras</li></router-link
-            >
-            <router-link :to="{ name: 'dupont' }"
-              ><li class="hover-menu_link">Diagrama Dupon</li></router-link
-            >
             <router-link :to="{ name: 'vertical' }"
               ><li class="hover-menu_link">Analisis Vertical</li></router-link
             >
@@ -56,29 +63,20 @@
             >
           </div>
         </q-item>
-        <q-item to="/reportes" exact-active-class="q-py-md active-item">
-          <q-item-section avatar top>
-            <q-avatar class="ico" icon="fa-solid fa-file-lines" />
-          </q-item-section>
+        <q-item
+          class="q-my-md"
+          to="/dupont"
+          exact-active-class="q-py-md active-item"
+        >
+          <div class="analisis-menu">
+            <q-item-section avatar top>
+              <q-avatar class="ico" icon="fas fa-project-diagram" />
+            </q-item-section>
 
-          <q-item-section>
-            <q-item-label lines="1">Reportes</q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-separator color="blue-grey-6" spaced />
-      </div>
-
-      <div class="item q-mt-lg" style="margin-bottom: 12px">
-        <q-separator color="blue-grey-6" spaced />
-        <q-item-label header class="subdiv">Administración</q-item-label>
-        <q-item to="/admin" exact-active-class="q-py-md active-item">
-          <q-item-section avatar top>
-            <q-avatar class="ico" icon="settings" />
-          </q-item-section>
-
-          <q-item-section>
-            <q-item-label lines="1">Configuración</q-item-label>
-          </q-item-section>
+            <q-item-section>
+              <q-item-label lines="1">Análisis DUPONT</q-item-label>
+            </q-item-section>
+          </div>
         </q-item>
         <q-separator color="blue-grey-6" spaced />
       </div>
@@ -88,7 +86,6 @@
 
 <script setup>
 import { ref } from "vue";
-
 let miniState = ref(true);
 </script>
 
@@ -103,7 +100,8 @@ let miniState = ref(true);
 }
 .subdiv {
   color: rgb(176, 164, 164);
-  padding: 8px 12px 12px 16px;
+  padding: 0px 20px;
+  margin-bottom: 25px;
 }
 .active-item {
   color: white;
@@ -117,6 +115,7 @@ let miniState = ref(true);
   color: aliceblue;
   background-color: #00abb3;
 }
+
 .item {
   color: white;
   text-decoration-color: azure;
@@ -153,7 +152,8 @@ let miniState = ref(true);
 .hover-menu_link {
   display: flex;
   justify-content: center;
-  padding: 0.5rem 1rem;
+  margin-top: 10 px;
+  padding: 1rem 0rem;
 }
 
 .hover-menu_link:hover {

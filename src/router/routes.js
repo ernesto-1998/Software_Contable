@@ -10,21 +10,10 @@ const routes = [
       },
     ],
   },
-
   {
     path: "/analisis",
     component: () => import("layouts/GeneralLayout.vue"),
     children: [
-      {
-        path: "/reportes",
-        name: "reportes",
-        component: () => import("pages/Reportes.vue"),
-      },
-      {
-        path: "/admin",
-        name: "admin",
-        component: () => import("src/pages/AdministracionPage.vue"),
-      },
       {
         path: "/razones",
         name: "razones",
