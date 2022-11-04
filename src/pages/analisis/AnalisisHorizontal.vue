@@ -2,12 +2,32 @@
   <div class="vertical-container">
     <div class="info-container bg-secondary">
       <div class="title">
-        <label> Análisis Horizontal </label>
+        <label>
+          Análisis <span class="text-weight-bold">Horizontal</span>
+        </label>
       </div>
       <div class="estado-financiero_container">
         <label>Estado Financiero: </label>
         <q-select
-          filled
+          label-color="purple-13"
+          bg-color="white"
+          color="purple-13"
+          clearable
+          transition-show="flip-up"
+          transition-hide="scale"
+          rounded
+          outlined
+          popup-content-style="border-top-left-radius: 15px 50px;
+  border-top-right-radius: 15px 50px;
+  border-bottom-left-radius: 80px 19px;
+  border-bottom-right-radius: 80px 19px;
+  border: solid 3px #6e7491;
+  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;"
+          style="
+            width: 320px;
+            border-radius: 30px;
+            box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+          "
           v-model="estado"
           :options="options"
           label="Estado Financiero"
@@ -16,27 +36,65 @@
       <div class="periodo-container">
         <label>Periodos: </label>
         <q-select
-          filled
+          label-color="purple-13"
+          bg-color="white"
+          color="purple-13"
+          clearable
+          transition-show="flip-up"
+          transition-hide="scale"
+          rounded
+          outlined
+          popup-content-style="border-top-left-radius: 15px 50px;
+  border-top-right-radius: 15px 50px;
+  border-bottom-left-radius: 80px 19px;
+  border-bottom-right-radius: 80px 19px;
+  border: solid 3px #6e7491;
+  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;"
+          style="
+            width: 320px;
+            border-radius: 30px;
+            box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+          "
           v-model="periodo1"
           :options="periods"
           label="Comparar periodo"
         />
 
         <q-select
-          filled
-          style="width: 250px"
+          label-color="purple-13"
+          bg-color="white"
+          color="purple-13"
+          clearable
+          transition-show="flip-up"
+          transition-hide="scale"
+          rounded
+          outlined
+          popup-content-style="border-top-left-radius: 15px 50px;
+  border-top-right-radius: 15px 50px;
+  border-bottom-left-radius: 80px 19px;
+  border-bottom-right-radius: 80px 19px;
+  border: solid 3px #6e7491;
+  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;"
+          style="
+            width: 320px;
+            border-radius: 30px;
+            box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+          "
           v-model="periodo2"
           :options="periods"
           label="Con el periodo"
           class="periodo2"
         />
       </div>
-      <q-btn
-        color="white"
-        text-color="black"
-        label="Generar"
-        @click="showAnalisis"
-      />
+      <div class="row justify-end q-py-md">
+        <q-btn
+          color="primary"
+          label="Generar Análisis"
+          no-caps
+          @click="showAnalisis"
+          class="q-mr-xl buttom"
+        />
+      </div>
     </div>
     <div class="info-container bg-secondary">
       <div class="row q-gutter-x-lg justify-evenly">
@@ -158,7 +216,7 @@ watch(estado, () => {
   display: grid;
   grid-template-columns: 150px 250px;
   align-items: center;
-  margin-top: 1.5rem;
+  margin-top: 3rem;
 }
 
 .estado-financiero_container label {
@@ -174,6 +232,15 @@ watch(estado, () => {
 .periodo2 {
   position: relative;
   bottom: 55px;
-  left: 450px;
+  left: 550px;
+}
+
+.buttom {
+  border-radius: 24px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 3px 5px -1px,
+    rgba(0, 0, 0, 0.14) 0 6px 10px 0, rgba(0, 0, 0, 0.12) 0 1px 18px 0;
+  height: 48px;
+  letter-spacing: 0.25px;
+  padding: 2px 24px;
 }
 </style>

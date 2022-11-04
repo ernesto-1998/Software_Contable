@@ -619,7 +619,7 @@ function getNewAmount(value) {
 }
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
 button
   cursor: pointer
   border: 0

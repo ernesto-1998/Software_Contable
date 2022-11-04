@@ -354,7 +354,7 @@ onBeforeUnmount(() => {
 });
 </script>
 
-<style>
+<style scoped>
 .label {
   border: 0px inset rgba(100, 100, 100, 1);
   border-top-left-radius: 20px;
