@@ -215,6 +215,7 @@ let keysEstado = {};
 // let temporalVals = {};
 
 // Variables que controlan la tabla del balance
+
 let columnsActivo = ref([]);
 let columnsPasivo = ref([]);
 let columnsPatrimonio = ref([]);
@@ -240,11 +241,12 @@ let rowsAnalisisEstado = ref([]);
 
 const activarAnalisis = (año, estado) => {
   limpiarVariables();
+  if(año.length === 0 || estado === null) return alert("Debes rellenar ambos campos");
   tab.value = año[0];
   if (estado === "Balance General") {
     showGraphicsBalance.value = true;
     showGraphicsER.value = false;
-    generadorEstado.value = true;
+    generadorBalance.value = true;
     columnsActivo.value.push("ACTIVO");
     columnsPasivo.value.push("PASIVO");
     columnsPatrimonio.value.push("PATRIMONIO");
@@ -255,8 +257,12 @@ const activarAnalisis = (año, estado) => {
     }
     activarAnalisisBalance(año);
   } 
-  else if("Estado de Resultados"){
-
+  else if(estado === "Estado de Resultados"){
+    columnsTitulo.value.push("CUENTAS");
+    for (let a of año) {
+      columnsTitulo.value.push(a, "(%) Relativo", "(%) Absoluto");
+    }
+    activarAnalisisEstado(año);
   }
   else {
     showGraphicsBalance.value = false;
@@ -635,7 +641,7 @@ const activarAnalisisEstado = (años) => {
 
   // Utilidad Operativa
 
-  rowsProductosOperacion.value.push(["UTILIDAD DE OPERACIÓN"]);
+  rowsAnalisisEstado.value.push(["UTILIDAD DE OPERACIÓN"]);
   for(let año of años){
       let totales = obtenerTotalesEstado(año);
       rowsAnalisisEstado.value[contador].push(totales.utilidadOperacion, calcularPorcentaje(totales.utilidadOperacion, totales.utilidadOperacion).toFixed(1) + "%", calcularPorcentaje(totales.utilidadOperacion, totales.ProductosOperacion).toFixed(1) + "%");
@@ -643,6 +649,73 @@ const activarAnalisisEstado = (años) => {
 
   contador++;
 
+  // Cuentas de Utilidad Antes de Impuestos y Reservas
+
+  rowsAnalisisEstado.value.push(["Gastos Financieros"]);
+  for(let año of años){
+      let totales = obtenerTotalesEstado(año);
+      rowsAnalisisEstado.value[contador].push(totales.gastosFinancieros, calcularPorcentaje(totales.gastosFinancieros, totales.utilidadAntesImpuestos).toFixed(1) + "%", calcularPorcentaje(totales.gastosFinancieros, totales.ProductosOperacion).toFixed(1) + "%");
+  }   
+
+  contador++;
+
+  for(let val of keysEstado.sub_productos_financieros){
+    rowsAnalisisEstado.value.push([val]);
+    for (let año of años) {
+      let totales = obtenerTotalesEstado(año);
+      let cuentaUtilidadAntesImpuestos =
+        totales.estado.sub_costos_y_gastos_de_operacion.get(val) || 0;
+      rowsAnalisisEstado.value[contador].push(
+        cuentaUtilidadAntesImpuestos,
+        calcularPorcentaje(
+          cuentaUtilidadAntesImpuestos,
+          totales.utilidadAntesImpuestos
+        ).toFixed(1) + "%",
+        calcularPorcentaje(cuentaUtilidadAntesImpuestos, totales.ProductosOperacion).toFixed(1) +
+          "%"
+      );
+    }
+    contador++;    
+  } 
+
+  // Utilidad Antes de Impuestos
+
+  rowsProductosOperacion.value.push(["UTILIDAD ANTES DE IMPUESTOS Y RESERVAS"]);
+  for(let año of años){
+      let totales = obtenerTotalesEstado(año);
+      rowsAnalisisEstado.value[contador].push(totales.gastosFinancieros, calcularPorcentaje(totales.gastosFinancieros, totales.utilidadAntesImpuestos).toFixed(1) + "%", calcularPorcentaje(totales.gastosFinancieros, totales.ProductosOperacion).toFixed(1) + "%");
+  }   
+
+  contador++;
+
+  // Cuentas Utilidad por Distribuir (Neta)
+
+  for(let val of keysEstado.sub_impuestos_y_reservas){
+    rowsAnalisisEstado.value.push([val]);
+    for (let año of años) {
+      let totales = obtenerTotalesEstado(año);
+      let cuentaUtilidadNeta =
+        totales.estado.sub_impuestos_y_reservas.get(val) || 0;
+      rowsAnalisisEstado.value[contador].push(
+        cuentaUtilidadNeta,
+        calcularPorcentaje(
+          cuentaUtilidadNeta,
+          totales.cuentaUtilidadNeta
+        ).toFixed(1) + "%",
+        calcularPorcentaje(cuentaUtilidadNeta, totales.ProductosOperacion).toFixed(1) +
+          "%"
+      );
+    }
+    contador++;    
+  } 
+  
+  rowsProductosOperacion.value.push(["UTILIDAD POR DISTRIBUIR"]);
+  for(let año of años){
+      let totales = obtenerTotalesEstado(año);
+      rowsAnalisisEstado.value[contador].push(totales.utilidadNeta, calcularPorcentaje(totales.utilidadNeta, totales.utilidadNeta).toFixed(1) + "%", calcularPorcentaje(totales.utilidadNeta, totales.ProductosOperacion).toFixed(1) + "%");
+  }   
+
+  contador++;
 }
 
 const calcularPorcentaje = (numerador, denominador) => {

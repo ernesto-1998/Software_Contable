@@ -9,11 +9,11 @@
         <div class="table-container">
             <table class="table-content">
                 <tr class="table-head bg-secondary">
-                    <th class="table-head_titles table-ceil" align="center" v-for="(item, index) in props.columnsActivo" :key="index">
+                    <th class="table-head_titles table-ceil" align="center" v-for="(item, index) in props.columnsTitulo" :key="index">
                         <span>{{ item }}</span>
                     </th>
                 </tr>
-                <tr class="table-row" v-for="(item, index) in props.rowsActivo" :key="index">
+                <tr class="table-row" v-for="(item, index) in props.rowsAnalisisEstado" :key="index">
                     <td class="table-ceil bg-accent" align="center" v-for="(childItem, index) in item" :key="index">
                         <span class="conditionalBinding" v-if="(childItem === 'Total Activo Corriente') || (childItem === 'Total Activo No Corriente') || (childItem === 'Total Activo')">{{ childItem }} </span>
                         <span v-else>{{ childItem }} </span>

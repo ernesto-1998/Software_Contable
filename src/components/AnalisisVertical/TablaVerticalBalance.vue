@@ -124,8 +124,7 @@ const props = defineProps({
   columnsPatrimonio: Array,
   rowsActivo: Array,
   rowsPasivo: Array,
-  rowsPatrimonio: Array,
-  generador: Boolean,
+  rowsPatrimonio: Array
 });
 </script>
 
@@ -150,8 +149,8 @@ const props = defineProps({
   color: var(--table-color);
 }
 
-.table-row {
-}
+/* .table-row {
+} */
 
 .table-ceil {
   padding: 0.5rem;
