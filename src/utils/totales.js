@@ -160,6 +160,8 @@ export const obtenerTotalesEstado = (año) => {
   let utilidadNeta = utilidadAntesImpuestos - impuestos_y_reservas;
 
   return {
+    estado,
+
     impuestos,
     utilidadBruta,
     utilidadOperacion,

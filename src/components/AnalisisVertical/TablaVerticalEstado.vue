@@ -1,11 +1,11 @@
 <template>
     <div class="vertical-table_container">
         <div class="title-container">
-            <span>Balance General</span>
+            <span>Estado de Resultados</span>
         </div>
         <div class="subtitle-container">
             <span>DEL SUR S.A de C.V</span>
-        </div>
+        </div>   
         <div class="table-container">
             <table class="table-content">
                 <tr class="table-head bg-secondary">
@@ -42,59 +42,17 @@
                     </td>
                 </tr> 
             </table>
-        </div>
+        </div>     
     </div>
 </template>
-
 <script setup>
 
-const props = defineProps({
-    title: String,
-    columnsActivo: Array,
-    columnsPasivo: Array,
-    columnsPatrimonio: Array,
-    rowsActivo: Array,
-    rowsPasivo: Array,
-    rowsPatrimonio: Array,
-    generador: Boolean
-});
-
 </script>
-
 <style>
     .vertical-table_container {
         display: grid;
         justify-content: center;
         /* width: 98%; */
         margin: auto;
-    }               
-
-    .table-container {
-        overflow: auto;
-        height: 25.5rem;
-    }
-
-    .table-content {
-        max-width: 100%;
-    }
-
-    .table-head_titles {
-        color: var(--table-color);
-    }
-
-    .table-row {
-    }
-
-    .table-ceil {
-        padding: 0.5rem;
-    }
-
-    .table-ceil:nth-child(1) {
-        min-width: 15rem;
-    }
-
-    .conditionalBinding {
-        text-transform: uppercase;
-        font-weight: bold;
-    }
+    }    
 </style>
