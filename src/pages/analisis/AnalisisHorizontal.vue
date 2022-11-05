@@ -559,8 +559,11 @@ const calcularVariacionAbsoluta = (periodo1, periodo2) => {
 }
 
 const calcularVariacionRelativa = (periodo1, periodo2) => {
-  if(periodo2 === 0) {
+  if(periodo1 === 0 && periodo2 === 0) {
     return 0;
+  }
+  if(periodo2 === 0) {
+    return 100
   }
   return (((periodo1 / periodo2) - 1)*100);
 }
