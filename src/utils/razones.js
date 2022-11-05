@@ -82,6 +82,10 @@ export const razones_deuda = {
     return (pasivos_totales / activos_totales) * 100;
   },
 
+  razon_deuda_capital_patrimonial: function (pasivos_totales, capital) {
+    return (pasivos_totales / capital) * 100;
+  },
+
   razon_cargos_interes_fijo: function (utilidad_antes_impuestos, impuestos) {
     return utilidad_antes_impuestos / impuestos;
   },

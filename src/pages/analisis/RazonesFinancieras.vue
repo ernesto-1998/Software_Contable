@@ -122,7 +122,7 @@ const activarRazones = (año, razon) => {
     generador.value = false;
     return alert("Debe rellenar ambos campos");
   }
-    
+
   limpiarTabla();
   generador.value = true;
   if (razon === "Razones de Liquidez") {
