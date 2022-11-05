@@ -176,7 +176,6 @@ let rowUAR = 0;
 let UAR = 0;
 let UXD = 0;
 let UOP = 0;
-let UN = 0;
 let UB = 0;
 let totalProductosOperacion = 0;
 let totalCostosEnergia = 0;
@@ -574,7 +573,6 @@ function getDataAcount(typeAcount, acountChanged) {
 
 // Obtenemos el nuevo monto ingresado en el popup edit
 function getNewAmount(value) {
-  console.log("enviando valor..");
   value = value.trim();
   if (value.includes("$")) {
     value = value.split("$")[1].split(",").join("").trim();

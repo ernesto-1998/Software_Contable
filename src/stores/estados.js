@@ -601,6 +601,8 @@ export const useCounterStore = defineStore("estados", {
               value.set(cuenta, newAmount);
             }
           }
+        } else {
+          balance.patrimonio.set(cuenta, newAmount);
         }
       }
     },
