@@ -70,7 +70,7 @@
         />
       </div>
     </div>
-    <div class="razones-container bg-positive" v-if="rows.length !== 0">
+    <div class="razones-container bg-positive" v-if="generador === true">
       <TablaRazones :columns="columns" :rows="rows" :title="title" />
     </div>
   </div>
@@ -98,6 +98,7 @@ onBeforeMount(() => {
 });
 
 const input = useCounterStore();
+let generador = ref(false);
 let año = ref([]);
 let razon = ref(null);
 let periods = [];
@@ -113,9 +114,17 @@ let columns = ref([]);
 let rows = ref([]);
 
 const activarRazones = (año, razon) => {
-  if (año.length < 1 || razon === null)
+  if (año === null) {
+    generador.value = false;
+    return alert("Debes escoger un año o un rango de años");
+  }
+  if (año.length < 1 || razon === null) {
+    generador.value = false;
     return alert("Debe rellenar ambos campos");
+  }
+    
   limpiarTabla();
+  generador.value = true;
   if (razon === "Razones de Liquidez") {
     for (let añ of año) {
       activarRazonesLiquidez(añ);

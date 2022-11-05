@@ -199,7 +199,6 @@ onBeforeMount(() => {
     sub_impuestos_y_reservas: Array.from(new Set(temporalKeysEstado.sub_impuestos_y_reservas))
   }
 
-  console.log(keysEstado)
 });
 
 const input = useCounterStore();
@@ -234,7 +233,22 @@ let rowsAnalisisEstado = ref([]);
 
 const activarAnalisis = (año, estado) => {
   limpiarVariables();
-  if(año.length === 0 || estado === null) return alert("Debes rellenar ambos campos");
+  if(año === null || estado === null) {
+    generadorBalance.value = false;
+    generadorEstado.value = false;
+
+    showGraphicsBalance.value = false;
+    showGraphicsER.value = false;    
+    return alert("Debes rellenar ambos campos");
+  }
+  if(año.length === 0) {
+    generadorBalance.value = false;
+    generadorEstado.value = false;
+
+    showGraphicsBalance.value = false;
+    showGraphicsER.value = false; 
+    return alert("Debes escoger un periodo o varios");
+  }
   tab.value = año[0];
   if (estado === "Balance General") {
     showGraphicsBalance.value = true;
