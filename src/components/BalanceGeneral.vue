@@ -48,7 +48,7 @@
             dense
             icon="far fa-times-circle"
             @click="close"
-            class="q-ml-md buttom"
+            class="q-ml-md"
           />
         </template>
         <template v-slot:header="props">
@@ -95,6 +95,7 @@
             >
               {{ props.row.sub_activo }}
               <q-popup-edit
+                v-if="props.row.sub_activo"
                 @save="getDataAcount(props.row.typeIzq, props.row.cuentaActivo)"
                 @hide="closePopUp"
                 @update:model-value="getNewAmount"
@@ -167,6 +168,7 @@
             >
               {{ props.row.sub_pasivo }}
               <q-popup-edit
+                v-if="props.row.sub_pasivo"
                 v-model="props.row.sub_pasivo"
                 v-slot="scope"
                 buttons
@@ -219,6 +221,27 @@
               }"
             >
               {{ props.row.total_pasivo }}
+              <q-popup-edit
+                v-if="props.row.isTotalEditable"
+                @save="getDataAcount('PT', props.row.cuentaPasivo)"
+                @hide="closePopUp"
+                @update:model-value="getNewAmount"
+                :validate="validarInput"
+                v-model="props.row.total_pasivo"
+                v-slot="scope"
+                buttons
+                label-set="Guardar"
+                label-cancel="Cancelar"
+              >
+                <q-input
+                  v-model="scope.value"
+                  dense
+                  :error="errorCalories"
+                  :error-message="errorMessageCalories"
+                  @keyup.enter="scope.set"
+                  autofocus
+                />
+              </q-popup-edit>
             </q-td>
           </q-tr>
         </template>
@@ -486,6 +509,7 @@ onMounted(() => {
       rows.value[index].cuentaPasivo = cuenta;
       rows.value[index].total_pasivo =
         "$ " + new Intl.NumberFormat("en-US").format(monto);
+      rows.value[index].isTotalEditable = true;
       rows.value[index].isPT = true;
       rows.value[index].typeDer = "PT";
       index += 1;
@@ -530,11 +554,14 @@ function close() {
 function setTotalActivoCorriente(cuentas) {
   totalActivoCorriente = 0;
   for (const index in cuentas) {
-    totalActivoCorriente += parseFloat(
-      cuentas[index].sub_activo.includes("$")
-        ? cuentas[index].sub_activo.split("$")[1].split(",").join("").trim()
-        : cuentas[index].sub_activo.trim()
-    );
+    if (cuentas[index].sub_activo.includes("$")) {
+      totalActivoCorriente += parseFloat(
+        cuentas[index].sub_activo.split("$")[1].split(",").join("").trim()
+      );
+    } else {
+      totalActivoCorriente += parseFloat(cuentas[index].sub_activo.trim());
+      cuentas[index].sub_activo = "$ " + cuentas[index].sub_activo.trim();
+    }
   }
 
   rows.value[rowTotaclActivoCorriente].total_activo =
@@ -547,11 +574,14 @@ function setTotalActivoCorriente(cuentas) {
 function setTotalActivoNoCorriente(cuentas) {
   totalActivoNoCorriente = 0;
   for (const index in cuentas) {
-    totalActivoNoCorriente += parseFloat(
-      cuentas[index].sub_activo.includes("$")
-        ? cuentas[index].sub_activo.split("$")[1].split(",").join("").trim()
-        : cuentas[index].sub_activo.trim()
-    );
+    if (cuentas[index].sub_activo.includes("$")) {
+      totalActivoNoCorriente += parseFloat(
+        cuentas[index].sub_activo.split("$")[1].split(",").join("").trim()
+      );
+    } else {
+      totalActivoNoCorriente += parseFloat(cuentas[index].sub_activo.trim());
+      cuentas[index].sub_activo = "$ " + cuentas[index].sub_activo.trim();
+    }
   }
   rows.value[rowTotalActivoNoCorriente].total_activo =
     "$ " +
@@ -571,11 +601,14 @@ function setTotalActivos() {
 function setTotalPasivoCorriente(cuentas) {
   totalPasivosCorrientes = 0;
   for (const index in cuentas) {
-    totalPasivosCorrientes += parseFloat(
-      cuentas[index].sub_pasivo.includes("$")
-        ? cuentas[index].sub_pasivo.split("$")[1].split(",").join("").trim()
-        : cuentas[index].sub_pasivo.trim()
-    );
+    if (cuentas[index].sub_pasivo.includes("$")) {
+      totalPasivosCorrientes += parseFloat(
+        cuentas[index].sub_pasivo.split("$")[1].split(",").join("").trim()
+      );
+    } else {
+      totalPasivosCorrientes += parseFloat(cuentas[index].sub_pasivo.trim());
+      cuentas[index].sub_pasivo = "$ " + cuentas[index].sub_pasivo.trim();
+    }
   }
   rows.value[rowTotalPasivoCorriente].total_pasivo =
     "$ " +
@@ -587,11 +620,14 @@ function setTotalPasivoNoCorriente(cuentas) {
   console.log(totalPasivosNoCorrientes);
   totalPasivosNoCorrientes = 0;
   for (const index in cuentas) {
-    totalPasivosNoCorrientes += parseFloat(
-      cuentas[index].sub_pasivo.includes("$")
-        ? cuentas[index].sub_pasivo.split("$")[1].split(",").join("").trim()
-        : cuentas[index].sub_pasivo.trim()
-    );
+    if (cuentas[index].sub_pasivo.includes("$")) {
+      totalPasivosNoCorrientes += parseFloat(
+        cuentas[index].sub_pasivo.split("$")[1].split(",").join("").trim()
+      );
+    } else {
+      totalPasivosNoCorrientes += parseFloat(cuentas[index].sub_pasivo.trim());
+      cuentas[index].sub_pasivo = "$ " + cuentas[index].sub_pasivo.trim();
+    }
   }
   rows.value[rowTotalPasivoNoCorriente].total_pasivo =
     "$ " +
@@ -625,11 +661,14 @@ function setTotalCapitalSocial(cuentas) {
 function setTotalPatrimonio() {
   totalPatrimonio = 0;
   for (let i = rowTotalCapitalSocial; i < rowTotalPatrimonio; i++) {
-    totalPatrimonio += parseFloat(
-      rows.value[i].total_pasivo.includes("$")
-        ? rows.value[i].total_pasivo.split("$")[1].split(",").join("").trim()
-        : rows.value[i].total_pasivo.trim()
-    );
+    if (rows.value[i].total_pasivo.includes("$")) {
+      totalPatrimonio += parseFloat(
+        rows.value[i].total_pasivo.split("$")[1].split(",").join("").trim()
+      );
+    } else {
+      totalPatrimonio += parseFloat(rows.value[i].total_pasivo.trim());
+      rows.value[i].total_pasivo = "$ " + rows.value[i].total_pasivo.trim();
+    }
   }
   rows.value[rowTotalPatrimonio].total_pasivo =
     "$ " + new Intl.NumberFormat("en-US").format(totalPatrimonio.toFixed(2));
@@ -672,7 +711,7 @@ watch(rows.value, () => {
       rows.value.filter((cuenta) => cuenta.typeDer === "CS")
     );
   } else if (typeChanged === "PT") {
-    set;
+    setTotalPatrimonio();
   }
 });
 
@@ -684,29 +723,16 @@ function getDataAcount(typeAcount, acountChanged) {
 
 // Obtenemos el nuevo monto ingresado en el popup edit
 function getNewAmount(value) {
+  value = value.trim();
   if (value.includes("$")) {
-    value = value.split(" ")[1];
+    value = value.split("$")[1].split(",").join("").trim();
   }
+  console.info("guardando el dato", value);
   store.updateBalance(props.balance, acount, parseFloat(value));
 }
 </script>
 
 <style lang="sass">
-.buttom
-  cursor: pointer
-  border: 0
-  border-radius: 6px
-  font-weight: 600
-  margin: 10px 10px
-  width: 200px
-  padding: 10px 0
-  box-shadow: 0 0 20px rgba(104, 85, 224, 0.2)
-  transition: 0.4s
-
-.buttom:hover
-  color: white
-  box-shadow: 0 0 20px rgba(104, 85, 224, 0.6)
-  background-color: rgba(104, 85, 224, 1)
 
 .bg-brand
     background: #0b032d !important
