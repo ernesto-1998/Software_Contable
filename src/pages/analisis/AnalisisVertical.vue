@@ -192,10 +192,10 @@ onBeforeMount(() => {
 
   keysEstado = {
     sub_productos_de_operacion: Array.from(new Set(temporalKeysEstado.sub_productos_de_operacion)),
-    sub_costos_de_energia: Array.from(new Set(temporalKeysEstado.sub_costos_de_energia)),
+    sub_costos_d_financieros: Array.from(new Set(temporalKeysEstado.sub_gastos_financieros)),
+    sub_proe_energia: Array.from(new Set(temporalKeysEstado.sub_costos_de_energia)),
     sub_costos_y_gastos_de_operacion: Array.from(new Set(temporalKeysEstado.sub_costos_y_gastos_de_operacion)),
-    sub_gastos_financieros: Array.from(new Set(temporalKeysEstado.sub_gastos_financieros)),
-    sub_productos_financieros: Array.from(new Set(temporalKeysEstado.sub_productos_financieros)),
+    sub_gastosductos_financieros: Array.from(new Set(temporalKeysEstado.sub_productos_financieros)),
     sub_impuestos_y_reservas: Array.from(new Set(temporalKeysEstado.sub_impuestos_y_reservas))
   }
 
