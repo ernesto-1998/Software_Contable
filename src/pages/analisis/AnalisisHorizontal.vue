@@ -96,6 +96,21 @@
         />
       </div>
     </div>
+
+    <div v-if="generadorBalance === true" class="vertical-seccion-container bg-positive">
+      <TablaAnalisisBalance
+        :columnsActivo="columnsActivo"
+        :columnsPasivo="columnsPasivo"
+        :columnsPatrimonio="columnsPatrimonio"
+        :rowsActivo="rowsActivo"
+        :rowsPasivo="rowsPasivo" :rowsPatrimonio="rowsPatrimonio"
+      />
+    </div>
+    <div v-if="generadorEstado === true" class="vertical-seccion-container bg-positive">
+      <TablaAnalisisEstado :columnsTitulo="columnsTitulo" :rowsAnalisisEstado="rowsAnalisisEstado"
+      />
+    </div>
+
     <div class="info-container bg-secondary">
       <div class="row q-gutter-x-lg justify-evenly">
         <div class="col-md-auto">
@@ -131,7 +146,7 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount, watch } from "vue";
+import { ref, onBeforeMount, watch, onUpdated } from "vue";
 import { useCounterStore } from "stores/estados";
 import GraficoRosquillaBalance from "src/components/graphics/GraficoRosquillaBalance.vue";
 import GraficoUtilidades from "src/components/graphics/GraficoUtilidades.vue";
@@ -165,6 +180,9 @@ function showAnalisis() {
     showGraphicsER.value = true;
   }
 }
+
+
+
 
 watch(periodo1, () => {
   if (showGraphicsBalance.value) {

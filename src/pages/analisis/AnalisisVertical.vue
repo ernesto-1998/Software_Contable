@@ -71,7 +71,7 @@
     </div>
 
     <div v-if="generadorBalance === true" class="vertical-seccion-container bg-positive">
-      <TablaVerticalBalance
+      <TablaAnalisisBalance
         :columnsActivo="columnsActivo"
         :columnsPasivo="columnsPasivo"
         :columnsPatrimonio="columnsPatrimonio"
@@ -80,7 +80,7 @@
       />
     </div>
     <div v-if="generadorEstado === true" class="vertical-seccion-container bg-positive">
-      <TablaVerticalEstado :columnsTitulo="columnsTitulo" :rowsAnalisisEstado="rowsAnalisisEstado"
+      <TablaAnalisisEstado :columnsTitulo="columnsTitulo" :rowsAnalisisEstado="rowsAnalisisEstado"
       />
     </div>
 
@@ -160,8 +160,8 @@
 <script setup>
 import { ref, onBeforeMount, watch } from "vue";
 import { useCounterStore } from "stores/estados";
-import TablaVerticalBalance from "../../components/AnalisisVertical/TablaVerticalBalance.vue";
-import TablaVerticalEstado from "../../components/AnalisisVertical/TablaVerticalEstado.vue";
+import TablaAnalisisBalance from "../../components/AnalisisVertical-Horizontal/TablaAnalisisBalance.vue";
+import TablaAnalisisEstado from "../../components/AnalisisVertical-Horizontal/TablaAnalisisEstado.vue";
 import {
   obtenerTotalesBalance,
   obtenerTotalesEstado,
@@ -259,9 +259,9 @@ const activarAnalisis = (año, estado) => {
     columnsPasivo.value.push("PASIVO");
     columnsPatrimonio.value.push("PATRIMONIO");
     for (let a of año) {
-      columnsActivo.value.push(a, "(%) Absoluto");
-      columnsPasivo.value.push(a, "(%) Absoluto");
-      columnsPatrimonio.value.push(a, "(%) Absoluto");
+      columnsActivo.value.push(a, "(%)");
+      columnsPasivo.value.push(a, "(%)");
+      columnsPatrimonio.value.push(a, "(%)");
     }
     activarAnalisisBalance(año);
   } 
@@ -272,7 +272,7 @@ const activarAnalisis = (año, estado) => {
     generadorEstado.value = true;
     columnsTitulo.value.push("CUENTAS");
     for (let a of año) {
-      columnsTitulo.value.push(a, "(%) Absoluto");
+      columnsTitulo.value.push(a, "(%)");
     }
     activarAnalisisEstado(año);
   }
