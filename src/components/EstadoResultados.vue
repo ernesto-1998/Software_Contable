@@ -9,6 +9,7 @@
         hide-pagination
         row-key="name"
         dense
+        bordered
         separator="none"
       >
         <template v-slot:top>
@@ -58,6 +59,7 @@
             >
               {{ props.row.monto }}
               <q-popup-edit
+                v-if="props.row.monto"
                 @hide="closePopUp"
                 @save="getDataAcount(props.row.type, props.row.cuenta)"
                 @update:model-value="getNewAmount"
@@ -69,7 +71,6 @@
                 label-cancel="Cancelar"
               >
                 <q-input
-                  prefix="$"
                   v-model="scope.value"
                   dense
                   :error="errorCalories"
@@ -90,6 +91,27 @@
               }"
             >
               {{ props.row.total }}
+              <q-popup-edit
+                v-if="props.row.isTotalEditable"
+                @hide="closePopUp"
+                @save="getDataAcount(props.row.type, props.row.cuenta)"
+                @update:model-value="getNewAmount"
+                :validate="validarInput"
+                v-model="props.row.total"
+                v-slot="scope"
+                buttons
+                label-set="Guardar"
+                label-cancel="Cancelar"
+              >
+                <q-input
+                  v-model="scope.value"
+                  dense
+                  :error="errorCalories"
+                  :error-message="errorMessageCalories"
+                  @keyup.enter="scope.set"
+                  autofocus
+                />
+              </q-popup-edit>
             </q-td>
           </q-tr>
         </template>
@@ -99,17 +121,18 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted, onBeforeUnmount } from "vue";
 import { useCounterStore } from "../stores/estados";
 import useEventsBus from "../eventBus";
 
 const props = defineProps({
-  show: Boolean,
+  estado: Object,
 });
 
 const store = useCounterStore();
 const { bus } = useEventsBus();
-const showDialog = ref(props.show);
+const { emit } = useEventsBus();
+const showDialog = ref(true);
 let errorCalories = ref(false);
 let errorMessageCalories = ref("");
 const initialPagination = ref({
@@ -150,6 +173,18 @@ let rowUtilidadOperacion = 0;
 let rowUXD = 0;
 let rowUAR = 0;
 
+let UAR = 0;
+let UXD = 0;
+let UOP = 0;
+let UN = 0;
+let UB = 0;
+let totalProductosOperacion = 0;
+let totalCostosEnergia = 0;
+let totalCostosGastosOperacion = 0;
+let totalGastosFinancieros = 0;
+let totalProductosFinancieros = 0;
+let totalRows = 0;
+
 // Totales de cuentas del estado y utilidades
 let totalImpuestos = 0;
 
@@ -159,6 +194,16 @@ function closePopUp() {
 }
 
 function validarInput(value) {
+  console.log("validando");
+  value = value.trim();
+  console.log(value);
+
+  if (value.includes("$")) {
+    value = value.slice(1, value.length).trim();
+    console.log("quitamos el dolar:", value);
+  }
+  value = value.split(",").join("").trim();
+  console.log("quitando comas:", value);
   if (isNaN(value)) {
     errorCalories.value = true;
     errorMessageCalories.value =
@@ -179,6 +224,7 @@ function validarInput(value) {
     } else {
       errorCalories.value = false;
       errorMessageCalories.value = "";
+      value = "$ " + value;
       return true;
     }
   }
@@ -186,269 +232,315 @@ function validarInput(value) {
 
 function close() {
   showDialog.value = !showDialog.value;
-  rows.value = [];
-  totalImpuestos = 0;
+  emit("closeEstado");
 }
 
 function setTotalProductosOperacion(cuentas) {
-  console.log(cuentas);
-  let newTotalProductosOperacion = 0;
+  totalProductosOperacion = 0;
   for (const index in cuentas) {
-    newTotalProductosOperacion += parseFloat(cuentas[index].monto);
+    if (cuentas[index].monto.includes("$")) {
+      totalProductosOperacion += parseFloat(
+        cuentas[index].monto.split("$")[1].split(",").join("").trim()
+      );
+    } else {
+      totalProductosOperacion += parseFloat(cuentas[index].monto.trim());
+      cuentas[index].monto = "$ " + cuentas[index].monto;
+    }
   }
   rows.value[rowTotalProductoOperacion].total =
-    newTotalProductosOperacion.toFixed(2);
+    "$ " +
+    new Intl.NumberFormat("en-US").format(totalProductosOperacion.toFixed(2));
 
-  // ACTUALIZANDO LAS UTILIDADES
-  updateUtilidades();
+  setUB();
 }
 
 function setTotalCostoEnergia(cuentas) {
-  let newTotalCostoEnergia = 0;
+  totalCostosEnergia = 0;
   for (const index in cuentas) {
-    newTotalCostoEnergia += parseFloat(cuentas[index].monto);
+    if (cuentas[index].monto.includes("$")) {
+      totalCostosEnergia += parseFloat(
+        cuentas[index].monto.split("$")[1].split(",").join("").trim()
+      );
+    } else {
+      totalCostosEnergia += parseFloat(cuentas[index].monto.trim());
+      cuentas[index].monto = "$ " + cuentas[index].monto;
+    }
   }
-  rows.value[rowTotalCostosEnergia].total = newTotalCostoEnergia.toFixed(2);
-  // ACTUALIZANDO LAS UTILIDADES
-  updateUtilidades();
+  rows.value[rowTotalCostosEnergia].total =
+    "$ " + new Intl.NumberFormat("en-US").format(totalCostosEnergia.toFixed(2));
+
+  setUB();
 }
 
 function setTotalGastosOperacion(cuentas) {
-  let newTotalGastosOperacion = 0;
+  totalCostosGastosOperacion = 0;
   for (const index in cuentas) {
-    newTotalGastosOperacion += parseFloat(cuentas[index].monto);
+    if (cuentas[index].monto.includes("$")) {
+      totalCostosGastosOperacion += parseFloat(
+        cuentas[index].monto.split("$")[1].split(",").join("").trim()
+      );
+    } else {
+      totalCostosGastosOperacion += parseFloat(cuentas[index].monto.trim());
+      cuentas[index].monto = "$ " + cuentas[index].monto;
+    }
   }
   rows.value[rowTotalCostosGastosOperacion].total =
-    newTotalGastosOperacion.toFixed(2);
-  // ACTUALIZANDO LAS UTILIDADES
-  updateUtilidades();
+    "$ " +
+    new Intl.NumberFormat("en-US").format(
+      totalCostosGastosOperacion.toFixed(2)
+    );
+
+  setUOP();
 }
 
 function setTotalGastosFinancieros(cuentas) {
-  let newTotalGastosFinancieros = 0;
+  totalGastosFinancieros = 0;
   for (const index in cuentas) {
-    newTotalGastosFinancieros += parseFloat(cuentas[index].monto);
+    if (cuentas[index].monto.includes("$")) {
+      totalGastosFinancieros += parseFloat(
+        cuentas[index].monto.split("$")[1].split(",").join("").trim()
+      );
+    } else {
+      totalGastosFinancieros += parseFloat(cuentas[index].monto.trim());
+      cuentas[index].monto = "$ " + cuentas[index].monto;
+    }
   }
   rows.value[rowTotalGastosFinancieros].total =
-    newTotalGastosFinancieros.toFixed(2);
-  // ACTUALIZANDO LAS UTILIDADES
-  updateUtilidades();
+    "$ " +
+    new Intl.NumberFormat("en-US").format(totalGastosFinancieros.toFixed(2));
+
+  setUAR();
 }
 
 function setTotalProductosFinancieros(cuentas) {
-  let newTotalProductosFinancieros = 0;
+  totalProductosFinancieros = 0;
   for (const index in cuentas) {
-    newTotalProductosFinancieros += parseFloat(cuentas[index].monto);
+    if (cuentas[index].monto.includes("$")) {
+      totalProductosFinancieros += parseFloat(
+        cuentas[index].monto.split("$")[1].split(",").join("").trim()
+      );
+    } else {
+      totalProductosFinancieros += parseFloat(cuentas[index].monto.trim());
+      cuentas[index].monto = "$ " + cuentas[index].monto;
+    }
   }
   rows.value[rowTotalProductosFinancieros].total =
-    newTotalProductosFinancieros.toFixed(2); // ACTUALIZANDO LAS UTILIDADES
-  updateUtilidades();
-}
-function updateUtilidades() {
-  setUB();
-  setUOP();
+    "$ " +
+    new Intl.NumberFormat("en-US").format(totalProductosFinancieros.toFixed(2));
+
   setUAR();
+}
+
+function setTotalImpuestos(cuentas) {
+  totalImpuestos = 0;
+  for (const index in cuentas) {
+    if (cuentas[index].total.includes("$")) {
+      totalImpuestos += parseFloat(
+        cuentas[index].total.split("$")[1].split(",").join("").trim()
+      );
+    } else {
+      totalImpuestos += parseFloat(cuentas[index].total.trim());
+      cuentas[index].total = "$ " + cuentas[index].total;
+    }
+  }
   setUXD();
 }
+
 function setUB() {
-  rows.value[rowUtilidadBruta].total = (
-    rows.value[rowTotalProductoOperacion].total -
-    rows.value[rowTotalCostosEnergia].total
-  ).toFixed(2);
+  UB = (totalProductosOperacion - totalCostosEnergia).toFixed(2);
+  rows.value[rowUtilidadBruta].total =
+    "$ " + new Intl.NumberFormat("en-US").format(UB);
+  setUOP();
 }
 
 function setUOP() {
-  rows.value[rowUtilidadOperacion].total = (
-    rows.value[rowUtilidadBruta].total -
-    rows.value[rowTotalCostosGastosOperacion].total
-  ).toFixed(2);
+  UOP = (UB - totalCostosGastosOperacion).toFixed(2);
+  rows.value[rowUtilidadOperacion].total =
+    "$ " + new Intl.NumberFormat("en-US").format(UOP);
+  setUAR();
 }
 
 function setUAR() {
-  rows.value[rowUAR].total = (
-    rows.value[rowUtilidadOperacion].total -
-    (rows.value[rowTotalGastosFinancieros].total -
-      rows.value[rowTotalProductosFinancieros].total)
-  ).toFixed(2);
+  UAR = (UOP - (totalGastosFinancieros - totalProductosFinancieros)).toFixed(2);
+  rows.value[rowUAR].total = "$ " + new Intl.NumberFormat("en-US").format(UAR);
+  setUXD();
 }
 
 function setUXD() {
-  rows.value[rowUXD].total = (
-    rows.value[rowUAR].total - totalImpuestos
-  ).toFixed(2);
+  UXD = (UAR - totalImpuestos).toFixed(2);
+  rows.value[rowUXD].total = "$ " + new Intl.NumberFormat("en-US").format(UXD);
 }
 
-watch(
-  () => bus.value.get("sendEstado"),
-  (val) => {
-    estado = val[0];
-    let totalProductosOperacion = 0;
-    let totalCostosEnergia = 0;
-    let totalCostosGastosOperacion = 0;
-    let totalGastosFinancieros = 0;
-    let totalProductosFinancieros = 0;
-    let totalRows = 0;
-    year.value = val[0].año;
+onMounted(() => {
+  console.log(props.estado);
+  year.value = props.estado.año;
 
-    // determinando el número necesario de filas para la tabla
-    for (const [typeCuenta, value] of Object.entries(val[0])) {
-      if (typeCuenta === "año") {
-        continue;
-      }
-      totalRows += value.size;
+  // determinando el número necesario de filas para la tabla
+  for (const [typeCuenta, value] of Object.entries(props.estado)) {
+    if (typeCuenta === "año") {
+      continue;
     }
-    totalRows += 18;
-
-    // inicializando el array de filas
-    for (let i = 0; i < totalRows; i++) {
-      rows.value.push({});
-    }
-    let index = 0;
-    rowTotalProductoOperacion = index;
-    rows.value[index].cuenta = "PRODUCTOS DE OPERACIÓN";
-    rows.value[index].isHeader = true;
-    index += 1;
-    // llenando las filas de productos de operación
-    for (const [cuenta, monto] of val[0].sub_productos_de_operacion) {
-      rows.value[index].cuenta = cuenta;
-      rows.value[index].monto = monto;
-      rows.value[index].type = "PO";
-      totalProductosOperacion += parseFloat(monto.toFixed(2));
-      index += 1;
-    }
-    rows.value[index - 1].isUltimaSubCuenta = true;
-
-    // añadiendo el total de productos de operación
-    rows.value[rowTotalProductoOperacion].total =
-      totalProductosOperacion.toFixed(2);
-    index += 1;
-    rows.value[index].cuenta = "MENOS";
-    rows.value[index].isOperador = true;
-    index += 1;
-    rowTotalCostosEnergia = index;
-    rows.value[index].cuenta = "COSTOS DE ENERGIA";
-    rows.value[index].isUltimaTotal = true;
-    rows.value[index].isHeader = true;
-    index += 1;
-    for (const [cuenta, monto] of val[0].sub_costos_de_energia) {
-      rows.value[index].cuenta = cuenta;
-      rows.value[index].monto = monto;
-      rows.value[index].type = "CE";
-      totalCostosEnergia += parseFloat(monto.toFixed(2));
-      index += 1;
-    }
-    rows.value[rowTotalCostosEnergia].total = totalCostosEnergia.toFixed(2);
-
-    rowUtilidadBruta = index;
-    rows.value[rowUtilidadBruta].total = (
-      rows.value[rowTotalProductoOperacion].total -
-      rows.value[rowTotalCostosEnergia].total
-    ).toFixed(2);
-    rows.value[index].isHeader = true;
-    rows.value[index].cuenta = "MARGEN COMPRA VENTA DE ENERGIA";
-    rows.value[index].isUtilidad = true;
-    index += 1;
-
-    for (const [cuenta, monto] of val[0].sub_costos_y_gastos_de_operacion) {
-      rows.value[index].cuenta = cuenta;
-      rows.value[index].monto = monto;
-      rows.value[index].type = "GO";
-      totalCostosGastosOperacion += parseFloat(monto.toFixed(2));
-      index += 1;
-    }
-    rows.value[index - 1].isUltimaSubCuenta = true;
-
-    index += 1;
-    rowTotalCostosGastosOperacion = index;
-    rows.value[index].isHeader = true;
-    rows.value[index].cuenta = "COSTOS Y GASTOS DE OPERACION";
-    rows.value[index].isUltimaTotal = true;
-    rows.value[rowTotalCostosGastosOperacion].total =
-      totalCostosGastosOperacion.toFixed(2);
-
-    index += 1;
-    rowUtilidadOperacion = index;
-    rows.value[index].isHeader = true;
-    rows.value[index].cuenta = "UTILIDAD DE OPERACIÓN";
-    rows.value[index].isUtilidad = true;
-    rows.value[index].total = (
-      rows.value[rowUtilidadBruta].total -
-      rows.value[rowTotalCostosGastosOperacion].total
-    ).toFixed(2);
-    index += 2;
-
-    rows.value[index].cuenta = "MENOS";
-    rows.value[index].isOperador = true;
-    index += 1;
-
-    rowTotalGastosFinancieros = index;
-    rows.value[index].cuenta = "GASTOS FINANCIEROS";
-    rows.value[index].isHeader = true;
-    index += 1;
-    for (const [cuenta, monto] of val[0].sub_gastos_financieros) {
-      rows.value[index].cuenta = cuenta;
-      rows.value[index].monto = monto;
-      rows.value[index].type = "GF";
-      totalGastosFinancieros += parseFloat(monto.toFixed(2));
-      index += 1;
-    }
-
-    rows.value[rowTotalGastosFinancieros].total =
-      totalGastosFinancieros.toFixed(2);
-
-    rows.value[index].cuenta = "MAS";
-    rows.value[index].isOperador = true;
-
-    index += 1;
-    rowTotalProductosFinancieros = index;
-    rows.value[index].cuenta = "PRODUCTOS FINANCIEROS";
-    rows.value[index].isUltimaTotal = true;
-    rows.value[index].isHeader = true;
-    index += 1;
-    for (const [cuenta, monto] of val[0].sub_productos_financieros) {
-      rows.value[index].cuenta = cuenta;
-      rows.value[index].monto = monto;
-      rows.value[index].type = "PF";
-      totalProductosFinancieros += parseFloat(monto.toFixed(2));
-      index += 1;
-    }
-    rows.value[index - 1].isUltimaSubCuenta = true;
-    rows.value[rowTotalProductosFinancieros].total = totalProductosFinancieros;
-
-    index += 1;
-    rowUAR = index;
-    rows.value[rowUAR].total = (
-      rows.value[rowUtilidadOperacion].total -
-      (parseFloat(rows.value[rowTotalGastosFinancieros].total) -
-        rows.value[rowTotalProductosFinancieros].total)
-    ).toFixed(2);
-    rows.value[index].cuenta = "UTILIDAD ANTES DE IMPUESTOS Y RESERVAS";
-    rows.value[index].isUtilidad = true;
-    rows.value[index].isHeader = true;
-    index += 1;
-
-    rows.value[index].cuenta = "MENOS";
-    rows.value[index].isHeader = true;
-
-    index += 1;
-    for (const [cuenta, monto] of val[0].sub_impuestos_y_reservas) {
-      rows.value[index].cuenta = cuenta;
-      rows.value[index].total = monto;
-      rows.value[index].type = "IR";
-      totalImpuestos += parseFloat(monto.toFixed(2));
-      index += 1;
-    }
-    rows.value[index - 1].isUltimaTotal = true;
-
-    rowUXD = index;
-    rows.value[index].cuenta = "UTILIDAD POR DISTRIBUIR";
-    rows.value[index].isUtilidad = true;
-    rows.value[index].total = (
-      rows.value[rowUAR].total - totalImpuestos
-    ).toFixed(2);
-    rows.value[index].isHeader = true;
+    totalRows += value.size;
   }
-);
+  totalRows += 18;
+
+  // inicializando el array de filas
+  for (let i = 0; i < totalRows; i++) {
+    rows.value.push({});
+  }
+  let index = 0;
+  rowTotalProductoOperacion = index;
+  rows.value[index].cuenta = "PRODUCTOS DE OPERACIÓN";
+  rows.value[index].isHeader = true;
+  index += 1;
+  // llenando las filas de productos de operación
+  for (const [cuenta, monto] of props.estado.sub_productos_de_operacion) {
+    rows.value[index].cuenta = cuenta;
+    rows.value[index].monto =
+      "$ " + new Intl.NumberFormat("en-US").format(monto);
+    rows.value[index].type = "PO";
+    totalProductosOperacion += parseFloat(monto.toFixed(2));
+    index += 1;
+  }
+  rows.value[index - 1].isUltimaSubCuenta = true;
+
+  // añadiendo el total de productos de operación
+  rows.value[rowTotalProductoOperacion].total =
+    "$ " +
+    new Intl.NumberFormat("en-US").format(totalProductosOperacion.toFixed(2));
+  index += 1;
+  rows.value[index].cuenta = "MENOS";
+  rows.value[index].isOperador = true;
+  index += 1;
+  rowTotalCostosEnergia = index;
+  rows.value[index].cuenta = "COSTOS DE ENERGIA";
+  rows.value[index].isUltimaTotal = true;
+  rows.value[index].isHeader = true;
+  index += 1;
+  for (const [cuenta, monto] of props.estado.sub_costos_de_energia) {
+    rows.value[index].cuenta = cuenta;
+    rows.value[index].monto =
+      "$ " + new Intl.NumberFormat("en-US").format(monto);
+    rows.value[index].type = "CE";
+    totalCostosEnergia += parseFloat(monto.toFixed(2));
+    index += 1;
+  }
+  rows.value[rowTotalCostosEnergia].total =
+    "$ " + new Intl.NumberFormat("en-US").format(totalCostosEnergia.toFixed(2));
+
+  rowUtilidadBruta = index;
+  UB = (totalProductosOperacion - totalCostosEnergia).toFixed(2);
+  rows.value[rowUtilidadBruta].total =
+    "$ " + new Intl.NumberFormat("en-US").format(UB);
+  rows.value[index].isHeader = true;
+  rows.value[index].cuenta = "MARGEN COMPRA VENTA DE ENERGIA";
+  rows.value[index].isUtilidad = true;
+  index += 1;
+
+  for (const [cuenta, monto] of props.estado.sub_costos_y_gastos_de_operacion) {
+    rows.value[index].cuenta = cuenta;
+    rows.value[index].monto =
+      "$ " + new Intl.NumberFormat("en-US").format(monto);
+    rows.value[index].type = "GO";
+    totalCostosGastosOperacion += parseFloat(monto.toFixed(2));
+    index += 1;
+  }
+  rows.value[index - 1].isUltimaSubCuenta = true;
+
+  index += 1;
+  rowTotalCostosGastosOperacion = index;
+  rows.value[index].isHeader = true;
+  rows.value[index].cuenta = "COSTOS Y GASTOS DE OPERACION";
+  rows.value[index].isUltimaTotal = true;
+  rows.value[rowTotalCostosGastosOperacion].total =
+    "$ " +
+    new Intl.NumberFormat("en-US").format(
+      totalCostosGastosOperacion.toFixed(2)
+    );
+
+  index += 1;
+  rowUtilidadOperacion = index;
+  rows.value[index].isHeader = true;
+  rows.value[index].cuenta = "UTILIDAD DE OPERACIÓN";
+  rows.value[index].isUtilidad = true;
+  UOP = (UB - totalCostosGastosOperacion).toFixed(2);
+  rows.value[index].total = "$ " + new Intl.NumberFormat("en-US").format(UOP);
+  index += 2;
+
+  rows.value[index].cuenta = "MENOS";
+  rows.value[index].isOperador = true;
+  index += 1;
+
+  rowTotalGastosFinancieros = index;
+  rows.value[index].cuenta = "GASTOS FINANCIEROS";
+  rows.value[index].isHeader = true;
+  index += 1;
+  for (const [cuenta, monto] of props.estado.sub_gastos_financieros) {
+    rows.value[index].cuenta = cuenta;
+    rows.value[index].monto =
+      "$ " + new Intl.NumberFormat("en-US").format(monto);
+    rows.value[index].type = "GF";
+    totalGastosFinancieros += parseFloat(monto.toFixed(2));
+    index += 1;
+  }
+
+  rows.value[rowTotalGastosFinancieros].total =
+    "$ " +
+    new Intl.NumberFormat("en-US").format(totalGastosFinancieros.toFixed(2));
+
+  rows.value[index].cuenta = "MAS";
+  rows.value[index].isOperador = true;
+
+  index += 1;
+  rowTotalProductosFinancieros = index;
+  rows.value[index].cuenta = "PRODUCTOS FINANCIEROS";
+  rows.value[index].isUltimaTotal = true;
+  rows.value[index].isHeader = true;
+  index += 1;
+  for (const [cuenta, monto] of props.estado.sub_productos_financieros) {
+    rows.value[index].cuenta = cuenta;
+    rows.value[index].monto =
+      "$ " + new Intl.NumberFormat("en-US").format(monto);
+    rows.value[index].type = "PF";
+    totalProductosFinancieros += parseFloat(monto.toFixed(2));
+    index += 1;
+  }
+  rows.value[index - 1].isUltimaSubCuenta = true;
+  rows.value[rowTotalProductosFinancieros].total =
+    "$ " +
+    new Intl.NumberFormat("en-US").format(totalProductosFinancieros.toFixed(2));
+
+  index += 1;
+  rowUAR = index;
+  UAR = (UOP - (totalGastosFinancieros - totalProductosFinancieros)).toFixed(2);
+  rows.value[rowUAR].total = "$ " + new Intl.NumberFormat("en-US").format(UAR);
+  rows.value[index].cuenta = "UTILIDAD ANTES DE IMPUESTOS Y RESERVAS";
+  rows.value[index].isUtilidad = true;
+  rows.value[index].isHeader = true;
+  index += 1;
+
+  rows.value[index].cuenta = "MENOS";
+  rows.value[index].isHeader = true;
+
+  index += 1;
+  for (const [cuenta, monto] of props.estado.sub_impuestos_y_reservas) {
+    rows.value[index].cuenta = cuenta;
+    rows.value[index].total =
+      "$ " + new Intl.NumberFormat("en-US").format(monto);
+    rows.value[index].isTotalEditable = true;
+    rows.value[index].type = "IR";
+    totalImpuestos += parseFloat(monto.toFixed(2));
+    index += 1;
+  }
+  rows.value[index - 1].isUltimaTotal = true;
+
+  rowUXD = index;
+  rows.value[index].cuenta = "UTILIDAD POR DISTRIBUIR";
+  rows.value[index].isUtilidad = true;
+  UXD = (UAR - totalImpuestos).toFixed(2);
+  rows.value[index].total = "$ " + new Intl.NumberFormat("en-US").format(UXD);
+  rows.value[index].isHeader = true;
+});
 
 watch(rows.value, () => {
   if (typeChanged === "PO") {
@@ -469,6 +561,8 @@ watch(rows.value, () => {
     setTotalProductosFinancieros(
       rows.value.filter((cuenta) => cuenta.type === "PF")
     );
+  } else if (typeChanged === "IR") {
+    setTotalImpuestos(rows.value.filter((cuenta) => cuenta.type === "IR"));
   }
 });
 
@@ -480,7 +574,13 @@ function getDataAcount(typeAcount, acountChanged) {
 
 // Obtenemos el nuevo monto ingresado en el popup edit
 function getNewAmount(value) {
-  store.updateEstado(estado, acount, parseFloat(value));
+  console.log("enviando valor..");
+  value = value.trim();
+  if (value.includes("$")) {
+    value = value.split("$")[1].split(",").join("").trim();
+  }
+  console.log(value);
+  store.updateEstado(props.estado, acount, parseFloat(value));
 }
 </script>
 
@@ -489,24 +589,6 @@ function getNewAmount(value) {
 .text-sub
   box-shadow: 0 1px 0px  rgb(0 0 0) !important
 
-button
-  cursor: pointer
-  border: 0
-  border-radius: 6px
-  font-weight: 600
-  margin: 10px 10px
-  width: 200px
-  padding: 10px 0
-  box-shadow: 0 0 20px rgba(104, 85, 224, 0.2)
-  transition: 0.4s
-
-button:hover
-  color: white
-  box-shadow: 0 0 20px rgba(104, 85, 224, 0.6)
-  background-color: rgba(104, 85, 224, 1)
-
-.bg-brand
-    background: #0b032d !important
 
 .my-sticky-header-table
   /* height or max-height is important */

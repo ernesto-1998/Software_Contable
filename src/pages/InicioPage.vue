@@ -54,7 +54,7 @@
       </div>
     </div>
     <balanceDialog :balance="balance" v-if="showBalanceDialog" />
-    <estadoDialog v-if="showEstadoDialog" />
+    <estadoDialog :estado="estado" v-if="showEstadoDialog" />
   </div>
 </template>
 
@@ -75,6 +75,7 @@ const showBalanceDialog = ref(false);
 const showEstadoDialog = ref(false);
 const year = ref(null);
 let balance = ref(null);
+let estado = ref(null);
 const options = ["2018", "2019", "2020", "2021", "2022"];
 
 // METHODS
@@ -83,8 +84,8 @@ function showBalance() {
   showBalanceDialog.value = true;
 }
 function showEstado() {
+  estado.value = store.getEstadoByYear(parseInt(year.value));
   showEstadoDialog.value = true;
-  emit("sendEstado", store.getEstadoByYear(parseInt(year.value)));
 }
 
 function scrollInto(el) {
@@ -94,18 +95,8 @@ function scrollInto(el) {
   setVerticalScrollPosition(target, offset, duration);
 }
 
-// Computed
-const computedShowBalance = computed(() => {
-  return showBalanceDialog;
-});
-
-const computedShowEstado = computed(() => {
-  return showEstadoDialog;
-});
-
 // WATCHS
 watch(year, () => {
-  console.log("detectamos cambio en el year");
   showList.value = true;
 });
 
@@ -114,6 +105,14 @@ watch(
   () => {
     console.log(" se ha cerrado el balance");
     showBalanceDialog.value = false;
+  }
+);
+
+watch(
+  () => bus.value.get("closeEstado"),
+  () => {
+    console.log(" se ha cerrado el estado");
+    showEstadoDialog.value = false;
   }
 );
 </script>
