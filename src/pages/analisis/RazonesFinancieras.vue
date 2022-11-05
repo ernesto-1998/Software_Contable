@@ -99,6 +99,7 @@ onBeforeMount(() => {
 
 const input = useCounterStore();
 let generador = ref(false);
+let nivelPorcentaje = 2;
 let año = ref([]);
 let razon = ref(null);
 let periods = [];
@@ -152,7 +153,7 @@ const activarRazonesLiquidez = (año) => {
     "Razón Circulante",
     "Razón Rápida",
     "Capital de Trabajo",
-    "Nivel de Dependencia",
+    "Nivel de Dependencia de Inventarios",
   ];
   rows.value.push([
     año,
@@ -168,25 +169,25 @@ const activarRazonesActividad = (año) => {
   const datos = obtenerDatosRazones(año);
   columns.value = [
     "Año",
-    "Rotación de Inventarios",
-    "Rotación de Cuentas por Cobrar",
     "Número de días Inventario",
-    "Ciclo Operacional",
-    "Periodo Promedio de Cobro",
-    "Periodo Promedio de Pago",
+    "Rotación de Inventarios",
     "Rotacion de Activo Total",
     "Rotación de Activo Operacional",
+    "Rotación de Cuentas por Cobrar",
+    "Periodo Promedio de Cobro",
+    "Periodo Promedio de Pago",
+    "Ciclo Operacional",
   ];
   rows.value.push([
     año,
-    datos.rotacion_inventarios,
-    datos.rotacion_cuentas_por_cobrar,
     datos.numero_dias_inventario,
-    datos.ciclo_operacional,
-    datos.periodo_promedio_cobro,
-    datos.periodo_promedio_pago,
+    datos.rotacion_inventarios,
     datos.rotacion_activo_total,
     datos.rotacion_activo_operacional,
+    datos.rotacion_cuentas_por_cobrar,
+    datos.periodo_promedio_cobro,
+    datos.periodo_promedio_pago,
+    datos.ciclo_operacional,
   ]);
 };
 
@@ -196,12 +197,14 @@ const activarRazonesDeuda = (año) => {
   columns.value = [
     "Año",
     "Razon de Endeudamiento",
+    "Razon Deuda Capital Patrimonial",
     "Razon Cargo Interes Fijo",
     "MAF",
   ];
   rows.value.push([
     año,
-    datos.razon_endeudamiento,
+    datos.razon_endeudamiento + "%",
+    datos.razon_deuda_capital_patrimonial + "%",
     datos.razon_cargos_interes_fijo,
     datos.maf,
   ]);
@@ -220,11 +223,11 @@ const activarRazonesRendimiento = (año) => {
   ];
   rows.value.push([
     año,
-    datos.roa,
-    datos.roe,
-    datos.margen_utilidad_bruta,
-    datos.margen_utilidad_operativa,
-    datos.margen_utilidad_neta,
+    datos.roa + "%",
+    datos.roe + "%",
+    datos.margen_utilidad_bruta + "%",
+    datos.margen_utilidad_operativa + "%",
+    datos.margen_utilidad_neta + "%",
   ]);
 };
 
@@ -258,13 +261,13 @@ const obtenerDatosRazones = (año) => {
 
   const razon_circulante = razones_liquidez
     .razon_circulante(activo_corriente, pasivo_corriente)
-    .toFixed(2);
+    .toFixed(nivelPorcentaje);
   const razon_rapida = razones_liquidez
     .razon_rapida(activo_corriente, inventarios, pasivo_corriente)
-    .toFixed(2);
+    .toFixed(nivelPorcentaje);
   const capital_trabajo = razones_liquidez
     .capital_trabajo(activo_corriente, pasivo_corriente)
-    .toFixed(2);
+    .toFixed(nivelPorcentaje);
   const nivel_dependencia = razones_liquidez
     .nivel_de_dependencia_de_inventarios(
       pasivo_corriente,
@@ -272,31 +275,31 @@ const obtenerDatosRazones = (año) => {
       cuentas_por_cobrar,
       inventarios
     )
-    .toFixed(2);
+    .toFixed(nivelPorcentaje);
 
   // Razones de Actividad
 
   const rotacion_cuentas_por_cobrar = razones_actividad
     .rotacion_cuentas_por_cobrar(cuentas_por_cobrar, ventas)
-    .toFixed(2);
+    .toFixed(nivelPorcentaje);
   const rotacion_inventarios = razones_actividad
     .rotacion_inventarios(costo_de_ventas, inventarios)
-    .toFixed(2);
+    .toFixed(nivelPorcentaje);
   const numero_dias_inventario = razones_actividad
     .numero_dias_inventario(inventarios, costo_de_ventas)
-    .toFixed(2);
+    .toFixed(nivelPorcentaje);
   const ciclo_operacional = razones_actividad
     .ciclo_operacional(cuentas_por_cobrar, ventas, inventarios, costo_de_ventas)
-    .toFixed(2);
+    .toFixed(nivelPorcentaje);
   const periodo_promedio_cobro = razones_actividad
     .periodo_promedio_cobro(cuentas_por_cobrar, ventas)
-    .toFixed(2);
+    .toFixed(nivelPorcentaje);
   const periodo_promedio_pago = razones_actividad
     .periodo_promedio_pago(cuentas_por_pagar, costo_de_ventas)
-    .toFixed(2);
+    .toFixed(nivelPorcentaje);
   const rotacion_activo_total = razones_actividad
     .rotacion_activo_total(ventas, activo)
-    .toFixed(2);
+    .toFixed(nivelPorcentaje);
   const rotacion_activo_operacional = razones_actividad
     .rotacion_activo_operacional(
       ventas,
@@ -306,31 +309,32 @@ const obtenerDatosRazones = (año) => {
       total_depreciacion,
       efectivo
     )
-    .toFixed(2);
+    .toFixed(nivelPorcentaje);
 
   // Razones de Deuda
 
   const razon_endeudamiento = razones_deuda
     .razon_endeudamiento(pasivo, activo)
-    .toFixed(2);
+    .toFixed(nivelPorcentaje);
+  const razon_deuda_capital_patrimonial = razones_deuda.razon_deuda_capital_patrimonial(pasivo, patrimonio).toFixed(nivelPorcentaje);
   const razon_cargos_interes_fijo = razones_deuda
     .razon_cargos_interes_fijo(utilidad_antes_impuestos, impuestos)
-    .toFixed(2);
-  const maf = razones_deuda.MAF(activo, patrimonio).toFixed(2);
+    .toFixed(nivelPorcentaje);
+  const maf = razones_deuda.MAF(activo, patrimonio).toFixed(nivelPorcentaje);
 
   // Razones de Rendimiento
 
-  const roa = razones_rendimiento.ROA(utilidad_neta, activo).toFixed(2);
-  const roe = razones_rendimiento.ROE(utilidad_neta, patrimonio).toFixed(2);
+  const roa = razones_rendimiento.ROA(utilidad_neta, activo).toFixed(nivelPorcentaje);
+  const roe = razones_rendimiento.ROE(utilidad_neta, patrimonio).toFixed(nivelPorcentaje);
   const margen_utilidad_bruta = razones_rendimiento
     .margen_utilidad_bruta(utilidad_bruta, ventas)
-    .toFixed(2);
+    .toFixed(nivelPorcentaje);
   const margen_utilidad_operativa = razones_rendimiento
     .margen_utilidad_operativa(utilidad_operativa, ventas)
-    .toFixed(2);
+    .toFixed(nivelPorcentaje);
   const margen_utilidad_neta = razones_rendimiento
     .margen_utilidad_neta(utilidad_neta, ventas)
-    .toFixed(2);
+    .toFixed(nivelPorcentaje);
 
   return {
     activo,
@@ -360,6 +364,7 @@ const obtenerDatosRazones = (año) => {
     ciclo_operacional,
     // Razon de Deuda
     razon_endeudamiento,
+    razon_deuda_capital_patrimonial,
     razon_cargos_interes_fijo,
     maf,
     // Razones de Rendimiento
