@@ -124,45 +124,7 @@ const props = defineProps({
   columnsPatrimonio: Array,
   rowsActivo: Array,
   rowsPasivo: Array,
-  rowsPatrimonio: Array,
-  generador: Boolean,
+  rowsPatrimonio: Array
 });
 </script>
 
-<style scoped>
-.vertical-table_container {
-  display: grid;
-  justify-content: center;
-  /* width: 98%; */
-  margin: auto;
-}
-
-.table-container {
-  overflow: auto;
-  height: 25.5rem;
-}
-
-.table-content {
-  max-width: 100%;
-}
-
-.table-head_titles {
-  color: var(--table-color);
-}
-
-.table-row {
-}
-
-.table-ceil {
-  padding: 0.5rem;
-}
-
-.table-ceil:nth-child(1) {
-  min-width: 15rem;
-}
-
-.conditionalBinding {
-  text-transform: uppercase;
-  font-weight: bold;
-}
-</style>
