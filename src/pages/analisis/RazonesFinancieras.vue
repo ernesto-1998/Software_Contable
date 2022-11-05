@@ -7,7 +7,7 @@
         </label>
       </div>
       <div class="periodo-container">
-        <label>Periodo: </label>
+        <label>Periodos: </label>
         <q-select
           label-color="purple-13"
           bg-color="white"
@@ -31,7 +31,7 @@
           v-model="año"
           multiple
           :options="periods"
-          label="periodo"
+          label="Periodos"
         />
         <label class="q-ml-xl">Razones: </label>
         <q-select

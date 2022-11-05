@@ -53,8 +53,8 @@
         </q-list>
       </div>
     </div>
-    <balanceDialog :show="computedShowBalance" />
-    <estadoDialog :show="computedShowEstado" />
+    <balanceDialog :balance="balance" v-if="showBalanceDialog" />
+    <estadoDialog v-if="showEstadoDialog" />
   </div>
 </template>
 
@@ -68,18 +68,19 @@ import { scroll } from "quasar";
 const { getScrollTarget, setVerticalScrollPosition } = scroll;
 
 // DATA
-const { emit } = useEventsBus();
+const { bus } = useEventsBus();
 const store = useCounterStore();
 const showList = ref(false);
 const showBalanceDialog = ref(false);
 const showEstadoDialog = ref(false);
 const year = ref(null);
+let balance = ref(null);
 const options = ["2018", "2019", "2020", "2021", "2022"];
 
 // METHODS
 function showBalance() {
+  balance.value = store.getBalanceGeneralByYear(parseInt(year.value));
   showBalanceDialog.value = true;
-  emit("sendBalance", store.getBalanceGeneralByYear(parseInt(year.value)));
 }
 function showEstado() {
   showEstadoDialog.value = true;
@@ -107,6 +108,14 @@ watch(year, () => {
   console.log("detectamos cambio en el year");
   showList.value = true;
 });
+
+watch(
+  () => bus.value.get("closeBalance"),
+  () => {
+    console.log(" se ha cerrado el balance");
+    showBalanceDialog.value = false;
+  }
+);
 </script>
 
 <style scoped>

@@ -37,17 +37,32 @@
           color="primary"
           label="Generar Análisis"
           no-caps
-          @click="showGraphicDupont = true"
+          @click="show"
           class="q-mr-xl buttom"
         />
       </div>
     </div>
-    <div class="dupont-container bg-positive">
-      <DupontGraphic
-        v-if="showGraphicDupont"
-        :periodo="parseInt(year)"
-      ></DupontGraphic>
-    </div>
+    <q-dialog v-model="alert" full-width full-height>
+      <q-card style="border-radius: 30px">
+        <q-card-section
+          class="row items-center q-pb-none bg-secondary text-white"
+        >
+          <div class="text-h6 q-pb-lg">
+            Análisis Dupon Periodo
+            <span class="text-weight-bold">{{ year }}</span>
+          </div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+        <q-separator color="black" />
+        <q-card-section class="bg-grey-4">
+          <DupontGraphic
+            v-if="showGraphicDupont"
+            :periodo="parseInt(year)"
+          ></DupontGraphic>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -55,8 +70,15 @@
 import { ref, watch } from "vue";
 import DupontGraphic from "src/components/graphics/DupontGraphic.vue";
 const year = ref(null);
+let alert = ref(false);
 const periods = ["2018", "2019", "2020", "2021", "2022"];
 const showGraphicDupont = ref(false);
+
+function show() {
+  showGraphicDupont.value = true;
+  alert.value = true;
+}
+
 watch(year, () => {
   if (showGraphicDupont.value) {
     showGraphicDupont.value = false;

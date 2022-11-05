@@ -48,7 +48,7 @@
             dense
             icon="far fa-times-circle"
             @click="close"
-            class="q-ml-md"
+            class="q-ml-md buttom"
           />
         </template>
         <template v-slot:header="props">
@@ -106,7 +106,6 @@
                 label-cancel="Cancelar"
               >
                 <q-input
-                  prefix="$"
                   v-model="scope.value"
                   dense
                   :error="errorCalories"
@@ -190,7 +189,6 @@
                 "
               >
                 <q-input
-                  prefix="$"
                   v-model="scope.value"
                   dense
                   :error="errorCalories"
@@ -230,17 +228,17 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted, onBeforeUnmount } from "vue";
 import { useCounterStore } from "../stores/estados";
 import useEventsBus from "../eventBus";
 
 const props = defineProps({
-  show: Boolean,
+  balance: Object,
 });
 
+const { emit } = useEventsBus();
 const store = useCounterStore();
-const { bus } = useEventsBus();
-const showDialog = ref(props.show);
+const showDialog = ref(true);
 let errorCalories = ref(false);
 let errorMessageCalories = ref("");
 const year = ref("");
@@ -296,12 +294,29 @@ let rowTotalCapitalSocial = 0;
 let rowTotalPatrimonio = 0;
 let rowTotalPasivoPatrimonio = 0;
 
+let totalActivoCorriente = 0;
+let totalActivoNoCorriente = 0;
+let totalPasivosCorrientes = 0;
+let totalPasivosNoCorrientes = 0;
+let totalPatrimonio = 0;
+let totalCapitalSocial = 0;
+
 function closePopUp() {
   errorCalories.value = false;
   errorMessageCalories.value = "";
 }
 
 function validarInput(value) {
+  console.log("validando");
+  value = value.trim();
+  console.log(value);
+
+  if (value.includes("$")) {
+    value = value.slice(1, value.length).trim();
+    console.log("quitamos el dolar:", value);
+  }
+  value = value.split(",").join("").trim();
+  console.log("quitando comas:", value);
   if (isNaN(value)) {
     errorCalories.value = true;
     errorMessageCalories.value =
@@ -322,266 +337,324 @@ function validarInput(value) {
     } else {
       errorCalories.value = false;
       errorMessageCalories.value = "";
+      value = "$ " + value;
       return true;
     }
   }
 }
 
+onMounted(() => {
+  console.log(props.balance.activo.activo_corriente);
+  year.value = props.balance.año;
+
+  // numero total de cuentas para el lado izquierdo (ACTIVOS)
+  const rowsIzq =
+    props.balance.activo.activo_corriente.size +
+    props.balance.activo.activo_no_corriente.size +
+    3;
+  // numero total de cuentas para el lado derecho (PASIVO + CAPITAL)
+  const rowsDer =
+    props.balance.pasivo.pasivo_corriente.size +
+    props.balance.pasivo.pasivo_no_corriente.size +
+    props.balance.patrimonio.get("sub_capital_social").size +
+    (props.balance.patrimonio.size - 1) +
+    12;
+
+  // DETERMINANDO CUAL LADO TIENE MAS CUENTAS
+  const mayor = rowsDer > rowsIzq ? rowsDer : rowsIzq;
+  // DIMENSIONANDO EL ARRAY DE ROWS CON EL NUMERO MAYOR DE CUENTAS
+  for (let i = 0; i < mayor; i++) {
+    rows.value.push({});
+  }
+
+  // LLENANDO EL LADO IZQUIERDO DEL BALANCE
+  let index = 0;
+  rows.value[index].cuentaPasivo = "PASIVOS CORRIENTES";
+  rows.value[index].isHeaderPV = true;
+  rows.value[index].cuentaActivo = "ACTIVOS CORRIENTES";
+  rows.value[index].isHeaderAC = true;
+  index += 1;
+  for (const [cuenta, monto] of props.balance.activo.activo_corriente) {
+    rows.value[index].cuentaActivo = cuenta;
+    rows.value[index].sub_activo =
+      "$ " + new Intl.NumberFormat("en-US").format(monto);
+    rows.value[index].isAC = true;
+    rows.value[index].typeIzq = "AC";
+    totalActivoCorriente += parseFloat(monto.toFixed(2));
+    index += 1;
+  }
+  rowTotaclActivoCorriente = index;
+  rows.value[index].cuentaActivo = "TOTAL ACTIVO CORRIENTE";
+  rows.value[index].isSubTotalAC = true;
+  rows.value[index].total_activo =
+    "$ " +
+    new Intl.NumberFormat("en-US").format(totalActivoCorriente.toFixed(2));
+  index += 2;
+  rows.value[index].cuentaActivo = "ACTIVOS NO CORRIENTES";
+  rows.value[index].isHeaderAC = true;
+  index += 1;
+  for (const [cuenta, monto] of props.balance.activo.activo_no_corriente) {
+    rows.value[index].cuentaActivo = cuenta;
+    rows.value[index].sub_activo =
+      "$ " + new Intl.NumberFormat("en-US").format(monto);
+    rows.value[index].isAC = true;
+    rows.value[index].typeIzq = "ANC";
+    totalActivoNoCorriente += parseFloat(monto.toFixed(2));
+    index += 1;
+  }
+  rowTotalActivoNoCorriente = index;
+  rows.value[index].cuentaActivo = "TOTAL ACTIVO NO CORRIENTE";
+  rows.value[index].isSubTotalAC = true;
+  rows.value[index].total_activo =
+    "$ " +
+    new Intl.NumberFormat("en-US").format(totalActivoNoCorriente.toFixed(2));
+
+  index += 1;
+
+  // LLENANDO EL LADO DERECHO DEL BALANCE
+  index = 1;
+  for (const [cuenta, monto] of props.balance.pasivo.pasivo_corriente) {
+    rows.value[index].cuentaPasivo = cuenta;
+    rows.value[index].sub_pasivo =
+      "$ " + new Intl.NumberFormat("en-US").format(monto);
+    rows.value[index].isPC = true;
+    rows.value[index].isPV = true;
+    rows.value[index].typeDer = "PC";
+    index += 1;
+    totalPasivosCorrientes += parseFloat(monto.toFixed(2));
+  }
+  rowTotalPasivoCorriente = index;
+  rows.value[index].cuentaPasivo = "TOTAL PASIVOS CORRIENTES";
+  rows.value[index].isSubTotalPV = true;
+  rows.value[index].total_pasivo =
+    "$ " +
+    new Intl.NumberFormat("en-US").format(totalPasivosCorrientes.toFixed(2));
+  index += 2;
+  rows.value[index].cuentaPasivo = "PASIVOS NO CORRIENTES";
+  rows.value[index].isHeaderPV = true;
+  index += 1;
+  for (const [cuenta, monto] of props.balance.pasivo.pasivo_no_corriente) {
+    rows.value[index].cuentaPasivo = cuenta;
+    rows.value[index].sub_pasivo =
+      "$ " + new Intl.NumberFormat("en-US").format(monto);
+    rows.value[index].isPNC = true;
+    rows.value[index].isPV = true;
+    rows.value[index].typeDer = "PNC";
+    index += 1;
+    totalPasivosNoCorrientes += monto;
+  }
+  rowTotalPasivoNoCorriente = index;
+  rows.value[index].cuentaPasivo = "TOTAL PASIVOS NO CORRIENTES";
+  rows.value[index].total_pasivo =
+    "$ " +
+    new Intl.NumberFormat("en-US").format(totalPasivosNoCorrientes.toFixed(2));
+  rows.value[index].isSubTotalPV = true;
+  index += 1;
+  rowTotalPasivos = index;
+  rows.value[index].cuentaPasivo = "TOTAL PASIVOS";
+  rows.value[index].total_pasivo =
+    "$ " +
+    new Intl.NumberFormat("en-US").format(
+      (totalPasivosCorrientes + totalPasivosNoCorrientes).toFixed(2)
+    );
+
+  rows.value[index].isTotalPV = true;
+  index += 2;
+
+  rows.value[index].cuentaPasivo = "PATRIMONIO Y RESERVAS";
+  rows.value[index].isHeaderPT = true;
+  index += 1;
+  for (const [cuenta, monto] of props.balance.patrimonio.get(
+    "sub_capital_social"
+  )) {
+    rows.value[index].cuentaPasivo = cuenta;
+    rows.value[index].sub_pasivo =
+      "$ " + new Intl.NumberFormat("en-US").format(monto);
+    rows.value[index].isCS = true;
+    rows.value[index].typeDer = "CS";
+    index += 1;
+    totalCapitalSocial += parseFloat(monto.toFixed(2));
+  }
+  rowTotalCapitalSocial = index;
+  rows.value[index].cuentaPasivo = "Total Capital Social";
+  rows.value[index].isTotalCS = true;
+  rows.value[index].total_pasivo =
+    "$ " + new Intl.NumberFormat("en-US").format(totalCapitalSocial);
+  index += 1;
+  for (const [cuenta, monto] of props.balance.patrimonio) {
+    if (cuenta !== "sub_capital_social") {
+      rows.value[index].cuentaPasivo = cuenta;
+      rows.value[index].total_pasivo =
+        "$ " + new Intl.NumberFormat("en-US").format(monto);
+      rows.value[index].isPT = true;
+      rows.value[index].typeDer = "PT";
+      index += 1;
+      totalPatrimonio += monto;
+    }
+  }
+  totalPatrimonio += totalCapitalSocial;
+  totalPatrimonio.toFixed(2);
+  rowTotalPatrimonio = index;
+  rows.value[index].cuentaPasivo = "TOTAL PATRIMONIO";
+  rows.value[index].isTotalPT = true;
+  rows.value[index].total_pasivo =
+    "$ " + new Intl.NumberFormat("en-US").format(totalPatrimonio);
+  index += 2;
+  rowTotalActivos = index;
+  rows.value[index].cuentaActivo = "TOTAL ACTIVOS";
+  rows.value[index].isTotalBalance = true;
+  rows.value[index].total_activo =
+    "$ " +
+    new Intl.NumberFormat("en-US").format(
+      (totalActivoCorriente + totalActivoNoCorriente).toFixed(2)
+    );
+  rowTotalPasivoPatrimonio = index;
+  rows.value[index].cuentaPasivo = "TOTAL PASIVOS Y PATRIMONIO";
+  rows.value[index].isTotalBalance = true;
+  rows.value[index].total_pasivo =
+    "$ " +
+    new Intl.NumberFormat("en-US").format(
+      (
+        totalPatrimonio +
+        totalPasivosCorrientes +
+        totalPasivosNoCorrientes
+      ).toFixed(2)
+    );
+});
+
+onBeforeUnmount(() => {
+  console.log("se ha destruido el componente de balance general");
+});
+
 function close() {
   showDialog.value = !showDialog.value;
-  rows.value = [];
+  emit("closeBalance");
 }
 
 function setTotalActivoCorriente(cuentas) {
-  let newTotalActivoCorriente = 0;
+  totalActivoCorriente = 0;
   for (const index in cuentas) {
-    newTotalActivoCorriente += parseFloat(cuentas[index].sub_activo);
+    totalActivoCorriente += parseFloat(
+      cuentas[index].sub_activo.includes("$")
+        ? cuentas[index].sub_activo.split("$")[1].split(",").join("").trim()
+        : cuentas[index].sub_activo.trim()
+    );
   }
+
   rows.value[rowTotaclActivoCorriente].total_activo =
-    newTotalActivoCorriente.toFixed(2);
+    "$ " +
+    new Intl.NumberFormat("en-US").format(totalActivoCorriente.toFixed(2));
 
   setTotalActivos();
 }
 
 function setTotalActivoNoCorriente(cuentas) {
-  let newTotalActivoNoCorriente = 0;
+  totalActivoNoCorriente = 0;
   for (const index in cuentas) {
-    newTotalActivoNoCorriente += parseFloat(cuentas[index].sub_activo);
+    totalActivoNoCorriente += parseFloat(
+      cuentas[index].sub_activo.includes("$")
+        ? cuentas[index].sub_activo.split("$")[1].split(",").join("").trim()
+        : cuentas[index].sub_activo.trim()
+    );
   }
   rows.value[rowTotalActivoNoCorriente].total_activo =
-    newTotalActivoNoCorriente.toFixed(2);
+    "$ " +
+    new Intl.NumberFormat("en-US").format(totalActivoNoCorriente.toFixed(2));
 
   setTotalActivos();
 }
 
 function setTotalActivos() {
   rows.value[rowTotalActivos].total_activo =
-    parseFloat(rows.value[rowTotalActivoNoCorriente].total_activo) +
-    parseFloat(rows.value[rowTotaclActivoCorriente].total_activo);
+    "$ " +
+    new Intl.NumberFormat("en-US").format(
+      (totalActivoCorriente + totalActivoNoCorriente).toFixed(2)
+    );
 }
 
 function setTotalPasivoCorriente(cuentas) {
-  let newTotalPasivoCorriente = 0;
+  totalPasivosCorrientes = 0;
   for (const index in cuentas) {
-    newTotalPasivoCorriente += parseFloat(cuentas[index].sub_pasivo);
+    totalPasivosCorrientes += parseFloat(
+      cuentas[index].sub_pasivo.includes("$")
+        ? cuentas[index].sub_pasivo.split("$")[1].split(",").join("").trim()
+        : cuentas[index].sub_pasivo.trim()
+    );
   }
   rows.value[rowTotalPasivoCorriente].total_pasivo =
-    newTotalPasivoCorriente.toFixed(2);
+    "$ " +
+    new Intl.NumberFormat("en-US").format(totalPasivosCorrientes.toFixed(2));
   setTotalPasivos();
 }
 
 function setTotalPasivoNoCorriente(cuentas) {
-  let newTotalPasivoNoCorriente = 0;
+  console.log(totalPasivosNoCorrientes);
+  totalPasivosNoCorrientes = 0;
   for (const index in cuentas) {
-    newTotalPasivoNoCorriente += parseFloat(cuentas[index].sub_pasivo);
+    totalPasivosNoCorrientes += parseFloat(
+      cuentas[index].sub_pasivo.includes("$")
+        ? cuentas[index].sub_pasivo.split("$")[1].split(",").join("").trim()
+        : cuentas[index].sub_pasivo.trim()
+    );
   }
   rows.value[rowTotalPasivoNoCorriente].total_pasivo =
-    newTotalPasivoNoCorriente.toFixed(2);
+    "$ " +
+    new Intl.NumberFormat("en-US").format(totalPasivosNoCorrientes.toFixed(2));
   setTotalPasivos();
 }
 
 function setTotalPasivos() {
   rows.value[rowTotalPasivos].total_pasivo =
-    parseFloat(rows.value[rowTotalPasivoCorriente].total_pasivo) +
-    parseFloat(rows.value[rowTotalPasivoNoCorriente].total_pasivo);
+    "$ " +
+    new Intl.NumberFormat("en-US").format(
+      (totalPasivosCorrientes + totalPasivosNoCorrientes).toFixed(2)
+    );
   setTotalPasivoPatrimonio();
 }
 
 function setTotalCapitalSocial(cuentas) {
-  let newTotalCapitalSocial = 0;
+  totalCapitalSocial = 0;
   for (const index in cuentas) {
-    newTotalCapitalSocial += parseFloat(cuentas[index].sub_pasivo);
+    totalCapitalSocial += parseFloat(
+      cuentas[index].sub_pasivo.includes("$")
+        ? cuentas[index].sub_pasivo.split("$")[1].split(",").join("").trim()
+        : cuentas[index].sub_pasivo.trim()
+    );
   }
   rows.value[rowTotalCapitalSocial].total_pasivo =
-    newTotalCapitalSocial.toFixed(2);
+    "$ " + new Intl.NumberFormat("en-US").format(totalCapitalSocial.toFixed(2));
   setTotalPatrimonio();
 }
 
 function setTotalPatrimonio() {
-  let newTotalPatrimonio = 0;
+  totalPatrimonio = 0;
   for (let i = rowTotalCapitalSocial; i < rowTotalPatrimonio; i++) {
-    newTotalPatrimonio += parseFloat(rows.value[i].total_pasivo);
+    totalPatrimonio += parseFloat(
+      rows.value[i].total_pasivo.includes("$")
+        ? rows.value[i].total_pasivo.split("$")[1].split(",").join("").trim()
+        : rows.value[i].total_pasivo.trim()
+    );
   }
-  rows.value[rowTotalPatrimonio].total_pasivo = newTotalPatrimonio;
+  rows.value[rowTotalPatrimonio].total_pasivo =
+    "$ " + new Intl.NumberFormat("en-US").format(totalPatrimonio.toFixed(2));
   setTotalPasivoPatrimonio();
 }
 
 function setTotalPasivoPatrimonio() {
   rows.value[rowTotalPasivoPatrimonio].total_pasivo =
-    parseFloat(rows.value[rowTotalPasivos].total_pasivo) +
-    parseFloat(rows.value[rowTotalPatrimonio].total_pasivo);
+    "$ " +
+    new Intl.NumberFormat("en-US").format(
+      (
+        totalPasivosCorrientes +
+        totalPasivosNoCorrientes +
+        totalPatrimonio
+      ).toFixed(2)
+    );
 }
 
-watch(
-  () => bus.value.get("sendBalance"),
-  (val) => {
-    balance = val[0];
-    year.value = balance.año;
-    let totalActivoCorriente = 0;
-    let totalActivoNoCorriente = 0;
-    let totalPasivosCorrientes = 0;
-    let totalPasivosNoCorrientes = 0;
-    let totalPatrimonio = 0;
-    let totalCapitalSocial = 0;
-
-    // numero total de cuentas para el lado izquierdo (ACTIVOS)
-    const rowsIzq =
-      val[0].activo.activo_corriente.size +
-      val[0].activo.activo_no_corriente.size +
-      3;
-    // numero total de cuentas para el lado derecho (PASIVO + CAPITAL)
-    const rowsDer =
-      val[0].pasivo.pasivo_corriente.size +
-      val[0].pasivo.pasivo_no_corriente.size +
-      val[0].patrimonio.get("sub_capital_social").size +
-      (val[0].patrimonio.size - 1) +
-      12;
-
-    // DETERMINANDO CUAL LADO TIENE MAS CUENTAS
-    const mayor = rowsDer > rowsIzq ? rowsDer : rowsIzq;
-    // DIMENSIONANDO EL ARRAY DE ROWS CON EL NUMERO MAYOR DE CUENTAS
-    for (let i = 0; i < mayor; i++) {
-      rows.value.push({});
-    }
-
-    // LLENANDO EL LADO IZQUIERDO DEL BALANCE
-    let index = 0;
-    rows.value[index].cuentaPasivo = "PASIVOS CORRIENTES";
-    rows.value[index].isHeaderPV = true;
-    rows.value[index].cuentaActivo = "ACTIVOS CORRIENTES";
-    rows.value[index].isHeaderAC = true;
-    index += 1;
-    for (const [cuenta, monto] of val[0].activo.activo_corriente) {
-      rows.value[index].cuentaActivo = cuenta;
-      rows.value[index].sub_activo = monto;
-      rows.value[index].isAC = true;
-      rows.value[index].typeIzq = "AC";
-      totalActivoCorriente += parseFloat(monto.toFixed(2));
-      index += 1;
-    }
-    rowTotaclActivoCorriente = index;
-    rows.value[index].cuentaActivo = "TOTAL ACTIVO CORRIENTE";
-    rows.value[index].isSubTotalAC = true;
-    rows.value[index].total_activo = parseFloat(
-      totalActivoCorriente.toFixed(2)
-    );
-    index += 2;
-    rows.value[index].cuentaActivo = "ACTIVOS NO CORRIENTES";
-    rows.value[index].isHeaderAC = true;
-    index += 1;
-    for (const [cuenta, monto] of val[0].activo.activo_no_corriente) {
-      rows.value[index].cuentaActivo = cuenta;
-      rows.value[index].sub_activo = monto;
-      rows.value[index].isAC = true;
-      rows.value[index].typeIzq = "ANC";
-      totalActivoNoCorriente += parseFloat(monto.toFixed(2));
-      index += 1;
-    }
-    rowTotalActivoNoCorriente = index;
-    rows.value[index].cuentaActivo = "TOTAL ACTIVO NO CORRIENTE";
-    rows.value[index].isSubTotalAC = true;
-    rows.value[index].total_activo = parseFloat(
-      totalActivoNoCorriente.toFixed(2)
-    );
-    index += 1;
-
-    // LLENANDO EL LADO DERECHO DEL BALANCE
-    index = 1;
-    for (const [cuenta, monto] of val[0].pasivo.pasivo_corriente) {
-      rows.value[index].cuentaPasivo = cuenta;
-      rows.value[index].sub_pasivo = monto;
-      rows.value[index].isPC = true;
-      rows.value[index].isPV = true;
-      rows.value[index].typeDer = "PC";
-      index += 1;
-      totalPasivosCorrientes += parseFloat(monto.toFixed(2));
-    }
-    rowTotalPasivoCorriente = index;
-    rows.value[index].cuentaPasivo = "TOTAL PASIVOS CORRIENTES";
-    rows.value[index].isSubTotalPV = true;
-    rows.value[index].total_pasivo = parseFloat(
-      totalPasivosCorrientes.toFixed(2)
-    );
-    index += 2;
-    rows.value[index].cuentaPasivo = "PASIVOS NO CORRIENTES";
-    rows.value[index].isHeaderPV = true;
-    index += 1;
-    for (const [cuenta, monto] of val[0].pasivo.pasivo_no_corriente) {
-      rows.value[index].cuentaPasivo = cuenta;
-      rows.value[index].sub_pasivo = parseFloat(monto.toFixed(2));
-      rows.value[index].isPNC = true;
-      rows.value[index].isPV = true;
-      rows.value[index].typeDer = "PNC";
-      index += 1;
-      totalPasivosNoCorrientes += monto;
-    }
-    rowTotalPasivoNoCorriente = index;
-    rows.value[index].cuentaPasivo = "TOTAL PASIVOS NO CORRIENTES";
-    rows.value[index].total_pasivo = parseFloat(
-      totalPasivosNoCorrientes.toFixed(2)
-    );
-    rows.value[index].isSubTotalPV = true;
-    index += 1;
-    rowTotalPasivos = index;
-    rows.value[index].cuentaPasivo = "TOTAL PASIVOS";
-    console.log(
-      totalPasivosCorrientes + " + " + totalPasivosNoCorrientes + " = ",
-      totalPasivosCorrientes + totalPasivosNoCorrientes
-    );
-    rows.value[index].total_pasivo =
-      parseFloat(rows.value[rowTotalPasivoCorriente].total_pasivo) +
-      parseFloat(rows.value[rowTotalPasivoNoCorriente].total_pasivo);
-    rows.value[index].isTotalPV = true;
-    index += 2;
-
-    rows.value[index].cuentaPasivo = "PATRIMONIO Y RESERVAS";
-    rows.value[index].isHeaderPT = true;
-    index += 1;
-    for (const [cuenta, monto] of val[0].patrimonio.get("sub_capital_social")) {
-      rows.value[index].cuentaPasivo = cuenta;
-      rows.value[index].sub_pasivo = monto;
-      rows.value[index].isCS = true;
-      rows.value[index].typeDer = "CS";
-      index += 1;
-      totalCapitalSocial += parseFloat(monto.toFixed(2));
-    }
-    rowTotalCapitalSocial = index;
-    rows.value[index].cuentaPasivo = "Total Capital Social";
-    rows.value[index].isTotalCS = true;
-    rows.value[index].total_pasivo = totalCapitalSocial;
-    index += 1;
-    for (const [cuenta, monto] of val[0].patrimonio) {
-      if (cuenta !== "sub_capital_social") {
-        rows.value[index].cuentaPasivo = cuenta;
-        rows.value[index].total_pasivo = monto;
-        rows.value[index].isPT = true;
-        rows.value[index].typeDer = "PT";
-        index += 1;
-        totalPatrimonio += monto;
-      }
-    }
-    totalPatrimonio += totalCapitalSocial;
-    totalPatrimonio.toFixed(2);
-    rowTotalPatrimonio = index;
-    rows.value[index].cuentaPasivo = "TOTAL PATRIMONIO";
-    rows.value[index].isTotalPT = true;
-    rows.value[index].total_pasivo = totalPatrimonio;
-    index += 2;
-    rowTotalActivos = index;
-    rows.value[index].cuentaActivo = "TOTAL ACTIVOS";
-    rows.value[index].isTotalBalance = true;
-    rows.value[index].total_activo =
-      parseFloat(totalActivoCorriente.toFixed(2)) +
-      parseFloat(totalActivoNoCorriente.toFixed(2));
-    rowTotalPasivoPatrimonio = index;
-    rows.value[index].cuentaPasivo = "TOTAL PASIVOS Y PATRIMONIO";
-    rows.value[index].isTotalBalance = true;
-    rows.value[index].total_pasivo =
-      totalPatrimonio + totalPasivosCorrientes + totalPasivosNoCorrientes;
-  }
-);
-
 watch(rows.value, () => {
+  console.log("ha cambiado el balance");
+  console.log(typeChanged);
   if (typeChanged === "AC") {
     setTotalActivoCorriente(
       rows.value.filter((cuenta) => cuenta.typeIzq === "AC")
@@ -615,12 +688,15 @@ function getDataAcount(typeAcount, acountChanged) {
 
 // Obtenemos el nuevo monto ingresado en el popup edit
 function getNewAmount(value) {
-  store.updateBalance(balance, acount, parseFloat(value));
+  if (value.includes("$")) {
+    value = value.split(" ")[1];
+  }
+  store.updateBalance(props.balance, acount, parseFloat(value));
 }
 </script>
 
-<style lang="sass" scoped>
-button
+<style lang="sass">
+.buttom
   cursor: pointer
   border: 0
   border-radius: 6px
@@ -631,7 +707,7 @@ button
   box-shadow: 0 0 20px rgba(104, 85, 224, 0.2)
   transition: 0.4s
 
-button:hover
+.buttom:hover
   color: white
   box-shadow: 0 0 20px rgba(104, 85, 224, 0.6)
   background-color: rgba(104, 85, 224, 1)
