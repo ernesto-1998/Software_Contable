@@ -522,10 +522,6 @@ onMounted(() => {
     );
 });
 
-onBeforeUnmount(() => {
-  console.log("se ha destruido el componente de balance general");
-});
-
 function close() {
   showDialog.value = !showDialog.value;
   emit("closeBalance");
