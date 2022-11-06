@@ -322,7 +322,7 @@ let totalActivoNoCorriente = 0;
 let totalPasivosCorrientes = 0;
 let totalPasivosNoCorrientes = 0;
 let totalPatrimonio = 0;
-let totalCapitalSocial = 0;
+let totalPatrimonioAtribuible = 0;
 
 function closePopUp() {
   errorCalories.value = false;
@@ -367,7 +367,7 @@ function validarInput(value) {
 }
 
 onMounted(() => {
-  console.log(props.balance.activo.activo_corriente);
+  console.log(props.balance);
   year.value = props.balance.año;
 
   // numero total de cuentas para el lado izquierdo (ACTIVOS)
@@ -379,9 +379,8 @@ onMounted(() => {
   const rowsDer =
     props.balance.pasivo.pasivo_corriente.size +
     props.balance.pasivo.pasivo_no_corriente.size +
-    props.balance.patrimonio.get("sub_capital_social").size +
-    (props.balance.patrimonio.size - 1) +
-    12;
+    props.balance.patrimonio.get("sub_patrimonio_propietarios").size +
+    13;
 
   // DETERMINANDO CUAL LADO TIENE MAS CUENTAS
   const mayor = rowsDer > rowsIzq ? rowsDer : rowsIzq;
@@ -488,7 +487,7 @@ onMounted(() => {
   rows.value[index].isHeaderPT = true;
   index += 1;
   for (const [cuenta, monto] of props.balance.patrimonio.get(
-    "sub_capital_social"
+    "sub_patrimonio_propietarios"
   )) {
     rows.value[index].cuentaPasivo = cuenta;
     rows.value[index].sub_pasivo =
@@ -496,16 +495,17 @@ onMounted(() => {
     rows.value[index].isCS = true;
     rows.value[index].typeDer = "CS";
     index += 1;
-    totalCapitalSocial += parseFloat(monto.toFixed(2));
+    totalPatrimonioAtribuible += parseFloat(monto.toFixed(2));
   }
   rowTotalCapitalSocial = index;
-  rows.value[index].cuentaPasivo = "Total Capital Social";
+  rows.value[index].cuentaPasivo =
+    "Total  patrimonio atribuible a propietarios controladora";
   rows.value[index].isTotalCS = true;
   rows.value[index].total_pasivo =
-    "$ " + new Intl.NumberFormat("en-US").format(totalCapitalSocial);
+    "$ " + new Intl.NumberFormat("en-US").format(totalPatrimonioAtribuible);
   index += 1;
   for (const [cuenta, monto] of props.balance.patrimonio) {
-    if (cuenta !== "sub_capital_social") {
+    if (cuenta !== "sub_patrimonio_propietarios") {
       rows.value[index].cuentaPasivo = cuenta;
       rows.value[index].total_pasivo =
         "$ " + new Intl.NumberFormat("en-US").format(monto);
@@ -516,7 +516,7 @@ onMounted(() => {
       totalPatrimonio += monto;
     }
   }
-  totalPatrimonio += totalCapitalSocial;
+  totalPatrimonio += totalPatrimonioAtribuible;
   totalPatrimonio.toFixed(2);
   rowTotalPatrimonio = index;
   rows.value[index].cuentaPasivo = "TOTAL PATRIMONIO";
@@ -645,16 +645,17 @@ function setTotalPasivos() {
 }
 
 function setTotalCapitalSocial(cuentas) {
-  totalCapitalSocial = 0;
+  totalPatrimonioAtribuible = 0;
   for (const index in cuentas) {
-    totalCapitalSocial += parseFloat(
+    totalPatrimonioAtribuible += parseFloat(
       cuentas[index].sub_pasivo.includes("$")
         ? cuentas[index].sub_pasivo.split("$")[1].split(",").join("").trim()
         : cuentas[index].sub_pasivo.trim()
     );
   }
   rows.value[rowTotalCapitalSocial].total_pasivo =
-    "$ " + new Intl.NumberFormat("en-US").format(totalCapitalSocial.toFixed(2));
+    "$ " +
+    new Intl.NumberFormat("en-US").format(totalPatrimonioAtribuible.toFixed(2));
   setTotalPatrimonio();
 }
 

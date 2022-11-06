@@ -76,7 +76,7 @@ const showEstadoDialog = ref(false);
 const year = ref(null);
 let balance = ref(null);
 let estado = ref(null);
-const options = ["2018", "2019", "2020", "2021", "2022"];
+const options = ["2017", "2018", "2019", "2020", "2021"];
 
 // METHODS
 function showBalance() {
