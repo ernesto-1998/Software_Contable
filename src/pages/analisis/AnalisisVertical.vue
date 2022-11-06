@@ -587,10 +587,10 @@ const activarAnalisisEstado = (años) => {
     contador++;    
   }
 
-   rowsAnalisisEstado.value.push(["Total de Ingresos"]);
+   rowsAnalisisEstado.value.push(["Costos Y Gastos de Operacion"]);
   for(let año of años){
       let totales = obtenerTotalesEstado(año);
-      rowsAnalisisEstado.value[contador].push(totales.ProductosOperacion, calcularPorcentaje(totales.ProductosOperacion, totales.ProductosOperacion).toFixed(nivelPorcentaje) + "%");
+      rowsAnalisisEstado.value[contador].push("-", "-");
   }   
 
   contador++; 
