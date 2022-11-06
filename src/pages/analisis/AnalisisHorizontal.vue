@@ -667,7 +667,7 @@ const activarAnalisisEstado = (periodo1, periodo2) => {
 
   // Productos de Operacion (Que viene a ser las Ventas)
 
-  rowsAnalisisEstado.value.push(["Total de Ingresos"]);
+  rowsAnalisisEstado.value.push(["Ingresos"]);
   {
     let totales1 = obtenerTotalesEstado(periodo1);
     let totales2 = obtenerTotalesEstado(periodo2);
@@ -714,6 +714,27 @@ const activarAnalisisEstado = (periodo1, periodo2) => {
     }
   }
 
+  // Total de Ingresos
+
+  rowsAnalisisEstado.value.push(["Total de Ingresos"]);
+  {
+    let totales1 = obtenerTotalesEstado(periodo1);
+    let totales2 = obtenerTotalesEstado(periodo2);
+    rowsAnalisisEstado.value[contador].push(
+      totales2.ProductosOperacion,
+      totales1.ProductosOperacion,
+      calcularVariacionAbsoluta(
+        totales1.ProductosOperacion,
+        totales2.ProductosOperacion
+      ).toFixed(nivelPorcentaje),
+      calcularVariacionRelativa(
+        totales1.ProductosOperacion,
+        totales2.ProductosOperacion
+      ).toFixed(nivelPorcentaje) + "%"
+    );
+  }
+
+
   // Costos de Energia
 
   // rowsAnalisisEstado.value.push(["Costos de Energía"]);
@@ -734,22 +755,30 @@ const activarAnalisisEstado = (periodo1, periodo2) => {
   //   );
   // }
 
-    rowsAnalisisEstado.value.push(["Costos de Energía"]);
-  {
-    let totales1 = obtenerTotalesEstado(periodo1);
-    let totales2 = obtenerTotalesEstado(periodo2);
-    rowsAnalisisEstado.value[contador].push(
-      totales2.CostosEnergia,
-      totales1.CostosEnergia,
-      calcularVariacionAbsoluta(
-        totales1.CostosEnergia,
-        totales2.CostosEnergia
-      ).toFixed(nivelPorcentaje),
-      calcularVariacionRelativa(
-        totales1.CostosEnergia,
-        totales2.CostosEnergia
-      ).toFixed(nivelPorcentaje) + "%"
-    );
+   // Cuentas de Costos y Gastos de Operacion
+
+  for(let val of keysEstado.sub_costos_y_gastos_de_operacion){
+    rowsAnalisisEstado.value.push([val]);
+    {
+      let totales1 = obtenerTotalesEstado(periodo1);
+      let totales2 = obtenerTotalesEstado(periodo2);
+      let cuentaUtilidadOperacion1 =
+        totales1.estado.sub_costos_y_gastos_de_operacion.get(val) || 0;
+      let cuentaUtilidadOperacion2 =
+        totales2.estado.sub_costos_y_gastos_de_operacion.get(val) || 0;
+      rowsAnalisisEstado.value[contador].push(
+        cuentaUtilidadOperacion2, cuentaUtilidadOperacion1,
+        calcularVariacionAbsoluta(
+          cuentaUtilidadOperacion1,
+          cuentaUtilidadOperacion2
+        ).toFixed(nivelPorcentaje),
+        calcularVariacionRelativa(
+          cuentaUtilidadOperacion1,
+          cuentaUtilidadOperacion2
+        ).toFixed(nivelPorcentaje) + "%"
+      );
+    }
+    contador++;    
   }
 
   contador++;
