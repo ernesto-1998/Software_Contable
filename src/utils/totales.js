@@ -104,9 +104,7 @@ export const obtenerTotalesEstado = (año) => {
     estado.sub_costos_y_gastos_de_operacion.get("Costo de venta y servicios") +
     estado.sub_costos_y_gastos_de_operacion.get("Compra de energía");
 
-  // Utilidad Bruta
-
-  let utilidadBruta = ProductosOperacion - CostosEnergia;
+  // let utilidadBruta = ProductosOperacion - CostosEnergia;
 
   // Costos y gastos de operacion
 
@@ -115,11 +113,11 @@ export const obtenerTotalesEstado = (año) => {
     costosYGastosOperacion += value;
   });
 
-  costosYGastosOperacion = costosYGastosOperacion - CostosEnergia;
+  // costosYGastosOperacion = costosYGastosOperacion - CostosEnergia;
 
   // Utilidad Operacion
 
-  let utilidadOperacion = utilidadBruta - costosYGastosOperacion;
+  let utilidadOperacion = ProductosOperacion - costosYGastosOperacion;
 
   // Gastos Financieros
 
@@ -147,11 +145,41 @@ export const obtenerTotalesEstado = (año) => {
 
   let utilidadNeta = utilidadAntesImpuestos - impuestos_y_reservas;
 
+  // sub_resultados_integrales
+
+  let sub_resultados_integrales = 0;
+  estado.sub_resultados_integrales.forEach(value => {
+    sub_resultados_integrales += value;
+  });
+
+  let resultadosIntegralesAño = utilidadNeta + sub_resultados_integrales;
+
+  // Sub utilidad atribuible
+
+  let sub_utilidad_atribuible = 0;
+  estado.sub_utilidad_atribuible.forEach(value => {
+    sub_utilidad_atribuible += (value || 0);
+  });
+
+  let sub_resultados_integrales_atribuible = 0;
+  if(estado.sub_resultados_integrales_atribuible) {
+    estado.sub_resultados_integrales_atribuible.forEach(value => {
+      sub_resultados_integrales_atribuible += value;
+    })
+  }
+
+  let sub_utilidades_por_accion = 0;
+  if(estado.sub_utilidades_por_accion) {
+    estado.sub_utilidades_por_accion.forEach(value => {
+      sub_utilidades_por_accion += value;
+    })
+  }
+
   return {
     estado,
     total_depreciacion,
     impuestos,
-    utilidadBruta,
+    // utilidadBruta,
     utilidadOperacion,
     utilidadAntesImpuestos,
     utilidadNeta,
@@ -161,5 +189,10 @@ export const obtenerTotalesEstado = (año) => {
     productosFinancieros,
     gastosFinancieros,
     impuestos_y_reservas,
+    sub_resultados_integrales,
+    resultadosIntegralesAño,
+    sub_utilidad_atribuible,
+    sub_resultados_integrales_atribuible,
+    sub_utilidades_por_accion
   };
 };
