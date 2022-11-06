@@ -74,8 +74,10 @@ export const getKeysEstado = (años) => {
         for(let [key, value] of totales.estado.sub_utilidad_atribuible){
             sub_utilidad_atribuible.push(key);
         }
-        for(let [key, value] of totales.estado.sub_resultados_integrales_atribuible){
-            sub_resultados_integrales_atribuible.push(key);
+        if(totales.estado.sub_resultados_integrales_atribuible){
+            for(let [key, value] of totales.estado.sub_resultados_integrales_atribuible){
+                sub_resultados_integrales_atribuible.push(key);
+            }
         }
         for(let [key, value] of totales.estado.sub_utilidades_por_accion){
             sub_utilidades_por_accion.push(key);
