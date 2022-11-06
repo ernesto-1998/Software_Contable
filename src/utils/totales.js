@@ -4,36 +4,20 @@ export const obtenerTotalesBalance = (año) => {
   let balance = useCounterStore().getBalanceGeneralByYear(año);
 
   const inventarios = balance.activo.activo_corriente.get("Inventarios");
-  const efectivo =
-    balance.activo.activo_corriente.get("Efectivo y Equivalentes de Efectivo") +
-    (balance.activo.activo_corriente.get("Efectivo Restringido") || 0);
-  const cuentas_por_cobrar =
-    balance.activo.activo_corriente.get("Cuentas por Cobrar") +
-    balance.activo.activo_corriente.get(
-      "Cuentas por Cobrar Activo Regulatorio"
-    ) +
-    balance.activo.activo_corriente.get(
-      "Cuentas por Cobrar a partes relacionadas"
-    ) +
-    balance.activo.activo_corriente.get("Estimación para Cuentas Incobrables");
+
+  const efectivo = balance.activo.activo_corriente.get(
+    "Efectivo y Equivalentes de Efectivo"
+  );
+
+  const cuentas_por_cobrar = balance.activo.activo_corriente.get(
+    "Deudores comerciales y otras cuentas por cobrar"
+  );
 
   const cuentas_por_pagar =
-    (balance.pasivo.pasivo_corriente.get("Cuentas por Pagar Regulatorias") ||
-      0) +
     balance.pasivo.pasivo_corriente.get(
-      "Cuentas por pagar a partes relacionadas"
+      "Cuentas por pagar a proveedores de energía"
     ) +
-    balance.pasivo.pasivo_corriente.get("Cuentas por Pagar Comerciales") +
-    balance.pasivo.pasivo_corriente.get(
-      "Otras cuentas por pagar y Gastos acumulados"
-    );
-  const total_depreciacion =
-    (balance.activo.activo_no_corriente.get(
-      "Depreciación Acumulada de Revaluación PP&E"
-    ) || 0) +
-    (balance.activo.activo_no_corriente.get(
-      "Depreciación Acumulada de Propiedad, Planta y Equipo"
-    ) || 0);
+    balance.pasivo.pasivo_corriente.get("Acreedores y otras cuentas por pagar");
 
   // Totales de Activo Balance General
 
@@ -65,24 +49,15 @@ export const obtenerTotalesBalance = (año) => {
 
   // Total Patrimonio Balance
 
-  let CapitalSocialMinimo = balance.patrimonio
-    .get("sub_capital_social")
-    .get("Capital social mínimo");
-  let CapitalSocialVariable = balance.patrimonio
-    .get("sub_capital_social")
-    .get("Capital social variable");
+  let patrimonioAtribuible = balance.patrimonio
+    .get("sub_patrimonio_propietarios")
+    .forEach((value) => {
+      patrimonioAtribuible += value;
+    });
 
-  let totalCapitalSocial = 0;
-  balance.patrimonio.get("sub_capital_social").forEach((value) => {
-    totalCapitalSocial += value;
-  });
-
-  let totalPatrimonio = 0;
-  const patrimonioArray = Array.from(balance.patrimonio.values());
-  for (let val = 1; val < patrimonioArray.length; val++) {
-    totalPatrimonio += patrimonioArray[val];
-  }
-  totalPatrimonio = totalPatrimonio + totalCapitalSocial;
+  let totalPatrimonio =
+    patrimonioAtribuible +
+    balance.patrimonio.get("Participaciones no controladoras");
 
   return {
     balance,
@@ -91,7 +66,6 @@ export const obtenerTotalesBalance = (año) => {
     inventarios,
     cuentas_por_cobrar,
     cuentas_por_pagar,
-    total_depreciacion,
 
     totalActivo,
     totalActivoCorriente,
@@ -99,9 +73,6 @@ export const obtenerTotalesBalance = (año) => {
     totalPasivo,
     totalPasivoCorriente,
     totalPasivoNoCorriente,
-    totalCapitalSocial,
-    CapitalSocialMinimo,
-    CapitalSocialVariable,
     totalPatrimonio,
   };
 };
@@ -109,11 +80,14 @@ export const obtenerTotalesBalance = (año) => {
 export const obtenerTotalesEstado = (año) => {
   let estado = useCounterStore().getEstadoByYear(año);
 
+  const total_depreciacion =
+    estado.sub_costos_y_gastos_de_operacion.get("Depreciación");
+
   let impuestos =
-    (estado.sub_impuestos_y_reservas.get("Impuesto Sobre la Renta") || 0) +
-    (estado.sub_impuestos_y_reservas.get("Impuesto Sobre la Renta Diferido") ||
-      0) +
-    (estado.sub_impuestos_y_reservas.get("Contribucion especial (CESC)") || 0);
+    estado.sub_impuestos_y_reservas.get("Impuesto sobre la renta") +
+    estado.sub_impuestos_y_reservas.get(
+      "Contribución especial para el plan de seguridad ciudadana"
+    );
 
   // Total Productos de operacion
 
@@ -124,7 +98,9 @@ export const obtenerTotalesEstado = (año) => {
 
   // Total Costos de Energia
 
-  let CostosEnergia = estado.sub_costos_de_energia.get("Compra de energia");
+  let CostosEnergia =
+    estado.sub_costos_y_gastos_de_operacion.get("Costo de venta y servicios") +
+    estado.sub_costos_y_gastos_de_operacion.get("Compra de energía");
 
   // Utilidad Bruta
 
@@ -136,6 +112,8 @@ export const obtenerTotalesEstado = (año) => {
   estado.sub_costos_y_gastos_de_operacion.forEach((value) => {
     costosYGastosOperacion += value;
   });
+
+  costosYGastosOperacion = costosYGastosOperacion - CostosEnergia;
 
   // Utilidad Operacion
 
@@ -149,9 +127,7 @@ export const obtenerTotalesEstado = (año) => {
   // Productos Financieros
 
   let productosFinancieros = 0;
-  estado.sub_productos_financieros.forEach((value) => {
-    productosFinancieros += value;
-  });
+  estado.sub_ingresos_financieros.get("Ingresos financieros");
 
   // Utilidad antes de impuestos
 
@@ -171,7 +147,7 @@ export const obtenerTotalesEstado = (año) => {
 
   return {
     estado,
-
+    total_depreciacion,
     impuestos,
     utilidadBruta,
     utilidadOperacion,
