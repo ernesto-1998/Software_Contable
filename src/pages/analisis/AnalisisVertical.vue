@@ -562,13 +562,13 @@ const activarAnalisisEstado = (años) => {
 
   // Productos de Operacion (Que viene a ser las Ventas)
 
-  rowsAnalisisEstado.value.push(["Total de Ingresos"]);
+  rowsAnalisisEstado.value.push(["Ingresos"]);
   for(let año of años){
       let totales = obtenerTotalesEstado(año);
       rowsAnalisisEstado.value[contador].push(totales.ProductosOperacion, calcularPorcentaje(totales.ProductosOperacion, totales.ProductosOperacion).toFixed(nivelPorcentaje) + "%");
   }   
 
-  contador++;
+  contador++;  
 
   // Cuentas de Productos de Operacion
 
@@ -586,6 +586,14 @@ const activarAnalisisEstado = (años) => {
     }
     contador++;    
   }
+
+   rowsAnalisisEstado.value.push(["Total de Ingresos"]);
+  for(let año of años){
+      let totales = obtenerTotalesEstado(año);
+      rowsAnalisisEstado.value[contador].push(totales.ProductosOperacion, calcularPorcentaje(totales.ProductosOperacion, totales.ProductosOperacion).toFixed(nivelPorcentaje) + "%");
+  }   
+
+  contador++; 
 
   // Cuentas de Costos y Gastos de Operacion
 

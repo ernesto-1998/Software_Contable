@@ -15,7 +15,7 @@
                 </tr>
                 <tr class="table-row" v-for="(item, index) in props.rowsAnalisisEstado" :key="index">
                     <td class="table-ceil bg-accent" align="center" v-for="(childItem, index) in item" :key="index">
-                        <span class="conditionalBinding" v-if="(childItem === 'Total de Ingresos') || (childItem === 'Total Costos y Gastos de Operación') || (childItem === 'UTILIDAD DE OPERACIÓN') || (childItem === 'UTILIDAD ANTES DE IMPUESTOS Y RESERVAS') || (childItem === 'UTILIDAD NETA') || (childItem === 'Otros resultados integrales, netos de impuesto sobre la renta') || (childItem === 'RESULTADOS INTEGRALES DEL AÑO') || (childItem === 'Utilidad por acción, compañía controladora') || (childItem === 'Utilidad por acción, compañía subsidiaria')">{{ childItem }} </span>
+                        <span class="conditionalBinding" v-if="(childItem === 'Total de Ingresos') || (childItem === 'Ingresos') || (childItem === 'Total Costos y Gastos de Operación') || (childItem === 'UTILIDAD DE OPERACIÓN') || (childItem === 'UTILIDAD ANTES DE IMPUESTOS Y RESERVAS') || (childItem === 'UTILIDAD NETA') || (childItem === 'Otros resultados integrales, netos de impuesto sobre la renta') || (childItem === 'RESULTADOS INTEGRALES DEL AÑO') || (childItem === 'Utilidad por acción, compañía controladora') || (childItem === 'Utilidad por acción, compañía subsidiaria')">{{ childItem }} </span>
                         <span v-else>{{ childItem }} </span>
                     </td>
                 </tr>
