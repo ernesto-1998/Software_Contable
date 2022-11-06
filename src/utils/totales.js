@@ -123,7 +123,7 @@ export const obtenerTotalesEstado = (año) => {
 
   // Productos Financieros
 
-  let productosFinancieros = 0;
+  let productosFinancieros = 
   estado.sub_ingresos_financieros.get("Ingresos financieros");
 
   // Utilidad antes de impuestos
@@ -131,7 +131,7 @@ export const obtenerTotalesEstado = (año) => {
   let utilidadAntesImpuestos =
     utilidadOperacion - gastosFinancieros + productosFinancieros;
 
-  // Utilidad Neta
+  // Impuestos y Reservas
 
   let impuestos_y_reservas = 0;
   estado.sub_impuestos_y_reservas.forEach((value) => {
