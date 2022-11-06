@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-dialog v-model="showDialog">
+    <q-dialog v-model="showDialog" full-width>
       <q-table
         class="my-sticky-header-table"
         :rows="rows"
@@ -170,6 +170,9 @@ let rowUtilidadBruta = 0;
 let rowTotalGastosFinancieros = 0;
 let rowTotalProductosFinancieros = 0;
 let rowUtilidadOperacion = 0;
+let rowTotalImpuestos = 0;
+let rowTotalResultadosIntegrales = 0;
+let rowTotalResultadosIntegralesDelAño = 0;
 let rowUXD = 0;
 let rowUAR = 0;
 
@@ -177,7 +180,10 @@ let UAR = 0;
 let UXD = 0;
 let UOP = 0;
 let UB = 0;
+let totalResultadosIntegralesDelAño = 0;
+let totalResultadosIntegralesAtribuibles = 0;
 let totalProductosOperacion = 0;
+let totalResultadosIntegrales = 0;
 let totalCostosEnergia = 0;
 let totalCostosGastosOperacion = 0;
 let totalGastosFinancieros = 0;
@@ -381,16 +387,16 @@ onMounted(() => {
     }
     totalRows += value.size;
   }
-  totalRows += 18;
+  console.log("total de rows");
+  console.log(totalRows);
+  totalRows += 34;
 
   // inicializando el array de filas
   for (let i = 0; i < totalRows; i++) {
     rows.value.push({});
   }
   let index = 0;
-  rowTotalProductoOperacion = index;
-  rows.value[index].cuenta = "PRODUCTOS DE OPERACIÓN";
-  rows.value[index].isHeader = true;
+  rows.value[index].cuenta = "Ingresos:";
   index += 1;
   // llenando las filas de productos de operación
   for (const [cuenta, monto] of props.estado.sub_productos_de_operacion) {
@@ -402,15 +408,18 @@ onMounted(() => {
     index += 1;
   }
   rows.value[index - 1].isUltimaSubCuenta = true;
-
+  rowTotalProductoOperacion = index;
   // añadiendo el total de productos de operación
+  rows.value[rowTotalProductoOperacion].cuenta = "Total ingresos";
   rows.value[rowTotalProductoOperacion].total =
     "$ " +
     new Intl.NumberFormat("en-US").format(totalProductosOperacion.toFixed(2));
+  rows.value[index].isHeader = true;
+  index += 2;
+  rows.value[index].cuenta = "Costos y gastos de operación:";
   index += 1;
-  rows.value[index].cuenta = "MENOS";
-  rows.value[index].isOperador = true;
-  index += 1;
+
+  /*
   rowTotalCostosEnergia = index;
   rows.value[index].cuenta = "COSTOS DE ENERGIA";
   rows.value[index].isUltimaTotal = true;
@@ -431,10 +440,7 @@ onMounted(() => {
   UB = (totalProductosOperacion - totalCostosEnergia).toFixed(2);
   rows.value[rowUtilidadBruta].total =
     "$ " + new Intl.NumberFormat("en-US").format(UB);
-  rows.value[index].isHeader = true;
-  rows.value[index].cuenta = "MARGEN COMPRA VENTA DE ENERGIA";
-  rows.value[index].isUtilidad = true;
-  index += 1;
+  */
 
   for (const [cuenta, monto] of props.estado.sub_costos_y_gastos_de_operacion) {
     rows.value[index].cuenta = cuenta;
@@ -445,11 +451,9 @@ onMounted(() => {
     index += 1;
   }
   rows.value[index - 1].isUltimaSubCuenta = true;
-
-  index += 1;
   rowTotalCostosGastosOperacion = index;
   rows.value[index].isHeader = true;
-  rows.value[index].cuenta = "COSTOS Y GASTOS DE OPERACION";
+  rows.value[index].cuenta = "Total costos y gastos de operación";
   rows.value[index].isUltimaTotal = true;
   rows.value[rowTotalCostosGastosOperacion].total =
     "$ " +
@@ -457,21 +461,23 @@ onMounted(() => {
       totalCostosGastosOperacion.toFixed(2)
     );
 
-  index += 1;
+  index += 2;
   rowUtilidadOperacion = index;
   rows.value[index].isHeader = true;
   rows.value[index].cuenta = "UTILIDAD DE OPERACIÓN";
   rows.value[index].isUtilidad = true;
-  UOP = (UB - totalCostosGastosOperacion).toFixed(2);
+  UOP = (totalProductosOperacion - totalCostosGastosOperacion).toFixed(2);
   rows.value[index].total = "$ " + new Intl.NumberFormat("en-US").format(UOP);
   index += 2;
-
+  /*
   rows.value[index].cuenta = "MENOS";
   rows.value[index].isOperador = true;
   index += 1;
-
+  */ rows.value[index].cuenta = "MENOS";
+  index += 1;
   rowTotalGastosFinancieros = index;
   rows.value[index].cuenta = "GASTOS FINANCIEROS";
+  rows.value[index].isUltimaTotal = true;
   rows.value[index].isHeader = true;
   index += 1;
   for (const [cuenta, monto] of props.estado.sub_gastos_financieros) {
@@ -482,7 +488,7 @@ onMounted(() => {
     totalGastosFinancieros += parseFloat(monto.toFixed(2));
     index += 1;
   }
-
+  rows.value[index - 1].isUltimaSubCuenta = true;
   rows.value[rowTotalGastosFinancieros].total =
     "$ " +
     new Intl.NumberFormat("en-US").format(totalGastosFinancieros.toFixed(2));
@@ -496,7 +502,7 @@ onMounted(() => {
   rows.value[index].isUltimaTotal = true;
   rows.value[index].isHeader = true;
   index += 1;
-  for (const [cuenta, monto] of props.estado.sub_productos_financieros) {
+  for (const [cuenta, monto] of props.estado.sub_ingresos_financieros) {
     rows.value[index].cuenta = cuenta;
     rows.value[index].monto =
       "$ " + new Intl.NumberFormat("en-US").format(monto);
@@ -516,29 +522,123 @@ onMounted(() => {
   rows.value[index].cuenta = "UTILIDAD ANTES DE IMPUESTOS Y RESERVAS";
   rows.value[index].isUtilidad = true;
   rows.value[index].isHeader = true;
-  index += 1;
+  index += 2;
 
   rows.value[index].cuenta = "MENOS";
+  rows.value[index].isOperador = true;
+  index += 1;
+  rowTotalImpuestos = index;
+  rows.value[index].cuenta = "Impuestos y Reservas";
+  rows.value[index].isUltimaTotal = true;
   rows.value[index].isHeader = true;
-
   index += 1;
   for (const [cuenta, monto] of props.estado.sub_impuestos_y_reservas) {
     rows.value[index].cuenta = cuenta;
-    rows.value[index].total =
+    rows.value[index].monto =
       "$ " + new Intl.NumberFormat("en-US").format(monto);
     rows.value[index].isTotalEditable = true;
     rows.value[index].type = "IR";
     totalImpuestos += parseFloat(monto.toFixed(2));
     index += 1;
   }
-  rows.value[index - 1].isUltimaTotal = true;
+  rows.value[index - 1].isUltimaSubCuenta = true;
+  rows.value[rowTotalImpuestos].total =
+    "$ " + new Intl.NumberFormat("en-US").format(totalImpuestos.toFixed(2));
+  index += 1;
 
   rowUXD = index;
-  rows.value[index].cuenta = "UTILIDAD POR DISTRIBUIR";
+  rows.value[index].cuenta = "UTILIDAD NETA";
   rows.value[index].isUtilidad = true;
-  UXD = (UAR - totalImpuestos).toFixed(2);
+  UXD = parseFloat((UAR - totalImpuestos).toFixed(2));
   rows.value[index].total = "$ " + new Intl.NumberFormat("en-US").format(UXD);
   rows.value[index].isHeader = true;
+  index += 2;
+  rows.value[index].cuenta = "MENOS";
+  rows.value[index].isOperador = true;
+  index += 1;
+  rowTotalResultadosIntegrales = index;
+  rows.value[index].cuenta =
+    "Otros resultados integrales, netos de impuesto sobre la renta:";
+
+  rows.value[index].isUltimaTotal = true;
+  rows.value[index].isHeader = true;
+  index += 1;
+
+  rows.value[index].cuenta =
+    "Partidas que no serán reclasificadas posteriormente a resultados";
+  index += 1;
+  for (const [cuenta, monto] of props.estado.sub_resultados_integrales) {
+    rows.value[index].cuenta = "- " + cuenta;
+    rows.value[index].monto =
+      "$ " + new Intl.NumberFormat("en-US").format(monto);
+    rows.value[index].isTotalEditable = true;
+    rows.value[index].type = "IR";
+    totalResultadosIntegrales += parseFloat(monto.toFixed(2));
+    index += 1;
+  }
+  rows.value[index - 1].isUltimaSubCuenta = true;
+  rows.value[rowTotalResultadosIntegrales].total =
+    "$ " +
+    new Intl.NumberFormat("en-US").format(totalResultadosIntegrales.toFixed(2));
+  index += 1;
+  rowTotalResultadosIntegralesDelAño = index;
+  totalResultadosIntegralesDelAño = UXD + totalResultadosIntegrales;
+  rows.value[index].cuenta = "RESULTADOS INTEGRALES DEL AÑO";
+
+  rows.value[index].isUtilidad = true;
+  rows.value[index].isHeader = true;
+  console.log(totalResultadosIntegralesDelAño);
+  rows.value[rowTotalResultadosIntegralesDelAño].total =
+    "$ " +
+    new Intl.NumberFormat("en-US").format(totalResultadosIntegralesDelAño);
+  index += 2;
+  rows.value[index].cuenta = "Utilidad del año atribuible a:";
+  index += 1;
+  for (const [cuenta, monto] of props.estado.sub_utilidad_atribuible) {
+    rows.value[index].cuenta = "- " + cuenta;
+    rows.value[index].monto =
+      "$ " + new Intl.NumberFormat("en-US").format(monto);
+    rows.value[index].isTotalEditable = true;
+    totalResultadosIntegrales += parseFloat(monto.toFixed(2));
+    index += 1;
+  }
+  rows.value[index - 1].isUltimaSubCuenta = true;
+  rows.value[index].monto =
+    "$ " + new Intl.NumberFormat("en-US").format(UXD.toFixed(2));
+
+  if (props.estado.sub_resultados_integrales_atribuible) {
+    index += 2;
+    rows.value[index].cuenta =
+      "Total resultados integrales del año atribuible a:";
+    index += 1;
+    for (const [cuenta, monto] of props.estado
+      .sub_resultados_integrales_atribuible) {
+      rows.value[index].cuenta = "- " + cuenta;
+      rows.value[index].monto =
+        "$ " + new Intl.NumberFormat("en-US").format(monto);
+      rows.value[index].isTotalEditable = true;
+      totalResultadosIntegralesAtribuibles += parseFloat(monto.toFixed(2));
+      index += 1;
+    }
+    rows.value[index - 1].isUltimaSubCuenta = true;
+    rows.value[index].monto =
+      "$ " +
+      new Intl.NumberFormat("en-US").format(
+        totalResultadosIntegralesAtribuibles.toFixed(2)
+      );
+  }
+  index += 2;
+  for (const [cuenta, monto] of props.estado.sub_utilidades_por_accion) {
+    rows.value[index].isHeader = true;
+    rows.value[index].isUtilidad = true;
+    rows.value[index].isUltimaSubCuenta = true;
+    rows.value[index].cuenta = "" + cuenta;
+    rows.value[index].monto =
+      "$ " + new Intl.NumberFormat("en-US").format(monto);
+    rows.value[index].isTotalEditable = true;
+    totalResultadosIntegralesAtribuibles += parseFloat(monto.toFixed(2));
+    index += 2;
+  }
 });
 
 watch(rows.value, () => {
@@ -589,6 +689,7 @@ function getNewAmount(value) {
 
 
 .my-sticky-header-table
+  auto-width
   /* height or max-height is important */
   height: 100%
 
