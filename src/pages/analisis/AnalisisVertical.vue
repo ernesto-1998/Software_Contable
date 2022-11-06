@@ -728,6 +728,8 @@ const activarAnalisisEstado = (años) => {
     }
     contador++;    
   } 
+
+  // Utilidad Neta
   
   rowsAnalisisEstado.value.push(["UTILIDAD NETA"]);
   for(let año of años){
@@ -791,7 +793,7 @@ const activarAnalisisEstado = (años) => {
     contador++;    
   }   
 
-  // Sub Utilidad Atribuible
+  // Sub Integrales Atribuible
 
   for(let val of keysEstado.sub_resultados_integrales_atribuible){
     rowsAnalisisEstado.value.push([val]);
@@ -810,7 +812,7 @@ const activarAnalisisEstado = (años) => {
     contador++;    
   }   
 
-  // Sub Utilidades Por Accion
+  // Sub Utilidades Por Accion Controladora
 
   rowsAnalisisEstado.value.push(["Utilidad por acción, compañía controladora"]);
   for(let año of años){
@@ -821,7 +823,7 @@ const activarAnalisisEstado = (años) => {
 
   contador++;
 
-  // Sub Utilidades Por Accion
+  // Sub Utilidades Por Accion Subsidiaria
 
   rowsAnalisisEstado.value.push(["Utilidad por acción, compañía subsidiaria"]);
   for(let año of años){

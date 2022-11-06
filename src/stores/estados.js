@@ -4,54 +4,6 @@ export const useCounterStore = defineStore("estados", {
   state: () => ({
     balance_general: [
       {
-        año: 2018,
-        activo: {
-          activo_corriente: new Map([
-            ["Efectivo y Equivalentes de Efectivo", 9_289_384],
-            ["Otros activos financieros", 994_838],
-            ["Remanente de impuesto sobre la renta", 4_297_600],
-            ["Deudores comerciales y otras cuentas por cobrar", 46_337_363],
-            ["Inventarios", 1_466_168],
-            ["Otros activos corrientes", 1_366_270],
-          ]),
-          activo_no_corriente: new Map([
-            ["Otros activos financieros", 548_525],
-            ["Deudores comerciales y otras cuentas por cobrar", 1_074_584],
-            ["Propiedades, planta y equipo, neto", 128_224_630],
-            ["Activos intangibles, netos", 7_956_803],
-          ]),
-        },
-        pasivo: {
-          pasivo_corriente: new Map([
-            ["Créditos y préstamos", 8_889_131],
-            ["Cuentas por pagar a proveedores de energía", 35_381_355],
-            ["Acreedores y otras cuentas por pagar", 11_048_735],
-            ["Pasivo por beneficios a empleados", 1_201_546],
-            ["Impuestos contribuciones y tasas por pagar", 1_721_430],
-            ["Provisiones", 674_460],
-            ["Ingresos diferidos", 634_264],
-          ]),
-          pasivo_no_corriente: new Map([
-            ["Créditos y préstamos", 47_310_156],
-            ["Pasivo por beneficios a empleados", 6_117_518],
-            ["Pasivo neto por impuesto diferido", 21_074_729],
-            ["Ingresos diferidos", 3_458_524],
-          ]),
-        },
-        patrimonio: new Map([
-          [
-            "sub_patrimonio_propietarios",
-            new Map([
-              ["Capital social", 12_281_064],
-              ["Otros componentes del patrimonio", 19_216_550],
-              ["Reserval legal", 7_089_744],
-              ["Utilidades retenidas", 25_451_652],
-            ]),
-          ],
-          ["Participaciones no controladoras", 5_307],
-        ]),
-      },
-      {
         año: 2017,
         activo: {
           activo_corriente: new Map([
@@ -97,6 +49,54 @@ export const useCounterStore = defineStore("estados", {
             ]),
           ],
           ["Participaciones no controladoras", 5_029],
+        ]),
+      },
+      {
+        año: 2018,
+        activo: {
+          activo_corriente: new Map([
+            ["Efectivo y Equivalentes de Efectivo", 9_289_384],
+            ["Otros activos financieros", 994_838],
+            ["Remanente de impuesto sobre la renta", 4_297_600],
+            ["Deudores comerciales y otras cuentas por cobrar", 46_337_363],
+            ["Inventarios", 1_466_168],
+            ["Otros activos corrientes", 1_366_270],
+          ]),
+          activo_no_corriente: new Map([
+            ["Otros activos financieros", 548_525],
+            ["Deudores comerciales y otras cuentas por cobrar", 1_074_584],
+            ["Propiedades, planta y equipo, neto", 128_224_630],
+            ["Activos intangibles, netos", 7_956_803],
+          ]),
+        },
+        pasivo: {
+          pasivo_corriente: new Map([
+            ["Créditos y préstamos", 8_889_131],
+            ["Cuentas por pagar a proveedores de energía", 35_381_355],
+            ["Acreedores y otras cuentas por pagar", 11_048_735],
+            ["Pasivo por beneficios a empleados", 1_201_546],
+            ["Impuestos contribuciones y tasas por pagar", 1_721_430],
+            ["Provisiones", 674_460],
+            ["Ingresos diferidos", 634_264],
+          ]),
+          pasivo_no_corriente: new Map([
+            ["Créditos y préstamos", 47_310_156],
+            ["Pasivo por beneficios a empleados", 6_117_518],
+            ["Pasivo neto por impuesto diferido", 21_074_729],
+            ["Ingresos diferidos", 3_458_524],
+          ]),
+        },
+        patrimonio: new Map([
+          [
+            "sub_patrimonio_propietarios",
+            new Map([
+              ["Capital social", 12_281_064],
+              ["Otros componentes del patrimonio", 19_216_550],
+              ["Reserval legal", 7_089_744],
+              ["Utilidades retenidas", 25_451_652],
+            ]),
+          ],
+          ["Participaciones no controladoras", 5_307],
         ]),
       },
       {
