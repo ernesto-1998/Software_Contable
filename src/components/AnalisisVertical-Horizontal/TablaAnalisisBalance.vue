@@ -100,11 +100,11 @@
               v-if="
                 childItem === 'Total Patrimonio Neto' ||
                 childItem === 'Total Pasivo + Patrimonio Neto' ||
-                childItem === 'sub_capital_social'
+                childItem === 'sub_patrimonio_propietarios'
               "
               >{{
-                childItem === "sub_capital_social"
-                  ? "Sub Capital Social"
+                childItem === "sub_patrimonio_propietarios"
+                  ? "Sub Patrimonio Propietarios"
                   : childItem
               }}
             </span>
