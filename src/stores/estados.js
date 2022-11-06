@@ -318,7 +318,7 @@ export const useCounterStore = defineStore("estados", {
       },
       {
         año: 2018,
-        sub_ingresos: new Map([
+        sub_productos_de_operacion: new Map([
           ["Servicios por distribución de energía", 293_151_437],
           ["Venta de electrodomésticos y servicios", 1_418_312],
           ["Otros ingresos operacionales", 5_700_550],
@@ -378,13 +378,13 @@ export const useCounterStore = defineStore("estados", {
       },
       {
         año: 2019,
-        sub_ingresos: new Map([
+        sub_productos_de_operacion: new Map([
           ["Servicios por distribución de energía", 311_918_820],
           ["Venta de electrodomésticos y servicios", 1_345_084],
           ["Otros ingresos operacionales", 5_630_794],
         ]),
         sub_costos_y_gastos_de_operacion: new Map([
-          ["Compra de energía", 246_139 - 559],
+          ["Compra de energía", 246_139_559],
           ["Costo de venta y servicios", 1_555_064],
           ["Depreciación", 5_611_786],
           ["Amortizacion de Intangibles", 1_458_590],
@@ -424,8 +424,8 @@ export const useCounterStore = defineStore("estados", {
           ["Impuestos sobre la renta diferido relativo a revalúo", 0],
         ]),
         sub_utilidad_atribuible: new Map([
-          ["Propietarios de la controladora", 13_663_229],
-          ["Participación no controladora", 1_366],
+          ["Propietarios de la controladora", 13_483_642],
+          ["Participación no controladora", 1_348],
         ]),
         sub_utilidades_por_accion: new Map([
           ["Utilidad por acción, compañía controladora", 4],
@@ -434,7 +434,7 @@ export const useCounterStore = defineStore("estados", {
       },
       {
         año: 2020,
-        sub_ingresos: new Map([
+        sub_productos_de_operacion: new Map([
           ["Servicios por distribución de energía", 243_313_459],
           ["Venta de electrodomésticos y servicios", 1_144_251],
           ["Otros ingresos operacionales", 5_395_169],
@@ -490,7 +490,7 @@ export const useCounterStore = defineStore("estados", {
       },
       {
         año: 2021,
-        sub_ingresos: new Map([
+        sub_productos_de_operacion: new Map([
           ["Servicios por distribución de energía", 291_600_627],
           ["Venta de electrodomésticos y servicios", 1_477_755],
           ["Otros ingresos operacionales", 6_327_787],
@@ -508,7 +508,7 @@ export const useCounterStore = defineStore("estados", {
 
           ["Costos por instalación de servicios", 429_200],
           ["Publicidad institucional", 274_847],
-          ["Estimación para cuentas de cobro dudoso", -567, 144],
+          ["Estimación para cuentas de cobro dudoso", -567_144],
           ["Estimación de obsolescencia de inventario", 345_473],
           ["Otros gastos de operación", 4_149_341],
         ]),
@@ -572,8 +572,10 @@ export const useCounterStore = defineStore("estados", {
     },
     updateBalance(balance, cuenta, newAmount) {
       // revisanddo en los activos
+      console.log("cuenta a cambiar:  ", cuenta);
       for (const [typeCuenta, value] of Object.entries(balance.activo)) {
         if (value.has(cuenta)) {
+          console.log("es del activo");
           value.set(cuenta, newAmount);
         }
       }
@@ -581,19 +583,22 @@ export const useCounterStore = defineStore("estados", {
       // revisando en los pasivos
       for (const [typeCuenta, value] of Object.entries(balance.pasivo)) {
         if (value.has(cuenta)) {
+          console.log("es del pasivo");
           value.set(cuenta, newAmount);
         }
       }
 
       // revisando en el patrimonio
       for (const [typeCuenta, value] of balance.patrimonio) {
-        if (typeCuenta === "sub_capital_social") {
+        if (typeCuenta === "sub_patrimonio_propietarios") {
           for (const [subCuenta, valueSubCuenta] of value) {
             if (subCuenta === cuenta) {
+              console.log("es del patri");
               value.set(cuenta, newAmount);
             }
           }
-        } else {
+        } else if (typeCuenta === cuenta) {
+          console.log("es del patri");
           balance.patrimonio.set(cuenta, newAmount);
         }
       }

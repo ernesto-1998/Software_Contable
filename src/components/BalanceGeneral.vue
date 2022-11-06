@@ -369,13 +369,13 @@ function validarInput(value) {
 onMounted(() => {
   console.log(props.balance);
   year.value = props.balance.año;
-
   // numero total de cuentas para el lado izquierdo (ACTIVOS)
   const rowsIzq =
     props.balance.activo.activo_corriente.size +
     props.balance.activo.activo_no_corriente.size +
-    3;
+    4;
   // numero total de cuentas para el lado derecho (PASIVO + CAPITAL)
+
   const rowsDer =
     props.balance.pasivo.pasivo_corriente.size +
     props.balance.pasivo.pasivo_no_corriente.size +
@@ -524,6 +524,7 @@ onMounted(() => {
   rows.value[index].total_pasivo =
     "$ " + new Intl.NumberFormat("en-US").format(totalPatrimonio);
   index += 2;
+  console.log(index);
   rowTotalActivos = index;
   rows.value[index].cuentaActivo = "TOTAL ACTIVOS";
   rows.value[index].isTotalBalance = true;
@@ -563,7 +564,7 @@ function setTotalActivoCorriente(cuentas) {
       cuentas[index].sub_activo = "$ " + cuentas[index].sub_activo.trim();
     }
   }
-
+  console.log(totalActivoCorriente);
   rows.value[rowTotaclActivoCorriente].total_activo =
     "$ " +
     new Intl.NumberFormat("en-US").format(totalActivoCorriente.toFixed(2));
@@ -729,6 +730,8 @@ function getNewAmount(value) {
     value = value.split("$")[1].split(",").join("").trim();
   }
   console.info("guardando el dato", value);
+  console.log(typeof value);
+  console.log(acount);
   store.updateBalance(props.balance, acount, parseFloat(value));
 }
 </script>
