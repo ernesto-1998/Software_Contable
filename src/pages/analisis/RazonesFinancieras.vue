@@ -62,6 +62,14 @@
       </div>
       <div class="row justify-end q-py-md">
         <q-btn
+          v-if="generador === true"
+          color="primary"
+          label="Generar PDF"
+          no-caps
+          @click="generarPDF"
+          class="q-mr-xl buttom"
+        />
+        <q-btn
           color="primary"
           label="Generar Razones"
           no-caps
@@ -70,7 +78,11 @@
         />
       </div>
     </div>
-    <div class="razones-container bg-positive" v-if="generador === true">
+    <div
+      ref="body"
+      class="razones-container bg-positive"
+      v-if="generador === true"
+    >
       <TablaRazones :columns="columns" :rows="rows" :title="title" />
     </div>
   </div>
@@ -78,6 +90,7 @@
 <script setup>
 import { ref, onBeforeMount } from "vue";
 import { useCounterStore } from "stores/estados";
+import { pdfHandler } from "../../utils/generatePDF.js";
 import TablaRazones from "src/components/RazonesFinancieras/TablaRazones.vue";
 import {
   razones_liquidez,
@@ -96,7 +109,7 @@ onBeforeMount(() => {
     periods.push(input.balance_general[i].año);
   }
 });
-
+const body = ref(null);
 const input = useCounterStore();
 let generador = ref(false);
 let nivelPorcentaje = 2;
@@ -113,6 +126,15 @@ let title = ref("");
 
 let columns = ref([]);
 let rows = ref([]);
+
+function generarPDF() {
+  pdfHandler.createRFReport(
+    body.value,
+    razon.value + año.value,
+    "landscape",
+    "Razones financieras"
+  );
+}
 
 const activarRazones = (año, razon) => {
   if (año === null) {
@@ -316,7 +338,9 @@ const obtenerDatosRazones = (año) => {
   const razon_endeudamiento = razones_deuda
     .razon_endeudamiento(pasivo, activo)
     .toFixed(nivelPorcentaje);
-  const razon_deuda_capital_patrimonial = razones_deuda.razon_deuda_capital_patrimonial(pasivo, patrimonio).toFixed(nivelPorcentaje);
+  const razon_deuda_capital_patrimonial = razones_deuda
+    .razon_deuda_capital_patrimonial(pasivo, patrimonio)
+    .toFixed(nivelPorcentaje);
   const razon_cargos_interes_fijo = razones_deuda
     .razon_cargos_interes_fijo(utilidad_antes_impuestos, impuestos)
     .toFixed(nivelPorcentaje);
@@ -324,8 +348,12 @@ const obtenerDatosRazones = (año) => {
 
   // Razones de Rendimiento
 
-  const roa = razones_rendimiento.ROA(utilidad_neta, activo).toFixed(nivelPorcentaje);
-  const roe = razones_rendimiento.ROE(utilidad_neta, patrimonio).toFixed(nivelPorcentaje);
+  const roa = razones_rendimiento
+    .ROA(utilidad_neta, activo)
+    .toFixed(nivelPorcentaje);
+  const roe = razones_rendimiento
+    .ROE(utilidad_neta, patrimonio)
+    .toFixed(nivelPorcentaje);
   const margen_utilidad_bruta = razones_rendimiento
     .margen_utilidad_bruta(utilidad_bruta, ventas)
     .toFixed(nivelPorcentaje);

@@ -33,46 +33,87 @@
       </div>
 
       <div class="row justify-end q-py-md">
-        <q-btn
-          color="primary"
-          label="Generar Análisis"
-          no-caps
-          @click="show"
-          class="q-mr-xl buttom"
-        />
+        <div class="col-2">
+          <q-btn
+            v-if="showGraphicDupont"
+            color="primary"
+            label="Generar PDF"
+            no-caps
+            @click="generarPDF"
+            class="buttom self-end"
+          />
+        </div>
+        <div class="col-2">
+          <q-btn
+            color="primary"
+            label="Generar Análisis"
+            no-caps
+            @click="show"
+            class="buttom"
+          />
+        </div>
       </div>
     </div>
-    <q-dialog v-model="alert" full-width full-height>
-      <q-card style="border-radius: 30px">
-        <q-card-section
-          class="row items-center q-pb-none bg-secondary text-white"
-        >
-          <div class="text-h6 q-pb-lg">
-            Análisis Dupon Periodo
-            <span class="text-weight-bold">{{ year }}</span>
-          </div>
-          <q-space />
-          <q-btn icon="close" flat round dense v-close-popup />
-        </q-card-section>
-        <q-separator color="black" />
-        <q-card-section class="bg-grey-4">
-          <DupontGraphic
-            v-if="showGraphicDupont"
-            :periodo="parseInt(year)"
-          ></DupontGraphic>
-        </q-card-section>
-      </q-card>
-    </q-dialog>
+    <div
+      ref="body"
+      v-if="showGraphicDupont"
+      class="dupont-container bg-positive"
+    >
+      <DupontGraphic :periodo="parseInt(year)"></DupontGraphic>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, watch } from "vue";
 import DupontGraphic from "src/components/graphics/DupontGraphic.vue";
+import { pdfHandler } from "../../utils/generatePDF.js";
+import jsPDF from "jspdf";
+import domtoimage from "dom-to-image";
+import html2canvas from "html2canvas";
 const year = ref(null);
+const body = ref(null);
 let alert = ref(false);
 const periods = ["2018", "2019", "2020", "2021", "2022"];
 const showGraphicDupont = ref(false);
+
+function downloadWithCSS() {
+  /** WITH CSS */
+  domtoimage
+    .toPng(body.value)
+    .then(function (dataUrl) {
+      var img = new Image();
+      img.src = dataUrl;
+      const doc = new jsPDF({
+        orientation: "landscape",
+        // unit: "pt",
+        format: [380, 370],
+      });
+      doc.addImage(img, "JPEG", 0, 0);
+      const date = new Date();
+      const filename =
+        "timechart_" +
+        date.getFullYear() +
+        ("0" + (date.getMonth() + 1)).slice(-2) +
+        ("0" + date.getDate()).slice(-2) +
+        ("0" + date.getHours()).slice(-2) +
+        ("0" + date.getMinutes()).slice(-2) +
+        ("0" + date.getSeconds()).slice(-2) +
+        ".pdf";
+      doc.save(filename);
+    })
+    .catch(function (error) {
+      console.error("oops, something went wrong!", error);
+    });
+}
+function generarPDF() {
+  pdfHandler.createDPReport(
+    body.value,
+    "AnálisisDupont" + year.value,
+
+    "landscape"
+  );
+}
 
 function show() {
   showGraphicDupont.value = true;
@@ -109,8 +150,8 @@ watch(year, () => {
 
 .dupont-container {
   margin: 1.7rem 2.5rem;
-  border-radius: 16px;
-  /* height: 350px; */
+  border-radius: 26px;
+  height: 1350px;
 }
 
 .buttom {

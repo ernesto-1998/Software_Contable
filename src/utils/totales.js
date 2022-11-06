@@ -48,12 +48,10 @@ export const obtenerTotalesBalance = (año) => {
   let totalPasivo = totalPasivoCorriente + totalPasivoNoCorriente;
 
   // Total Patrimonio Balance
-
-  let patrimonioAtribuible = balance.patrimonio
-    .get("sub_patrimonio_propietarios")
-    .forEach((value) => {
-      patrimonioAtribuible += value;
-    });
+  let patrimonioAtribuible = 0;
+  balance.patrimonio.get("sub_patrimonio_propietarios").forEach((value) => {
+    patrimonioAtribuible += value;
+  });
 
   let totalPatrimonio =
     patrimonioAtribuible +
