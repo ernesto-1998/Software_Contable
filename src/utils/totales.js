@@ -49,7 +49,8 @@ export const obtenerTotalesBalance = (año) => {
 
   // Total Patrimonio Balance
 
-  let patrimonioAtribuible = balance.patrimonio
+  let patrimonioAtribuible = 0;
+  balance.patrimonio
     .get("sub_patrimonio_propietarios")
     .forEach((value) => {
       patrimonioAtribuible += value;
@@ -66,6 +67,7 @@ export const obtenerTotalesBalance = (año) => {
     inventarios,
     cuentas_por_cobrar,
     cuentas_por_pagar,
+    patrimonioAtribuible,
 
     totalActivo,
     totalActivoCorriente,

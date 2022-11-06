@@ -178,7 +178,7 @@ onBeforeMount(() => {
     periods.push(input.balance_general[i].año);
   }        
 
-  let años = [2018, 2019, 2020, 2021, 2022];
+  let años = [2017, 2018, 2019, 2020, 2021];
   let temporalKeysBalance = getKeysBalance(años);
   let temporalKeysEstado = getKeysEstado(años);
 
@@ -192,11 +192,14 @@ onBeforeMount(() => {
 
   keysEstado = {
     sub_productos_de_operacion: Array.from(new Set(temporalKeysEstado.sub_productos_de_operacion)),
-    sub_costos_d_financieros: Array.from(new Set(temporalKeysEstado.sub_gastos_financieros)),
-    sub_proe_energia: Array.from(new Set(temporalKeysEstado.sub_costos_de_energia)),
     sub_costos_y_gastos_de_operacion: Array.from(new Set(temporalKeysEstado.sub_costos_y_gastos_de_operacion)),
-    sub_gastosductos_financieros: Array.from(new Set(temporalKeysEstado.sub_productos_financieros)),
-    sub_impuestos_y_reservas: Array.from(new Set(temporalKeysEstado.sub_impuestos_y_reservas))
+    sub_ingresos_financieros: Array.from(new Set(temporalKeysEstado.sub_ingresos_financieros)),
+    sub_gastos_financieros: Array.from(new Set(temporalKeysEstado.sub_gastos_financieros)),
+    sub_impuestos_y_reservas: Array.from(new Set(temporalKeysEstado.sub_impuestos_y_reservas)),
+    sub_resultados_integrales: Array.from(new Set(temporalKeysEstado.sub_impuestos_y_reservas)),
+    sub_utilidad_atribuible: Array.from(new Set(temporalKeysEstado.sub_utilidad_atribuible)),
+    sub_resultados_integrales_atribuible: Array.from(new Set(temporalKeysEstado.sub_resultados_integrales_atribuible)),
+    sub_utilidades_por_accion: Array.from(new Set(temporalKeysEstado.sub_utilidades_por_accion)),
   }
 
 });
