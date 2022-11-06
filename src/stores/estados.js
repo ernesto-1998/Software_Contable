@@ -558,16 +558,16 @@ export const useCounterStore = defineStore("estados", {
     updateEstado(estado, cuenta, newAmount) {
       if (estado.sub_productos_de_operacion.has(cuenta)) {
         estado.sub_productos_de_operacion.set(cuenta, newAmount);
-      } else if (estado.sub_costos_de_energia.has(cuenta)) {
-        estado.sub_costos_de_energia.set(cuenta, newAmount);
       } else if (estado.sub_costos_y_gastos_de_operacion.has(cuenta)) {
         estado.sub_costos_y_gastos_de_operacion.set(cuenta, newAmount);
+      } else if (estado.sub_ingresos_financieros.has(cuenta)) {
+        estado.sub_ingresos_financieros.set(cuenta, newAmount);
       } else if (estado.sub_gastos_financieros.has(cuenta)) {
         estado.sub_gastos_financieros.set(cuenta, newAmount);
-      } else if (estado.sub_productos_financieros.has(cuenta)) {
-        estado.sub_productos_financieros.set(cuenta, newAmount);
       } else if (estado.sub_impuestos_y_reservas.has(cuenta)) {
         estado.sub_impuestos_y_reservas.set(cuenta, newAmount);
+      } else if (estado.sub_resultados_integrales.has(cuenta)) {
+        estado.sub_resultados_integrales.set(cuenta, newAmount);
       }
     },
     updateBalance(balance, cuenta, newAmount) {

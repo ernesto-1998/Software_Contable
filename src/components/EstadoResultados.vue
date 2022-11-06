@@ -59,7 +59,7 @@
             >
               {{ props.row.monto }}
               <q-popup-edit
-                v-if="props.row.monto"
+                v-if="props.row.isMontoEditable"
                 @hide="closePopUp"
                 @save="getDataAcount(props.row.type, props.row.cuenta)"
                 @update:model-value="getNewAmount"
@@ -184,6 +184,7 @@ let totalResultadosIntegralesDelAño = 0;
 let totalResultadosIntegralesAtribuibles = 0;
 let totalProductosOperacion = 0;
 let totalResultadosIntegrales = 0;
+let totalUtilidadAtribuible = 0;
 let totalCostosEnergia = 0;
 let totalCostosGastosOperacion = 0;
 let totalGastosFinancieros = 0;
@@ -256,9 +257,10 @@ function setTotalProductosOperacion(cuentas) {
     "$ " +
     new Intl.NumberFormat("en-US").format(totalProductosOperacion.toFixed(2));
 
-  setUB();
+  setUOP();
 }
 
+/*
 function setTotalCostoEnergia(cuentas) {
   totalCostosEnergia = 0;
   for (const index in cuentas) {
@@ -274,8 +276,8 @@ function setTotalCostoEnergia(cuentas) {
   rows.value[rowTotalCostosEnergia].total =
     "$ " + new Intl.NumberFormat("en-US").format(totalCostosEnergia.toFixed(2));
 
-  setUB();
-}
+  setUOP();
+} */
 
 function setTotalGastosOperacion(cuentas) {
   totalCostosGastosOperacion = 0;
@@ -336,30 +338,53 @@ function setTotalProductosFinancieros(cuentas) {
   setUAR();
 }
 
+function setTotalResultadosIntegrales(cuentas) {
+  totalResultadosIntegrales = 0;
+  for (const index in cuentas) {
+    if (cuentas[index].monto.includes("$")) {
+      totalResultadosIntegrales += parseFloat(
+        cuentas[index].monto.split("$")[1].split(",").join("").trim()
+      );
+    } else {
+      totalResultadosIntegrales += parseFloat(cuentas[index].monto.trim());
+      cuentas[index].monto = "$ " + cuentas[index].monto;
+    }
+  }
+  rows.value[rowTotalResultadosIntegrales].total =
+    "$ " +
+    new Intl.NumberFormat("en-US").format(totalResultadosIntegrales.toFixed(2));
+  rows.value[rowTotalResultadosIntegralesDelAño].total =
+    "$ " +
+    new Intl.NumberFormat("en-US").format(UXD + totalResultadosIntegrales);
+}
+
 function setTotalImpuestos(cuentas) {
   totalImpuestos = 0;
   for (const index in cuentas) {
-    if (cuentas[index].total.includes("$")) {
+    if (cuentas[index].monto.includes("$")) {
       totalImpuestos += parseFloat(
-        cuentas[index].total.split("$")[1].split(",").join("").trim()
+        cuentas[index].monto.split("$")[1].split(",").join("").trim()
       );
     } else {
-      totalImpuestos += parseFloat(cuentas[index].total.trim());
-      cuentas[index].total = "$ " + cuentas[index].total;
+      totalImpuestos += parseFloat(cuentas[index].monto.trim());
+      cuentas[index].monto = "$ " + cuentas[index].monto;
     }
   }
+  rows.value[rowTotalImpuestos].total =
+    "$ " + new Intl.NumberFormat("en-US").format(totalImpuestos.toFixed(2));
   setUXD();
 }
 
+/*
 function setUB() {
   UB = (totalProductosOperacion - totalCostosEnergia).toFixed(2);
   rows.value[rowUtilidadBruta].total =
     "$ " + new Intl.NumberFormat("en-US").format(UB);
   setUOP();
-}
+} */
 
 function setUOP() {
-  UOP = (UB - totalCostosGastosOperacion).toFixed(2);
+  UOP = (totalProductosOperacion - totalCostosGastosOperacion).toFixed(2);
   rows.value[rowUtilidadOperacion].total =
     "$ " + new Intl.NumberFormat("en-US").format(UOP);
   setUAR();
@@ -372,8 +397,12 @@ function setUAR() {
 }
 
 function setUXD() {
-  UXD = (UAR - totalImpuestos).toFixed(2);
+  UXD = parseFloat((UAR - totalImpuestos).toFixed(2));
   rows.value[rowUXD].total = "$ " + new Intl.NumberFormat("en-US").format(UXD);
+  console.log(typeof UXD + " + " + typeof totalResultadosIntegrales);
+  rows.value[rowTotalResultadosIntegralesDelAño].total =
+    "$ " +
+    new Intl.NumberFormat("en-US").format(UXD + totalResultadosIntegrales);
 }
 
 onMounted(() => {
@@ -387,8 +416,6 @@ onMounted(() => {
     }
     totalRows += value.size;
   }
-  console.log("total de rows");
-  console.log(totalRows);
   totalRows += 34;
 
   // inicializando el array de filas
@@ -401,6 +428,7 @@ onMounted(() => {
   // llenando las filas de productos de operación
   for (const [cuenta, monto] of props.estado.sub_productos_de_operacion) {
     rows.value[index].cuenta = cuenta;
+    rows.value[index].isMontoEditable = true;
     rows.value[index].monto =
       "$ " + new Intl.NumberFormat("en-US").format(monto);
     rows.value[index].type = "PO";
@@ -444,6 +472,8 @@ onMounted(() => {
 
   for (const [cuenta, monto] of props.estado.sub_costos_y_gastos_de_operacion) {
     rows.value[index].cuenta = cuenta;
+
+    rows.value[index].isMontoEditable = true;
     rows.value[index].monto =
       "$ " + new Intl.NumberFormat("en-US").format(monto);
     rows.value[index].type = "GO";
@@ -482,6 +512,7 @@ onMounted(() => {
   index += 1;
   for (const [cuenta, monto] of props.estado.sub_gastos_financieros) {
     rows.value[index].cuenta = cuenta;
+    rows.value[index].isMontoEditable = true;
     rows.value[index].monto =
       "$ " + new Intl.NumberFormat("en-US").format(monto);
     rows.value[index].type = "GF";
@@ -504,6 +535,7 @@ onMounted(() => {
   index += 1;
   for (const [cuenta, monto] of props.estado.sub_ingresos_financieros) {
     rows.value[index].cuenta = cuenta;
+    rows.value[index].isMontoEditable = true;
     rows.value[index].monto =
       "$ " + new Intl.NumberFormat("en-US").format(monto);
     rows.value[index].type = "PF";
@@ -534,6 +566,7 @@ onMounted(() => {
   index += 1;
   for (const [cuenta, monto] of props.estado.sub_impuestos_y_reservas) {
     rows.value[index].cuenta = cuenta;
+    rows.value[index].isMontoEditable = true;
     rows.value[index].monto =
       "$ " + new Intl.NumberFormat("en-US").format(monto);
     rows.value[index].isTotalEditable = true;
@@ -553,7 +586,7 @@ onMounted(() => {
   rows.value[index].total = "$ " + new Intl.NumberFormat("en-US").format(UXD);
   rows.value[index].isHeader = true;
   index += 2;
-  rows.value[index].cuenta = "MENOS";
+  rows.value[index].cuenta = "MAS";
   rows.value[index].isOperador = true;
   index += 1;
   rowTotalResultadosIntegrales = index;
@@ -569,10 +602,10 @@ onMounted(() => {
   index += 1;
   for (const [cuenta, monto] of props.estado.sub_resultados_integrales) {
     rows.value[index].cuenta = "- " + cuenta;
+    rows.value[index].isMontoEditable = true;
+    rows.value[index].type = "RI";
     rows.value[index].monto =
       "$ " + new Intl.NumberFormat("en-US").format(monto);
-    rows.value[index].isTotalEditable = true;
-    rows.value[index].type = "IR";
     totalResultadosIntegrales += parseFloat(monto.toFixed(2));
     index += 1;
   }
@@ -598,8 +631,7 @@ onMounted(() => {
     rows.value[index].cuenta = "- " + cuenta;
     rows.value[index].monto =
       "$ " + new Intl.NumberFormat("en-US").format(monto);
-    rows.value[index].isTotalEditable = true;
-    totalResultadosIntegrales += parseFloat(monto.toFixed(2));
+    totalUtilidadAtribuible += parseFloat(monto.toFixed(2));
     index += 1;
   }
   rows.value[index - 1].isUltimaSubCuenta = true;
@@ -616,7 +648,6 @@ onMounted(() => {
       rows.value[index].cuenta = "- " + cuenta;
       rows.value[index].monto =
         "$ " + new Intl.NumberFormat("en-US").format(monto);
-      rows.value[index].isTotalEditable = true;
       totalResultadosIntegralesAtribuibles += parseFloat(monto.toFixed(2));
       index += 1;
     }
@@ -635,7 +666,6 @@ onMounted(() => {
     rows.value[index].cuenta = "" + cuenta;
     rows.value[index].monto =
       "$ " + new Intl.NumberFormat("en-US").format(monto);
-    rows.value[index].isTotalEditable = true;
     totalResultadosIntegralesAtribuibles += parseFloat(monto.toFixed(2));
     index += 2;
   }
@@ -662,13 +692,25 @@ watch(rows.value, () => {
     );
   } else if (typeChanged === "IR") {
     setTotalImpuestos(rows.value.filter((cuenta) => cuenta.type === "IR"));
+  } else if (typeChanged === "RI") {
+    setTotalResultadosIntegrales(
+      rows.value.filter((cuenta) => cuenta.type === "RI")
+    );
   }
 });
 
 // Obtenemos la cuenta y el tipo de cuenta modificada desde el popup edit
 function getDataAcount(typeAcount, acountChanged) {
+  console.log("tipo cambio", typeAcount);
   typeChanged = typeAcount;
-  acount = acountChanged;
+
+  if (typeAcount === "RI") {
+    acount = acountChanged.split(" ").splice(1).join(" ");
+    console.log(acount);
+  } else {
+    acount = acountChanged;
+  }
+  console.log("cuenta", acount);
 }
 
 // Obtenemos el nuevo monto ingresado en el popup edit
@@ -689,7 +731,6 @@ function getNewAmount(value) {
 
 
 .my-sticky-header-table
-  auto-width
   /* height or max-height is important */
   height: 100%
 

@@ -332,7 +332,7 @@ onMounted(() => {
 
 <style scoped>
 .dupont {
-  width: auto;
-  height: 80vh;
+  width: 100%;
+  height: 100%;
 }
 </style>
