@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-dialog v-model="showDialog" full-width>
+    <q-dialog v-model="showDialog" full-width persistent>
       <q-table
         class="my-sticky-header-table"
         :rows="rows"
