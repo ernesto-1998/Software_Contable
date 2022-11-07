@@ -1,13 +1,13 @@
 <template>
   <div class="seccion-container">
-    <div class="title-container">
+    <div class="title-container_razones">
       <label>{{ props.title }}</label>
     </div>
     <div class="body-container">
-      <table class="table-container">
+      <table class="table-container_razones">
         <tr class="table-titles_container bg-secondary">
           <th
-            class="table-rows table-title"
+            class="table-rows_razones table-title_razones"
             v-for="(item, index) in props.columns"
             :key="index"
           >
@@ -16,7 +16,7 @@
         </tr>
         <tr class="table-rows_container">
           <td
-            class="table-rows bg-accent"
+            class="table-rows_razones bg-accent"
             align="center"
             v-for="(item, index) in props.rows[0]"
             :key="index"
@@ -26,7 +26,7 @@
         </tr>
         <tr v-if="rows.length > 1" class="table-rows_container">
           <td
-            class="table-rows bg-accent"
+            class="table-rows_razones bg-accent"
             align="center"
             v-for="(item, index) in props.rows[1]"
             :key="index"
@@ -36,7 +36,7 @@
         </tr>
         <tr v-if="rows.length > 2" class="table-rows_container">
           <td
-            class="table-rows bg-accent"
+            class="table-rows_razones bg-accent"
             align="center"
             v-for="(item, index) in props.rows[2]"
             :key="index"
@@ -46,7 +46,7 @@
         </tr>
         <tr v-if="rows.length > 3" class="table-rows_container">
           <td
-            class="table-rows bg-accent"
+            class="table-rows_razones bg-accent"
             align="center"
             v-for="(item, index) in props.rows[3]"
             :key="index"
@@ -56,7 +56,7 @@
         </tr>
         <tr v-if="rows.length > 4" class="table-rows_container">
           <td
-            class="table-rows bg-accent"
+            class="table-rows_razones bg-accent"
             align="center"
             v-for="(item, index) in props.rows[4]"
             :key="index"
@@ -79,15 +79,16 @@ const props = defineProps({
 </script>
 <style scoped>
 .seccion-container {
-  /* width: 90%; */
+  width: 90%;
   margin: auto;
 }
 
-.title-container {
+.title-container_razones {
+  color: var(--table-color);
   font-size: 1.5rem;
 }
 
-.table-title {
+.table-title_razones {
   color: var(--table-color);
 }
 
@@ -95,13 +96,13 @@ const props = defineProps({
   overflow-x: auto;
 }
 
-.table-container {
+.table-container_razones {
   /* background-color: var(--table-color); */
   width: 100%;
   margin-top: 0.8rem;
 }
 
-.table-rows {
+.table-rows_razones {
   padding: 0.5rem;
 }
 </style>
