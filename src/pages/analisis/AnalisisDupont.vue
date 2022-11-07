@@ -69,10 +69,11 @@
 import { ref, watch } from "vue";
 import DupontGraphic from "src/components/graphics/DupontGraphic.vue";
 import { pdfHandler } from "../../utils/generatePDF.js";
+import { alertas } from "../../utils/sweetAlerts2.js";
 const year = ref(null);
 const body = ref(null);
 let alert = ref(false);
-const periods = ["2018", "2019", "2020", "2021", "2022"];
+const periods = ["2017","2018", "2019", "2020", "2021"];
 const showGraphicDupont = ref(false);
 
 function generarPDF() {
@@ -84,6 +85,9 @@ function generarPDF() {
 }
 
 function show() {
+  if(year.value === null){
+    return alertas.alertaNegativa("Ha Ocurrido un error", "Debes llenar los 3 campos");    
+  }
   showGraphicDupont.value = true;
   alert.value = true;
 }

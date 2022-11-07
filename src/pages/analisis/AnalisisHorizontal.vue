@@ -262,6 +262,14 @@ const activarAnalisis = (periodo1, periodo2, estado) => {
     showGraphicsER.value = false;
     return alertas.alertaNegativa("Ha Ocurrido un error", "Debes llenar los 3 campos");
   }
+  if ( periodo1 === periodo2 ) {
+    generadorBalance.value = false;
+    generadorEstado.value = false;
+
+    showGraphicsBalance.value = false;
+    showGraphicsER.value = false;
+    return alertas.alertaNegativa("Ha Ocurrido un error", "No puedes escoger el mismo periodo");
+  }
   if (estado === "Balance General") {
     generadorEstado.value = false;
     generadorBalance.value = true;
