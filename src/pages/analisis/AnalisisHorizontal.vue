@@ -87,13 +87,15 @@
         />
       </div>
       <div class="row justify-end q-py-md">
-        <q-btn
-          color="primary"
-          label="Generar PDF"
-          no-caps
-          @click="generarPDF"
-          class="q-mr-xl buttom"
-        />
+        <div v-if="generadorEstado === true || generadorBalance === true">
+          <q-btn
+            color="primary"
+            label="Generar PDF"
+            no-caps
+            @click="generarPDF"
+            class="q-mr-xl buttom"
+          />
+        </div>
         <q-btn
           color="primary"
           label="Generar Análisis"
@@ -105,6 +107,7 @@
     </div>
 
     <div
+      ref="body"
       v-if="generadorBalance === true"
       class="vertical-seccion-container bg-positive"
     >
@@ -118,6 +121,7 @@
       />
     </div>
     <div
+      ref="body"
       v-if="generadorEstado === true"
       class="vertical-seccion-container bg-positive"
     >
@@ -244,6 +248,7 @@ onBeforeMount(() => {
 const input = useCounterStore();
 let nivelPorcentaje = 2;
 let estado = ref(null);
+const body = ref(null);
 let options = ["Balance General", "Estado de Resultados"];
 const showGraphicsBalance = ref(false);
 const showGraphicsER = ref(false);
@@ -271,7 +276,11 @@ let columnsTitulo = ref([]);
 let rowsAnalisisEstado = ref([]);
 
 function generarPDF() {
-  pdfHandler.create(document.getElementById("balance"));
+  pdfHandler.createDPReport(
+    body.value,
+    periodo1.value + periodo2.value + estado.value,
+    "landscape"
+  );
 }
 
 const activarAnalisis = (periodo1, periodo2, estado) => {
