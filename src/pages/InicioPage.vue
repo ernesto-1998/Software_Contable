@@ -13,10 +13,13 @@
         </p>
       </div>
     </div>
-    <router-link :to="{ name: 'inicio', hash: '#estados' }"
-      ><q-btn icon="picture_as_pdf" color="primary" no-caps
-    /></router-link>
-    <div id="estados" class="first bg-positive">
+    <q-btn
+      icon="picture_as_pdf"
+      color="primary"
+      no-caps
+      @click="setToEstados"
+    />
+    <div ref="estados" class="first bg-positive">
       <div class="row title">
         <h2>ESTADOS FINANCIEROS</h2>
       </div>
@@ -60,8 +63,8 @@
 </template>
 
 <script setup>
-import { ref, watch, computed, onBeforeMount } from "vue";
-import VueSmoothScroll from "vue3-smooth-scroll";
+import { inject, ref, watch, computed, onBeforeMount } from "vue";
+import { VueSmoothScroll } from "vue3-smooth-scroll";
 import { useCounterStore } from "../stores/estados";
 import balanceDialog from "../components/BalanceGeneral.vue";
 import estadoDialog from "../components/EstadoResultados.vue";
@@ -84,8 +87,18 @@ const showEstadoDialog = ref(false);
 const year = ref(null);
 let balance = ref(null);
 let estado = ref(null);
+const estados = ref(null);
 const options = ["2017", "2018", "2019", "2020", "2021"];
 
+const smoothScroll = inject("smoothScroll");
+
+function setToEstados() {
+  this.$smoothScroll({
+    scrollTo: estados.value,
+    duration: 1000,
+    offset: -50,
+  });
+}
 // METHODS
 function showBalance() {
   balance.value = store.getBalanceGeneralByYear(parseInt(year.value));
