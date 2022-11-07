@@ -13,7 +13,9 @@
         </p>
       </div>
     </div>
-
+    <router-link :to="{ name: 'inicio', hash: '#estados' }"
+      ><q-btn icon="picture_as_pdf" color="primary" no-caps
+    /></router-link>
     <div id="estados" class="first bg-positive">
       <div class="row title">
         <h2>ESTADOS FINANCIEROS</h2>
