@@ -114,14 +114,16 @@ onMounted(() => {
     }
   });
 
-  estado_resultados.sub_resultados_integrales_atribuible.forEach(
-    (amount, acount) => {
-      if (amount) {
-        dataVentas.push(amount);
-        labelsVentas.push(acount);
+  if(estado_resultados.sub_resultados_integrales_atribuible){
+    estado_resultados.sub_resultados_integrales_atribuible.forEach(
+      (amount, acount) => {
+        if (amount) {
+          dataVentas.push(amount);
+          labelsVentas.push(acount);
+        }
       }
-    }
-  );
+    );
+  } 
 
   let COLORS_COPY = [...COLORS];
   graphicsV = new Chart(document.getElementById(props.ids[0]), {
