@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-dialog v-model="showDialog">
+    <q-dialog v-model="showDialog" full-height full-width persistent>
       <q-table
         no-route-fullscreen-exit
         class="my-sticky-header-table"
@@ -10,7 +10,6 @@
         :pagination="initialPagination"
         hide-pagination
         dense
-        fullscreen
         scroll-target="body"
       >
         <template v-slot:top>
