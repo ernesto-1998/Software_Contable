@@ -101,7 +101,7 @@ export const obtenerTotalesEstado = (año) => {
     estado.sub_costos_y_gastos_de_operacion.get("Costo de venta y servicios") +
     estado.sub_costos_y_gastos_de_operacion.get("Compra de energía");
 
-  // let utilidadBruta = ProductosOperacion - CostosEnergia;
+  let utilidadBruta = ProductosOperacion - CostosEnergia;
 
   // Costos y gastos de operacion
 
@@ -110,7 +110,7 @@ export const obtenerTotalesEstado = (año) => {
     costosYGastosOperacion += value;
   });
 
-  // costosYGastosOperacion = costosYGastosOperacion - CostosEnergia;
+  costosYGastosOperacion = costosYGastosOperacion - CostosEnergia;
 
   // Utilidad Operacion
 
@@ -176,7 +176,7 @@ export const obtenerTotalesEstado = (año) => {
     estado,
     total_depreciacion,
     impuestos,
-    // utilidadBruta,
+    utilidadBruta,
     utilidadOperacion,
     utilidadAntesImpuestos,
     utilidadNeta,
