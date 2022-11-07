@@ -79,7 +79,7 @@ const props = defineProps({
 </script>
 <style scoped>
 .seccion-container {
-  width: 90%;
+  /* width: 90%; */
   margin: auto;
 }
 

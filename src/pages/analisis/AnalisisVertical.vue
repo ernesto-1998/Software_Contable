@@ -152,6 +152,7 @@ import {
   obtenerTotalesEstado,
 } from "../../utils/totales.js";
 import { getKeysBalance, getKeysEstado } from "../../utils/getKeys.js";
+import { alertas } from "../../utils/sweetAlerts2.js";
 import EspecificosBalance from "src/components/graphics/vertical/especificosBalance.vue";
 import AbsolutosBalance from "src/components/graphics/vertical/absolutosBalance.vue";
 import EspecificosER from "src/components/graphics/vertical/especificosER.vue";
@@ -249,7 +250,7 @@ const activarAnalisis = (año, estado) => {
 
     showGraphicsBalance.value = false;
     showGraphicsER.value = false;
-    return alert("Debes rellenar ambos campos");
+    return alertas.alertaNegativa("HA OCURRIDO UN ERROR", "Debes llenar los 2 campos");
   }
   if (año.length === 0) {
     generadorBalance.value = false;
@@ -257,7 +258,7 @@ const activarAnalisis = (año, estado) => {
 
     showGraphicsBalance.value = false;
     showGraphicsER.value = false;
-    return alert("Debes escoger un periodo o varios");
+    return alertas.alertaNegativa("Ha Ocurrido un error", "Debes llenar los 2 campos");
   }
   tab.value = año[0];
   if (estado === "Balance General") {

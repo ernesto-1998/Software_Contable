@@ -92,6 +92,7 @@
 import { ref, onBeforeMount, watch } from "vue";
 import { useCounterStore } from "stores/estados";
 import { pdfHandler } from "../../utils/generatePDF.js";
+import { alertas } from "../../utils/sweetAlerts2.js"
 import TablaRazones from "src/components/RazonesFinancieras/TablaRazones.vue";
 import {
   razones_liquidez,
@@ -140,11 +141,11 @@ function generarPDF() {
 const activarRazones = (año, razon) => {
   if (año === null) {
     generador.value = false;
-    return alert("Debes escoger un año o un rango de años");
+    return alertas.alertaNegativa("HA OCURRIDO UN ERROR", "Debes llenar todos los campos");
   }
   if (año.length < 1 || razon === null) {
     generador.value = false;
-    return alert("Debe rellenar ambos campos");
+    return alertas.alertaNegativa("HA OCURRIDO UN ERROR", "Debes llenar ambos campos");
   }
 
   limpiarTabla();
@@ -455,7 +456,6 @@ watch(año, () => {
   margin: 1.7rem 2.5rem;
   padding: 1rem;
   border-radius: 16px;
-  /* height: 350px; */
 }
 
 .buttom {

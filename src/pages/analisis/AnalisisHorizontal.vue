@@ -173,6 +173,7 @@ import {
   obtenerTotalesEstado,
 } from "../../utils/totales.js";
 import { pdfHandler } from "../../utils/generatePDF.js";
+import { alertas } from "../../utils/sweetAlerts2.js";
 import TablaAnalisisBalance from "../../components/AnalisisVertical-Horizontal/TablaAnalisisBalance.vue";
 import TablaAnalisisEstado from "../../components/AnalisisVertical-Horizontal/TablaAnalisisEstado.vue";
 
@@ -259,7 +260,7 @@ const activarAnalisis = (periodo1, periodo2, estado) => {
 
     showGraphicsBalance.value = false;
     showGraphicsER.value = false;
-    return alert("Debes todos los campos");
+    return alertas.alertaNegativa("Ha Ocurrido un error", "Debes llenar los 3 campos");
   }
   if (estado === "Balance General") {
     generadorEstado.value = false;
