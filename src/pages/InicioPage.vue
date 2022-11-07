@@ -60,7 +60,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, onBeforeMount } from "vue";
 import VueSmoothScroll from "vue3-smooth-scroll";
 import { useCounterStore } from "../stores/estados";
 import balanceDialog from "../components/BalanceGeneral.vue";
@@ -69,6 +69,12 @@ import useEventsBus from "../eventBus";
 import { scroll } from "quasar";
 const { getScrollTarget, setVerticalScrollPosition } = scroll;
 
+onBeforeMount(() => {
+  setTimeout(() => {
+    document.body.classList.remove("body");
+    document.body.classList.add("bg-accent");
+  }, 1000);
+});
 // DATA
 const { bus } = useEventsBus();
 const store = useCounterStore();

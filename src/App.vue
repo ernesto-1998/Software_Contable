@@ -6,10 +6,9 @@
   </router-view>
 </template>
 
-<script>
-import { defineComponent } from "vue";
-
-export default defineComponent({
+<script setup>
+import { defineComponent, watch } from "vue";
+defineComponent({
   name: "App",
 });
 </script>
@@ -17,7 +16,7 @@ export default defineComponent({
 <style scoped>
 .scale-enter-active,
 .scale-leave-active {
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
 }
 .scale-enter-from,
 .scale-leave-to {

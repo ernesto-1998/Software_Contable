@@ -61,6 +61,15 @@
       </div>
       <div class="row justify-end q-py-md">
         <q-btn
+          icon="picture_as_pdf"
+          v-if="generadorBalance === true"
+          color="primary"
+          label="Generar Reporte"
+          no-caps
+          @click="generarPDF"
+          class="q-mr-xl buttom"
+        />
+        <q-btn
           color="primary"
           label="Generar Análisis"
           no-caps
@@ -143,6 +152,7 @@
 </template>
 
 <script setup>
+import { pdfHandler } from "../../utils/generatePDF.js";
 import { ref, onBeforeMount, watch } from "vue";
 import { useCounterStore } from "stores/estados";
 import TablaAnalisisBalance from "../../components/AnalisisVertical-Horizontal/TablaAnalisisBalance.vue";
@@ -159,6 +169,10 @@ import EspecificosER from "src/components/graphics/vertical/especificosER.vue";
 import AbsolutosER from "src/components/graphics/vertical/absolutosER.vue";
 
 onBeforeMount(() => {
+  setTimeout(() => {
+    document.body.classList.remove("body");
+    document.body.classList.add("bg-accent");
+  }, 1000);
   // console.log(obtenerTotalesEstado(2017).ProductosOperacion)
   const tamanio = input.balance_general.length;
   for (let i = 0; i < tamanio; i++) {
@@ -250,7 +264,10 @@ const activarAnalisis = (año, estado) => {
 
     showGraphicsBalance.value = false;
     showGraphicsER.value = false;
-    return alertas.alertaNegativa("HA OCURRIDO UN ERROR", "Debes llenar los 2 campos");
+    return alertas.alertaNegativa(
+      "HA OCURRIDO UN ERROR",
+      "Debes llenar los 2 campos"
+    );
   }
   if (año.length === 0) {
     generadorBalance.value = false;
@@ -258,7 +275,10 @@ const activarAnalisis = (año, estado) => {
 
     showGraphicsBalance.value = false;
     showGraphicsER.value = false;
-    return alertas.alertaNegativa("Ha Ocurrido un error", "Debes llenar los 2 campos");
+    return alertas.alertaNegativa(
+      "Ha Ocurrido un error",
+      "Debes llenar los 2 campos"
+    );
   }
   tab.value = año[0];
   if (estado === "Balance General") {

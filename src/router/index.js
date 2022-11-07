@@ -33,5 +33,9 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
 
+  Router.beforeEach((to, from) => {
+    document.body.classList.remove("bg-accent");
+    document.body.classList.add("body");
+  });
   return Router;
 });

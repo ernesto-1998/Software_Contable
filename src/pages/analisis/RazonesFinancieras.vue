@@ -92,7 +92,7 @@
 import { ref, onBeforeMount, watch } from "vue";
 import { useCounterStore } from "stores/estados";
 import { pdfHandler } from "../../utils/generatePDF.js";
-import { alertas } from "../../utils/sweetAlerts2.js"
+import { alertas } from "../../utils/sweetAlerts2.js";
 import TablaRazones from "src/components/RazonesFinancieras/TablaRazones.vue";
 import {
   razones_liquidez,
@@ -106,6 +106,10 @@ import {
 } from "../../utils/totales.js";
 
 onBeforeMount(() => {
+  setTimeout(() => {
+    document.body.classList.remove("body");
+    document.body.classList.add("bg-accent");
+  }, 1000);
   const tamanio = input.balance_general.length;
   for (let i = 0; i < tamanio; i++) {
     periods.push(input.balance_general[i].año);
@@ -141,11 +145,17 @@ function generarPDF() {
 const activarRazones = (año, razon) => {
   if (año === null) {
     generador.value = false;
-    return alertas.alertaNegativa("HA OCURRIDO UN ERROR", "Debes llenar todos los campos");
+    return alertas.alertaNegativa(
+      "HA OCURRIDO UN ERROR",
+      "Debes llenar todos los campos"
+    );
   }
   if (año.length < 1 || razon === null) {
     generador.value = false;
-    return alertas.alertaNegativa("HA OCURRIDO UN ERROR", "Debes llenar ambos campos");
+    return alertas.alertaNegativa(
+      "HA OCURRIDO UN ERROR",
+      "Debes llenar ambos campos"
+    );
   }
 
   limpiarTabla();

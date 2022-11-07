@@ -66,15 +66,22 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onBeforeMount } from "vue";
 import DupontGraphic from "src/components/graphics/DupontGraphic.vue";
 import { pdfHandler } from "../../utils/generatePDF.js";
 import { alertas } from "../../utils/sweetAlerts2.js";
 const year = ref(null);
 const body = ref(null);
 let alert = ref(false);
-const periods = ["2017","2018", "2019", "2020", "2021"];
+const periods = ["2017", "2018", "2019", "2020", "2021"];
 const showGraphicDupont = ref(false);
+
+onBeforeMount(() => {
+  setTimeout(() => {
+    document.body.classList.remove("body");
+    document.body.classList.add("bg-accent");
+  }, 1000);
+});
 
 function generarPDF() {
   pdfHandler.createDPReport(
@@ -85,8 +92,11 @@ function generarPDF() {
 }
 
 function show() {
-  if(year.value === null){
-    return alertas.alertaNegativa("Ha Ocurrido un error", "Debes escoger un período");    
+  if (year.value === null) {
+    return alertas.alertaNegativa(
+      "Ha Ocurrido un error",
+      "Debes escoger un período"
+    );
   }
   showGraphicDupont.value = true;
   alert.value = true;
