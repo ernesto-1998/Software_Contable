@@ -261,7 +261,12 @@ let columnsTitulo = ref([]);
 let rowsAnalisisEstado = ref([]);
 
 function generarPDF() {
-  pdfHandler.createDPReport(body.value, año.value + estado.value, "landscape");
+  pdfHandler.createRFReport(
+    body.value,
+    año.value + estado.value,
+    "landscape",
+    "Analisis vertical"
+  );
 }
 
 const activarAnalisis = (año, estado) => {

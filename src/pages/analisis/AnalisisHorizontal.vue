@@ -276,10 +276,11 @@ let columnsTitulo = ref([]);
 let rowsAnalisisEstado = ref([]);
 
 function generarPDF() {
-  pdfHandler.createDPReport(
+  pdfHandler.createRFReport(
     body.value,
     periodo1.value + periodo2.value + estado.value,
-    "landscape"
+    "landscape",
+    "Analisis Horizontal"
   );
 }
 
@@ -771,10 +772,7 @@ const activarAnalisisEstado = (periodo1, periodo2) => {
       rowsAnalisisEstado.value[contador].push(
         productosOperacion2,
         productosOperacion1,
-        calcularVariacionAbsoluta(
-          productosOperacion1,
-          productosOperacion2
-        ),
+        calcularVariacionAbsoluta(productosOperacion1, productosOperacion2),
         calcularVariacionRelativa(
           productosOperacion1,
           productosOperacion2
@@ -1030,10 +1028,7 @@ const activarAnalisisEstado = (periodo1, periodo2) => {
       rowsAnalisisEstado.value[contador].push(
         cuentaUtilidadNeta2,
         cuentaUtilidadNeta1,
-        calcularVariacionAbsoluta(
-          cuentaUtilidadNeta1,
-          cuentaUtilidadNeta2
-        ),
+        calcularVariacionAbsoluta(cuentaUtilidadNeta1, cuentaUtilidadNeta2),
         calcularVariacionRelativa(
           cuentaUtilidadNeta1,
           cuentaUtilidadNeta2
@@ -1052,10 +1047,7 @@ const activarAnalisisEstado = (periodo1, periodo2) => {
     rowsAnalisisEstado.value[contador].push(
       totales2.utilidadNeta,
       totales1.utilidadNeta,
-      calcularVariacionAbsoluta(
-        totales1.utilidadNeta,
-        totales2.utilidadNeta
-      ),
+      calcularVariacionAbsoluta(totales1.utilidadNeta, totales2.utilidadNeta),
       calcularVariacionRelativa(
         totales1.utilidadNeta,
         totales2.utilidadNeta
@@ -1153,10 +1145,7 @@ const activarAnalisisEstado = (periodo1, periodo2) => {
       rowsAnalisisEstado.value[contador].push(
         utilidadAtribuible2,
         utilidadAtribuible1,
-        calcularVariacionAbsoluta(
-          utilidadAtribuible1,
-          utilidadAtribuible2
-        ),
+        calcularVariacionAbsoluta(utilidadAtribuible1, utilidadAtribuible2),
         calcularVariacionRelativa(
           utilidadAtribuible1,
           utilidadAtribuible2
@@ -1186,10 +1175,7 @@ const activarAnalisisEstado = (periodo1, periodo2) => {
       rowsAnalisisEstado.value[contador].push(
         integralAtribuible2,
         integralAtribuible1,
-        calcularVariacionAbsoluta(
-          integralAtribuible1,
-          integralAtribuible2
-        ),
+        calcularVariacionAbsoluta(integralAtribuible1, integralAtribuible2),
         calcularVariacionRelativa(
           integralAtribuible1,
           integralAtribuible2
