@@ -13,12 +13,12 @@
         </p>
       </div>
     </div>
-    <q-btn
+    <!-- <q-btn
       icon="picture_as_pdf"
       color="primary"
       no-caps
       @click="setToEstados"
-    />
+    /> -->
     <div ref="estados" class="first bg-positive">
       <div class="row title">
         <h2>ESTADOS FINANCIEROS</h2>
