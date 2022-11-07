@@ -357,9 +357,7 @@ const activarAnalisisBalance = (periodo1, periodo2) => {
     rowsActivo.value[contador].push(
       activoCorriente2,
       activoCorriente1,
-      calcularVariacionAbsoluta(activoCorriente1, activoCorriente2).toFixed(
-        nivelPorcentaje
-      ),
+      calcularVariacionAbsoluta(activoCorriente1, activoCorriente2),
       calcularVariacionRelativa(activoCorriente1, activoCorriente2).toFixed(
         nivelPorcentaje
       ) + "%"
@@ -740,7 +738,7 @@ const activarAnalisisEstado = (periodo1, periodo2) => {
       calcularVariacionAbsoluta(
         totales1.ProductosOperacion,
         totales2.ProductosOperacion
-      ).toFixed(nivelPorcentaje),
+      ),
       calcularVariacionRelativa(
         totales1.ProductosOperacion,
         totales2.ProductosOperacion
@@ -767,7 +765,7 @@ const activarAnalisisEstado = (periodo1, periodo2) => {
         calcularVariacionAbsoluta(
           productosOperacion1,
           productosOperacion2
-        ).toFixed(nivelPorcentaje),
+        ),
         calcularVariacionRelativa(
           productosOperacion1,
           productosOperacion2
@@ -840,7 +838,7 @@ const activarAnalisisEstado = (periodo1, periodo2) => {
         calcularVariacionAbsoluta(
           cuentaUtilidadOperacion1,
           cuentaUtilidadOperacion2
-        ).toFixed(nivelPorcentaje),
+        ),
         calcularVariacionRelativa(
           cuentaUtilidadOperacion1,
           cuentaUtilidadOperacion2
@@ -864,7 +862,7 @@ const activarAnalisisEstado = (periodo1, periodo2) => {
       calcularVariacionAbsoluta(
         totales1.costosYGastosOperacion,
         totales2.costosYGastosOperacion
-      ).toFixed(nivelPorcentaje),
+      ),
       calcularVariacionRelativa(
         totales1.costosYGastosOperacion,
         totales2.costosYGastosOperacion
@@ -910,7 +908,7 @@ const activarAnalisisEstado = (periodo1, periodo2) => {
       calcularVariacionAbsoluta(
         totales1.utilidadOperacion,
         totales2.utilidadOperacion
-      ).toFixed(nivelPorcentaje),
+      ),
       calcularVariacionRelativa(
         totales1.utilidadOperacion,
         totales2.utilidadOperacion
@@ -932,7 +930,7 @@ const activarAnalisisEstado = (periodo1, periodo2) => {
       calcularVariacionAbsoluta(
         totales1.gastosFinancieros,
         totales2.gastosFinancieros
-      ).toFixed(nivelPorcentaje),
+      ),
       calcularVariacionRelativa(
         totales1.gastosFinancieros,
         totales2.gastosFinancieros
@@ -952,7 +950,7 @@ const activarAnalisisEstado = (periodo1, periodo2) => {
       calcularVariacionAbsoluta(
         totales1.productosFinancieros,
         totales2.productosFinancieros
-      ).toFixed(nivelPorcentaje),
+      ),
       calcularVariacionRelativa(
         totales1.productosFinancieros,
         totales2.productosFinancieros
@@ -999,7 +997,7 @@ const activarAnalisisEstado = (periodo1, periodo2) => {
       calcularVariacionAbsoluta(
         totales1.utilidadAntesImpuestos,
         totales2.utilidadAntesImpuestos
-      ).toFixed(nivelPorcentaje),
+      ),
       calcularVariacionRelativa(
         totales1.utilidadAntesImpuestos,
         totales2.utilidadAntesImpuestos
@@ -1026,7 +1024,7 @@ const activarAnalisisEstado = (periodo1, periodo2) => {
         calcularVariacionAbsoluta(
           cuentaUtilidadNeta1,
           cuentaUtilidadNeta2
-        ).toFixed(nivelPorcentaje),
+        ),
         calcularVariacionRelativa(
           cuentaUtilidadNeta1,
           cuentaUtilidadNeta2
@@ -1048,7 +1046,7 @@ const activarAnalisisEstado = (periodo1, periodo2) => {
       calcularVariacionAbsoluta(
         totales1.utilidadNeta,
         totales2.utilidadNeta
-      ).toFixed(nivelPorcentaje),
+      ),
       calcularVariacionRelativa(
         totales1.utilidadNeta,
         totales2.utilidadNeta
@@ -1075,7 +1073,7 @@ const activarAnalisisEstado = (periodo1, periodo2) => {
         calcularVariacionAbsoluta(
           cuentaResultadoIntegral1,
           cuentaResultadoIntegral2
-        ).toFixed(nivelPorcentaje),
+        ),
         calcularVariacionRelativa(
           cuentaResultadoIntegral1,
           cuentaResultadoIntegral2
@@ -1099,7 +1097,7 @@ const activarAnalisisEstado = (periodo1, periodo2) => {
       calcularVariacionAbsoluta(
         totales1.sub_resultados_integrales,
         totales2.sub_resultados_integrales
-      ).toFixed(nivelPorcentaje),
+      ),
       calcularVariacionRelativa(
         totales1.sub_resultados_integrales,
         totales2.sub_resultados_integrales
@@ -1122,7 +1120,7 @@ const activarAnalisisEstado = (periodo1, periodo2) => {
       calcularVariacionAbsoluta(
         totales1.resultadosIntegralesAño,
         totales2.resultadosIntegralesAño
-      ).toFixed(nivelPorcentaje),
+      ),
       calcularVariacionRelativa(
         totales1.resultadosIntegralesAño,
         totales2.resultadosIntegralesAño
@@ -1149,7 +1147,7 @@ const activarAnalisisEstado = (periodo1, periodo2) => {
         calcularVariacionAbsoluta(
           utilidadAtribuible1,
           utilidadAtribuible2
-        ).toFixed(nivelPorcentaje),
+        ),
         calcularVariacionRelativa(
           utilidadAtribuible1,
           utilidadAtribuible2
@@ -1182,7 +1180,7 @@ const activarAnalisisEstado = (periodo1, periodo2) => {
         calcularVariacionAbsoluta(
           integralAtribuible1,
           integralAtribuible2
-        ).toFixed(nivelPorcentaje),
+        ),
         calcularVariacionRelativa(
           integralAtribuible1,
           integralAtribuible2
@@ -1212,7 +1210,7 @@ const activarAnalisisEstado = (periodo1, periodo2) => {
       calcularVariacionAbsoluta(
         utilidadAccionControladora1,
         utilidadAccionControladora2
-      ).toFixed(nivelPorcentaje),
+      ),
       calcularVariacionRelativa(
         utilidadAccionControladora1,
         utilidadAccionControladora2
@@ -1242,7 +1240,7 @@ const activarAnalisisEstado = (periodo1, periodo2) => {
       calcularVariacionAbsoluta(
         utilidadAccionSubsidiaria1,
         utilidadAccionSubsidiaria1
-      ).toFixed(nivelPorcentaje),
+      ),
       calcularVariacionRelativa(
         utilidadAccionSubsidiaria1,
         utilidadAccionSubsidiaria1
@@ -1252,7 +1250,7 @@ const activarAnalisisEstado = (periodo1, periodo2) => {
 };
 
 const calcularVariacionAbsoluta = (periodo1, periodo2) => {
-  return periodo1 - periodo2;
+  return "$ " + new Intl.NumberFormat("en-US").format(periodo1 - periodo2);
 };
 
 const calcularVariacionRelativa = (periodo1, periodo2) => {
