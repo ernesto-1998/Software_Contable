@@ -261,7 +261,7 @@ let columnsTitulo = ref([]);
 let rowsAnalisisEstado = ref([]);
 
 function generarPDF() {
-  pdfHandler.createRFReport(
+  pdfHandler.createAVReport(
     body.value,
     año.value + estado.value,
     "landscape",

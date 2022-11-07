@@ -86,4 +86,74 @@ export const pdfHandler = {
       })
       .catch(function (error) {});
   },
+  createAVReport: (element, fileName, orientation) => {
+    // documento
+    let doc = new jsPDF({
+      orientation: orientation,
+      // unit: "pt",
+      // alto, ancho
+      format: [3000, 3000],
+    });
+
+    let scale =
+      (doc.internal.pageSize.width - margin * 2) / element.scrollWidth;
+    doc.html(element, {
+      x: 1,
+      y: 0,
+      image: {
+        type: "jpeg",
+        quality: 1,
+      },
+      html2canvas: {
+        scale,
+        letterRendering: true,
+        backgroundColor: "#843B62",
+      },
+      callback: (doc) => {
+        doc.setProperties({
+          title: "Title",
+          subject: "Reporte financiero empresa DelSur",
+          author: "Software Financiero UES",
+          keywords: "generated, javascript, web 2.0, ajax",
+          creator: "UES",
+        });
+        doc.save(fileName);
+      },
+    });
+  },
+  createAHReport: (element, fileName, orientation) => {
+    // documento
+    let doc = new jsPDF({
+      orientation: orientation,
+      // unit: "pt",
+      // alto, ancho
+      format: [3000, 3000],
+    });
+
+    let scale =
+      (doc.internal.pageSize.width - margin * 2) / element.scrollWidth;
+    doc.html(element, {
+      x: 1,
+      y: 0,
+      image: {
+        type: "jpeg",
+        quality: 1,
+      },
+      html2canvas: {
+        scale,
+        letterRendering: true,
+        backgroundColor: "#843B62",
+      },
+      callback: (doc) => {
+        doc.setProperties({
+          title: "Title",
+          subject: "Reporte financiero empresa DelSur",
+          author: "Software Financiero UES",
+          keywords: "generated, javascript, web 2.0, ajax",
+          creator: "UES",
+        });
+        doc.save(fileName);
+      },
+    });
+  },
 };
