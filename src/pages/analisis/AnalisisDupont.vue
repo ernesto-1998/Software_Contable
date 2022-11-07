@@ -86,7 +86,7 @@ function generarPDF() {
 
 function show() {
   if(year.value === null){
-    return alertas.alertaNegativa("Ha Ocurrido un error", "Debes llenar los 3 campos");    
+    return alertas.alertaNegativa("Ha Ocurrido un error", "Debes escoger un período");    
   }
   showGraphicDupont.value = true;
   alert.value = true;
