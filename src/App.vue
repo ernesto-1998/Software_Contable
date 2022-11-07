@@ -16,7 +16,7 @@ defineComponent({
 <style scoped>
 .scale-enter-active,
 .scale-leave-active {
-  transition: all 0.4s ease;
+  transition: all 0.3s ease;
 }
 .scale-enter-from,
 .scale-leave-to {
