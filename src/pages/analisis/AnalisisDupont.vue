@@ -36,8 +36,9 @@
         <div class="col-2">
           <q-btn
             v-if="showGraphicDupont"
+            icon="picture_as_pdf"
             color="primary"
-            label="Generar PDF"
+            label="Generar Reporte"
             no-caps
             @click="generarPDF"
             class="buttom self-end"
@@ -68,49 +69,16 @@
 import { ref, watch } from "vue";
 import DupontGraphic from "src/components/graphics/DupontGraphic.vue";
 import { pdfHandler } from "../../utils/generatePDF.js";
-import jsPDF from "jspdf";
-import domtoimage from "dom-to-image";
-import html2canvas from "html2canvas";
 const year = ref(null);
 const body = ref(null);
 let alert = ref(false);
 const periods = ["2018", "2019", "2020", "2021", "2022"];
 const showGraphicDupont = ref(false);
 
-function downloadWithCSS() {
-  /** WITH CSS */
-  domtoimage
-    .toPng(body.value)
-    .then(function (dataUrl) {
-      var img = new Image();
-      img.src = dataUrl;
-      const doc = new jsPDF({
-        orientation: "landscape",
-        // unit: "pt",
-        format: [380, 370],
-      });
-      doc.addImage(img, "JPEG", 0, 0);
-      const date = new Date();
-      const filename =
-        "timechart_" +
-        date.getFullYear() +
-        ("0" + (date.getMonth() + 1)).slice(-2) +
-        ("0" + date.getDate()).slice(-2) +
-        ("0" + date.getHours()).slice(-2) +
-        ("0" + date.getMinutes()).slice(-2) +
-        ("0" + date.getSeconds()).slice(-2) +
-        ".pdf";
-      doc.save(filename);
-    })
-    .catch(function (error) {
-      console.error("oops, something went wrong!", error);
-    });
-}
 function generarPDF() {
   pdfHandler.createDPReport(
     body.value,
     "AnálisisDupont" + year.value,
-
     "landscape"
   );
 }

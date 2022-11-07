@@ -38,7 +38,6 @@ function drawGraphic() {
     data: {
       labels: [
         "Ventas",
-        "Costos de venta",
         "C/G operativos",
         "Gastos Financieros",
         "Productos Financieros",
@@ -48,7 +47,6 @@ function drawGraphic() {
           label: "Periodo " + props.periodos[0],
           data: [
             obtenerTotalesEstado(props.periodos[1]).ProductosOperacion,
-            obtenerTotalesEstado(props.periodos[1]).CostosEnergia,
             obtenerTotalesEstado(props.periodos[1]).costosYGastosOperacion,
             obtenerTotalesEstado(props.periodos[1]).gastosFinancieros,
             obtenerTotalesEstado(props.periodos[1]).productosFinancieros,

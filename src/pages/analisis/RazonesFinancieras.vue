@@ -60,11 +60,12 @@
           label="Razon"
         />
       </div>
-      <div class="row justify-end q-py-md">
+      <div class="row justify-end q-pt-xl q-pb-md">
         <q-btn
+          icon="picture_as_pdf"
           v-if="generador === true"
           color="primary"
-          label="Generar PDF"
+          label="Generar Reporte"
           no-caps
           @click="generarPDF"
           class="q-mr-xl buttom"
@@ -88,7 +89,7 @@
   </div>
 </template>
 <script setup>
-import { ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount, watch } from "vue";
 import { useCounterStore } from "stores/estados";
 import { pdfHandler } from "../../utils/generatePDF.js";
 import TablaRazones from "src/components/RazonesFinancieras/TablaRazones.vue";
@@ -269,7 +270,7 @@ const obtenerDatosRazones = (año) => {
   const efectivo = totalesBalance.efectivo;
   const cuentas_por_cobrar = totalesBalance.cuentas_por_cobrar;
   const cuentas_por_pagar = totalesBalance.cuentas_por_pagar;
-  const total_depreciacion = totalesBalance.total_depreciacion;
+  const total_depreciacion = totalesEstado.total_depreciacion;
 
   const impuestos = totalesEstado.impuestos;
   const utilidad_bruta = totalesEstado.utilidadBruta;
@@ -408,6 +409,17 @@ const limpiarTabla = () => {
   rows.value = [];
   columns.value = [];
 };
+
+watch(razon, () => {
+  if (generador.value) {
+    generador.value = false;
+  }
+});
+watch(año, () => {
+  if (generador.value) {
+    generador.value = false;
+  }
+});
 </script>
 
 <style scoped>

@@ -3,8 +3,10 @@
     <p class="q-pt-sm">Porcentajes Absolutos para el periodo {{ periodo }}</p>
   </div>
   <div class="container">
-    <div class="col bg-grey-1 q-px-sm">
-      <canvas :id="props.ids[0]" width="600" height="1200"></canvas>
+    <div class="row">
+      <div class="col bg-grey-1 q-px-sm">
+        <canvas :id="props.ids[0]" width="600" height="800"></canvas>
+      </div>
     </div>
   </div>
 </template>
@@ -68,13 +70,6 @@ onMounted(() => {
     }
   });
 
-  estado_resultados.sub_costos_de_energia.forEach((amount, acount) => {
-    if (amount) {
-      dataVentas.push(amount);
-      labelsVentas.push(acount);
-    }
-  });
-
   estado_resultados.sub_costos_y_gastos_de_operacion.forEach(
     (amount, acount) => {
       if (amount) {
@@ -91,7 +86,7 @@ onMounted(() => {
     }
   });
 
-  estado_resultados.sub_productos_financieros.forEach((amount, acount) => {
+  estado_resultados.sub_ingresos_financieros.forEach((amount, acount) => {
     if (amount) {
       dataVentas.push(amount);
       labelsVentas.push(acount);
@@ -104,6 +99,29 @@ onMounted(() => {
       labelsVentas.push(acount);
     }
   });
+
+  estado_resultados.sub_resultados_integrales.forEach((amount, acount) => {
+    if (amount) {
+      dataVentas.push(amount);
+      labelsVentas.push(acount);
+    }
+  });
+
+  estado_resultados.sub_utilidad_atribuible.forEach((amount, acount) => {
+    if (amount) {
+      dataVentas.push(amount);
+      labelsVentas.push(acount);
+    }
+  });
+
+  estado_resultados.sub_resultados_integrales_atribuible.forEach(
+    (amount, acount) => {
+      if (amount) {
+        dataVentas.push(amount);
+        labelsVentas.push(acount);
+      }
+    }
+  );
 
   let COLORS_COPY = [...COLORS];
   graphicsV = new Chart(document.getElementById(props.ids[0]), {

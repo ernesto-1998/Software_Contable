@@ -20,10 +20,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-6 q-py-sm bg-grey-1">
-        <canvas :id="props.ids[4]" height="700"></canvas>
-      </div>
-      <div class="col-6 q-py-sm bg-grey-1">
+      <div class="col q-py-sm bg-grey-1">
         <canvas :id="props.ids[5]" height="700"></canvas>
       </div>
     </div>
@@ -48,7 +45,6 @@ let graphicAC = null;
 let graphicANC = null;
 let graphicPVC = null;
 let graphicPVNC = null;
-let graphicCS = null;
 let graphicPT = null;
 const simbolos = "0123456789ABCDEF";
 
@@ -131,26 +127,17 @@ onMounted(() => {
   });
 
   // obteniendo todas las cuentas de capital social y su total
-  let dataCapitalSocial = [];
-  let labelsCapitalSocial = [];
-  let totalCapitalSocial = 0;
-  console.log(balance_general.patrimonio.get("sub_capital_social"));
-  balance_general.patrimonio
-    .get("sub_capital_social")
-    .forEach((amount, acount) => {
-      dataCapitalSocial.push(amount);
-      labelsCapitalSocial.push(acount);
-      totalCapitalSocial += amount;
-    });
-
-  // obteniendo todas las cuentas de patrimonio no corriente y su total
   let dataPatrimonio = [];
   let labelsPatrimonio = [];
+  balance_general.patrimonio
+    .get("sub_patrimonio_propietarios")
+    .forEach((amount, acount) => {
+      dataPatrimonio.push(amount);
+      labelsPatrimonio.push(acount);
+    });
+
   balance_general.patrimonio.forEach((amount, acount) => {
-    if (acount === "sub_capital_social") {
-      labelsPatrimonio.push("Total Capital Social");
-      dataPatrimonio.push(totalCapitalSocial);
-    } else {
+    if (acount !== "sub_patrimonio_propietarios") {
       labelsPatrimonio.push(acount);
       dataPatrimonio.push(amount);
     }
@@ -450,79 +437,6 @@ onMounted(() => {
     },
   });
 
-  graphicCS = new Chart(document.getElementById(props.ids[4]), {
-    type: "doughnut",
-    data: {
-      labels: labelsCapitalSocial,
-      datasets: [
-        {
-          data: dataCapitalSocial,
-          backgroundColor: COLORS_COPY.sort(() => Math.random() - 0.5).splice(
-            0,
-            dataCapitalSocial.length
-          ),
-          hoverOffset: 5,
-          borderAlign: "center",
-          circumference: 360,
-          borderWidth: 0.5,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      animation: {
-        animateScale: true,
-      },
-      plugins: {
-        legend: {
-          position: "bottom",
-        },
-        title: {
-          display: true,
-          text: "Capital Social",
-          font: {
-            size: 17,
-          },
-        },
-        tooltip: {
-          padding: 3,
-          usePointStyle: true,
-          callbacks: {
-            title: (item) => {
-              if (item[0].label.length >= 30) {
-                let breakpoint = 0;
-                const frases = item[0].label.split(" ");
-                for (const frase of frases) {
-                  breakpoint += frase.length + 1;
-                  if (breakpoint >= 30) {
-                    breakpoint -= frase.length + 1;
-                    break;
-                  }
-                }
-                return (
-                  item[0].label.slice(0, breakpoint) +
-                  "\n" +
-                  item[0].label.slice(breakpoint)
-                );
-              } else {
-                return item[0].label;
-              }
-            },
-            label: (item) => {
-              return (
-                (
-                  (item.raw * 100) /
-                  obtenerTotalesBalance(props.periodo).totalCapitalSocial
-                ).toFixed(2) + "%"
-              );
-            },
-          },
-        },
-      },
-    },
-  });
-
   graphicPT = new Chart(document.getElementById(props.ids[5]), {
     type: "doughnut",
     data: {
@@ -602,7 +516,6 @@ onBeforeUnmount(() => {
   graphicANC.destroy();
   graphicPVC.destroy();
   graphicPVNC.destroy();
-  graphicCS.destroy();
   graphicPT.destroy();
 });
 </script>

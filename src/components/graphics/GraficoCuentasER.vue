@@ -28,14 +28,12 @@ onBeforeUnmount(() => {
 function drawGraphics() {
   const dataAño1 = [
     obtenerTotalesEstado(props.periodos[0]).ProductosOperacion,
-    obtenerTotalesEstado(props.periodos[0]).CostosEnergia,
     obtenerTotalesEstado(props.periodos[0]).costosYGastosOperacion,
     obtenerTotalesEstado(props.periodos[0]).gastosFinancieros,
     obtenerTotalesEstado(props.periodos[0]).productosFinancieros,
   ];
   const dataAño2 = [
     obtenerTotalesEstado(props.periodos[1]).ProductosOperacion,
-    obtenerTotalesEstado(props.periodos[1]).CostosEnergia,
     obtenerTotalesEstado(props.periodos[1]).costosYGastosOperacion,
     obtenerTotalesEstado(props.periodos[1]).gastosFinancieros,
     obtenerTotalesEstado(props.periodos[1]).productosFinancieros,
@@ -47,13 +45,7 @@ function drawGraphics() {
   graphicBarras = new Chart(document.getElementById("cuentasER"), {
     type: "bar",
     data: {
-      labels: [
-        "Ventas",
-        "Costos de venta",
-        "C/G de operación",
-        "Gastos fin.",
-        "Productos fin.",
-      ],
+      labels: ["Ventas", "C/G de operación", "Gastos fin.", "Productos fin."],
       datasets: [
         {
           label: "Periodo " + props.periodos[0],

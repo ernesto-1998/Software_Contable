@@ -1,13 +1,12 @@
 <template>
-  <div class="label text-center text-overline text-weight-bold">
-    <p class="q-pt-sm">Porcentajes Absolutos para el periodo {{ periodo }}</p>
-  </div>
   <div class="container">
-    <div class="col bg-grey-1 q-px-sm">
-      <canvas :id="props.ids[0]" width="600" height="1200"></canvas>
-    </div>
-    <div class="col bg-grey-1 q-px-sm">
-      <canvas :id="props.ids[1]" width="600" height="1200"></canvas>
+    <div class="row q-mt-xl">
+      <div class="col bg-grey-1 q-px-sm">
+        <canvas :id="props.ids[0]" width="300" height="750"></canvas>
+      </div>
+      <div class="col bg-grey-1 q-px-sm">
+        <canvas :id="props.ids[1]" width="300" height="750"></canvas>
+      </div>
     </div>
   </div>
 </template>
@@ -95,9 +94,8 @@ onMounted(() => {
     }
   });
 
-  console.log(balance_general.patrimonio.get("sub_capital_social"));
   balance_general.patrimonio
-    .get("sub_capital_social")
+    .get("sub_patrimonio_propietarios")
     .forEach((amount, acount) => {
       if (amount) {
         dataPasivoCapital.push(amount);
@@ -106,9 +104,7 @@ onMounted(() => {
     });
 
   balance_general.patrimonio.forEach((amount, acount) => {
-    if (acount === "sub_capital_social") {
-      console.log(amount);
-    } else {
+    if (acount !== "sub_patrimonio_propietarios") {
       if (amount) {
         dataPasivoCapital.push(amount);
         labelsPasivoCapital.push(acount);
@@ -143,7 +139,7 @@ onMounted(() => {
       },
       plugins: {
         legend: {
-          position: "left",
+          position: "bottom",
         },
         title: {
           display: true,
@@ -210,7 +206,7 @@ onMounted(() => {
       },
       plugins: {
         legend: {
-          position: "right",
+          position: "bottom",
         },
         title: {
           display: true,

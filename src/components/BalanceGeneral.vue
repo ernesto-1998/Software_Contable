@@ -2,6 +2,7 @@
   <div>
     <q-dialog v-model="showDialog">
       <q-table
+        no-route-fullscreen-exit
         class="my-sticky-header-table"
         :rows="rows"
         :columns="columns"

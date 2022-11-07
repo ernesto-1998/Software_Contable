@@ -11,11 +11,10 @@
         <p class="q-mt-lg">
           “Contribuir a la armonía de la vida para un mundo mejor”
         </p>
-        <button @click="scrollInto('first')">Ir Elemento1</button>
       </div>
     </div>
 
-    <div id="first" class="first bg-positive">
+    <div id="estados" class="first bg-positive">
       <div class="row title">
         <h2>ESTADOS FINANCIEROS</h2>
       </div>
@@ -60,6 +59,7 @@
 
 <script setup>
 import { ref, watch, computed } from "vue";
+import VueSmoothScroll from "vue3-smooth-scroll";
 import { useCounterStore } from "../stores/estados";
 import balanceDialog from "../components/BalanceGeneral.vue";
 import estadoDialog from "../components/EstadoResultados.vue";
@@ -86,13 +86,6 @@ function showBalance() {
 function showEstado() {
   estado.value = store.getEstadoByYear(parseInt(year.value));
   showEstadoDialog.value = true;
-}
-
-function scrollInto(el) {
-  const target = getScrollTarget(el);
-  const offset = el.offsetTop;
-  const duration = 1000;
-  setVerticalScrollPosition(target, offset, duration);
 }
 
 // WATCHS

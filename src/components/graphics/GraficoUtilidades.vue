@@ -16,13 +16,6 @@ const props = defineProps({
 });
 
 let graphicBarras = null;
-const options = [
-  "Activo corriente",
-  "Activo no corriente",
-  "Pasivo corriente",
-  "Pasivo no corriente",
-  "Patrimonio y reservas",
-];
 
 onMounted(() => {
   drawGraphics();
@@ -34,13 +27,11 @@ onBeforeUnmount(() => {
 
 function drawGraphics() {
   const dataAño2 = [
-    obtenerTotalesEstado(props.periodos[1]).utilidadBruta,
     obtenerTotalesEstado(props.periodos[1]).utilidadOperacion,
     obtenerTotalesEstado(props.periodos[1]).utilidadAntesImpuestos,
     obtenerTotalesEstado(props.periodos[1]).utilidadNeta,
   ];
   const dataAño1 = [
-    obtenerTotalesEstado(props.periodos[0]).utilidadBruta,
     obtenerTotalesEstado(props.periodos[0]).utilidadOperacion,
     obtenerTotalesEstado(props.periodos[0]).utilidadAntesImpuestos,
     obtenerTotalesEstado(props.periodos[0]).utilidadNeta,
@@ -51,7 +42,7 @@ function drawGraphics() {
   graphicBarras = new Chart(document.getElementById("utilidades"), {
     type: "bar",
     data: {
-      labels: ["Utilidad Bruta", "Utilidad Operativa", "UAR", "Utilidad Neta"],
+      labels: ["Utilidad Operativa", "UAR", "Utilidad Neta"],
       datasets: [
         {
           label: "Periodo " + props.periodos[0],
