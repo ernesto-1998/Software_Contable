@@ -114,7 +114,7 @@ export const obtenerTotalesEstado = (año) => {
 
   // Utilidad Operacion
 
-  let utilidadOperacion = ProductosOperacion - costosYGastosOperacion;
+  let utilidadOperacion = utilidadBruta - costosYGastosOperacion;
 
   // Gastos Financieros
 
