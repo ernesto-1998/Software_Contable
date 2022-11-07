@@ -193,7 +193,7 @@ const activarRazonesLiquidez = (año) => {
     año,
     datos.razon_circulante,
     datos.razon_rapida,
-    datos.capital_trabajo,
+    "$ " + new Intl.NumberFormat("en-US").format(datos.capital_trabajo),
     datos.nivel_dependencia,
   ]);
 };
